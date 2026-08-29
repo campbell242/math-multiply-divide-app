@@ -4,6 +4,11 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* The hidden attribute must beat any display a class sets. Without this,
+   `.screen { display: flex }` overrides the UA's [hidden] rule and every
+   screen renders stacked on one long page. */
+[hidden] { display: none !important; }
+
 html, body { margin: 0; padding: 0; height: 100%; }
 
 body {
@@ -612,7 +617,8 @@ body {
   opacity: 1;
   transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
 }
-.toast[hidden] { display: flex; opacity: 0; transform: translate(-50%, -8px); visibility: hidden; }
+/* The toast animates its exit, so it hides by class, not attribute. */
+.toast:not(.is-show) { opacity: 0; transform: translate(-50%, -8px); visibility: hidden; }
 .toast b {
   font-family: var(--font-display);
   font-size: var(--fs-body);

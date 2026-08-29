@@ -38,9 +38,9 @@ let toastTimer = null;
 function showToast(title, sub) {
   $("toast-title").textContent = title;
   $("toast-sub").textContent = sub;
-  $("toast").hidden = false;
+  $("toast").classList.add("is-show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { $("toast").hidden = true; }, 3000);
+  toastTimer = setTimeout(() => { $("toast").classList.remove("is-show"); }, 3000);
 }
 
 // Only reaching Gold or Diamond earns the toast and the rising third --
