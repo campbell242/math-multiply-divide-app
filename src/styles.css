@@ -1,143 +1,624 @@
-/* App styles. Every value here comes from tokens.css — see that file first. */
+/* App styles. Every value comes from tokens.css — see that file first.
+   Nothing here may introduce a colour, size, or radius of its own. */
 @import url("../tokens.css");
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
+html, body { margin: 0; padding: 0; height: 100%; }
 
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-weight: var(--fw-normal);
-  font-size: var(--fs-md);
-  line-height: var(--lh-normal);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-sentence);
+  font-size: var(--fs-body);
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
-  /* Kids will tap fast and repeatedly; kill the double-tap zoom and the
-     grey flash so it feels like an app rather than a web page. */
+  /* She taps fast and repeatedly. Kill double-tap zoom and the grey flash. */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  user-select: none;
 }
 
-.app {
-  max-width: 34rem;
+/* Grass strip along the top of every child screen: trim, never a ground. */
+.trim {
+  height: 10px;
+  background-image: url("../assets/tx-grass.png");
+  background-size: var(--tx-size);
+  background-repeat: repeat-x;
+  image-rendering: pixelated;
+  border-bottom: var(--border-w) solid var(--border-btn);
+}
+
+.screen {
+  max-width: 420px;
   margin: 0 auto;
-  min-height: 100%;
+  min-height: calc(100% - 13px);
   display: flex;
   flex-direction: column;
-  padding: var(--sp-4);
-  gap: var(--sp-5);
-}
-
-.app__bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-3);
-}
-
-.app__title {
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-heavy);
-  margin: 0;
-  letter-spacing: -0.01em;
-}
-
-/* --- Card ---------------------------------------------------------------- */
-.card {
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-md);
+  gap: var(--sp-4);
   padding: var(--sp-5);
 }
 
-.problem {
-  display: grid;
-  place-items: center;
-  gap: var(--sp-2);
-  text-align: center;
-  padding-block: var(--sp-6);
-}
+.stack { display: flex; flex-direction: column; gap: var(--sp-3); }
 
-.problem__expression {
-  font-family: var(--font-numeral);
-  font-size: var(--fs-problem);
-  font-weight: var(--fw-heavy);
-  line-height: var(--lh-tight);
-  letter-spacing: -0.02em;
-  margin: 0;
-}
-
-.problem__hint {
-  color: var(--text-muted);
-  font-size: var(--fs-sm);
-  margin: 0;
-}
-
-/* --- Button -------------------------------------------------------------- */
-.btn {
-  font-family: inherit;
-  font-size: var(--fs-lg);
+/* --- Header bar ----------------------------------------------------------- */
+.bar { display: flex; align-items: center; gap: var(--sp-3); }
+.bar__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
   font-weight: var(--fw-bold);
-  color: var(--text-inverse);
-  background: var(--accent);
-  border: 0;
-  border-radius: var(--r-md);
-  min-height: var(--tap-min);
-  padding-inline: var(--sp-5);
-  cursor: pointer;
-  box-shadow: var(--shadow-key);
-  transition: transform var(--dur-fast) var(--ease-out),
-              box-shadow var(--dur-fast) var(--ease-out),
-              background var(--dur-fast) var(--ease-out);
+  margin: 0;
+  flex: 1;
 }
-
-.btn:hover { background: var(--accent-hover); }
-
-/* Travel the full 5px so the key visibly bottoms out when pressed. */
-.btn:active {
-  transform: translateY(5px);
-  box-shadow: 0 0 0 var(--accent-hover);
-}
-
-.btn:focus-visible {
-  outline: 3px solid var(--accent);
-  outline-offset: 3px;
-}
-
-.btn--ghost {
-  background: transparent;
+.bar__meta {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
   color: var(--text-muted);
-  box-shadow: none;
-  border: 1px solid var(--border);
-  min-height: var(--tap-min);
+}
+.back {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  color: var(--text-muted);
+  background: none;
+  border: none;
   min-width: var(--tap-min);
-  padding-inline: var(--sp-3);
-  font-size: var(--fs-lg);
+  min-height: var(--tap-min);
+  cursor: pointer;
 }
 
-.btn--ghost:hover { background: var(--bg-sunken); color: var(--text); }
-.btn--ghost:active { transform: none; }
+/* --- Home ------------------------------------------------------------------ */
+.home-top { display: flex; align-items: center; gap: var(--sp-4); }
+.avatar {
+  width: 56px; height: 56px;
+  image-rendering: pixelated;
+  border: var(--border-w) solid var(--border-btn);
+  background: var(--slot-fill);
+  box-shadow: var(--bevel-chip);
+}
+.clock {
+  font-family: var(--font-display);
+  font-size: var(--fs-clock);
+  line-height: 1;
+  margin-left: auto;
+}
+.home-middle { flex: 1; color: var(--text-muted); font-size: var(--fs-label); }
 
-/* --- Status -------------------------------------------------------------- */
-.pill {
+/* --- Chips ------------------------------------------------------------------ */
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+.chip {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  border: var(--border-w-thin) solid var(--border-btn);
+  box-shadow: var(--bevel-chip);
+  padding: var(--sp-1) var(--sp-3);
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
-  border-radius: var(--r-full);
-  padding: var(--sp-2) var(--sp-4);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
+}
+.chip--correct { background: var(--correct); color: var(--on-dark); }
+.chip--fast    { background: var(--fast);    color: var(--ink); }
+.chip--emerald { background: var(--emerald-soft); color: var(--emerald-dark); border-color: var(--emerald-dark); }
+.chip--streak  { background: var(--tier-gold-soft); color: var(--tier-gold-text); border-color: var(--tier-gold-dark); }
+
+/* A pixel gem, until Design supplies an emerald sprite (docs/DESIGN_FEEDBACK.md). */
+.gem {
+  width: 14px; height: 14px;
+  background: var(--emerald);
+  border: var(--border-w-thin) solid var(--emerald-deep);
+  box-shadow: inset 2px 2px 0 var(--emerald-light), inset -2px -2px 0 var(--emerald-dark);
+  display: inline-block;
+}
+.chip--emerald::before { content: ""; }
+.chip--emerald .gem, .chip--emerald::before { margin-right: 0; }
+.gem--big { width: 56px; height: 56px; border-width: var(--border-w); margin: var(--sp-6) auto 0;
+  box-shadow: inset 6px 6px 0 var(--emerald-light), inset -6px -6px 0 var(--emerald-dark); }
+
+/* --- Buttons ------------------------------------------------------------------ */
+.btn {
+  font-family: var(--font-display);
+  font-size: var(--fs-button);
+  color: var(--on-dark);
+  text-shadow: var(--text-emboss);
+  background: var(--correct);
+  border: var(--border-w) solid var(--border-btn);
+  border-radius: var(--radius);
+  min-height: var(--tap-comfy);
+  padding-inline: var(--sp-5);
+  cursor: pointer;
+  box-shadow: var(--bevel-strong), var(--key-drop);
+  transition: transform var(--dur-press) var(--ease-out),
+              box-shadow var(--dur-press) var(--ease-out);
+}
+.btn:active { transform: translateY(5px); box-shadow: var(--bevel-strong); }
+.btn:focus-visible { outline: var(--border-w) solid var(--parent-edit); outline-offset: 3px; }
+.btn--big { font-size: var(--fs-heading); min-height: 64px; margin-top: auto; }
+.btn:disabled { background: var(--stone-disabled); color: var(--text-disabled); box-shadow: var(--bevel-pressed); cursor: default; }
+.btn:disabled:active { transform: none; }
+
+/* The wrong-state continue is quiet: card ground, ink text, no celebration. */
+.btn--check.is-next { background: var(--bg-card); color: var(--ink); text-shadow: none; box-shadow: var(--bevel-light), var(--key-drop-sm); }
+
+.quiet {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-sentence);
+  font-size: var(--fs-label);
+  color: var(--text-muted);
+  text-decoration: underline;
+  background: none; border: none;
+  min-height: var(--tap-min);
+  cursor: pointer;
 }
 
-.pill--correct { background: var(--correct-soft); color: var(--correct); }
-.pill--wrong   { background: var(--wrong-soft);   color: var(--wrong); }
-.pill--streak  { background: var(--accent-soft);  color: var(--accent); }
+/* --- Deck / mode pickers -------------------------------------------------------- */
+.label {
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  color: var(--text-tertiary);
+  margin-top: var(--sp-2);
+}
+.pick {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3);
+  font-family: inherit;
+  text-align: left;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-light), var(--key-drop-sm);
+  min-height: var(--tap-comfy);
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.pick:active { transform: translateY(4px); box-shadow: var(--bevel-light); }
+.pick__name { font-family: var(--font-display); font-size: var(--fs-button); }
+.pick__sub { font-size: var(--fs-hint); color: var(--text-muted); }
+.pick.is-on { border-color: var(--correct-dark); background: var(--correct-soft); }
+.pick.is-on .pick__name { color: var(--correct-text); }
+.pick:disabled { background: var(--bg-sunken); color: var(--text-disabled); box-shadow: none; cursor: default; }
+.pick:disabled .pick__name, .pick:disabled .pick__sub { color: var(--text-disabled); }
 
-.stack { display: flex; flex-direction: column; gap: var(--sp-4); }
-.row   { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+/* Auto-check: iron toggle in the routine app's ON/OFF language. */
+.toggle {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  min-height: var(--tap-min);
+  cursor: pointer;
+  align-self: flex-start;
+  padding-inline: var(--sp-4);
+  background: var(--iron-dark);
+  color: var(--divider);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-pressed);
+}
+.toggle.is-on {
+  background: var(--divider);
+  color: var(--ink);
+  border-color: var(--iron-dark);
+  box-shadow: var(--bevel-small);
+}
+.hint { font-size: var(--fs-micro); color: var(--text-tertiary); margin: 0; }
+
+/* --- The problem slab -------------------------------------------------------------- */
+.slab {
+  position: relative;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-light);
+  display: grid;
+  place-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-6) var(--sp-4);
+  transition: transform var(--dur-press) var(--steps-press);
+}
+.slab__problem {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 22vw, var(--fs-slab));
+  line-height: 1;
+  margin: 0;
+}
+.slab__entry {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  min-height: 1.1em;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--text-muted);
+  border-bottom: var(--border-w) solid var(--divider);
+  min-width: 3ch;
+  text-align: center;
+}
+.slab__reveal {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  margin: 0;
+  color: var(--wrong-text);
+}
+.slab__fast { position: absolute; top: var(--sp-3); right: var(--sp-3); }
+
+/* Correct: the press, the green wash rising in steps, the answer popping. */
+.slab.is-correct { transform: scale(0.985); }
+.slab.is-correct::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: var(--correct);
+  pointer-events: none;
+  opacity: 0.16;
+  animation: wash-in 90ms var(--steps-fade) backwards;
+}
+@keyframes wash-in { from { opacity: 0; } to { opacity: 0.16; } }
+.slab.is-correct .slab__entry {
+  color: var(--correct-text); border-color: var(--correct);
+  animation: pop-in 180ms var(--ease-pop);
+}
+@keyframes pop-in {
+  0% { transform: scale(0.2); }
+  60% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
+
+/* Wrong: slate and still. No motion, no sound — the state simply is. */
+.slab.is-wrong { background: var(--wrong-soft); border-color: var(--wrong); }
+.slab.is-wrong .slab__entry { color: var(--wrong-text); border-color: var(--wrong); text-decoration: line-through; }
+
+/* Stars: pop, rise 30px, fade — done inside the answer beat. */
+.slab__stars { position: absolute; top: 8%; left: 50%; pointer-events: none; }
+.slab__stars i {
+  position: absolute;
+  width: 16px; height: 16px;
+  background-image: url("../assets/icons/star.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  opacity: 0;
+}
+.slab__stars.is-burst i { animation: star-rise var(--dur-star) var(--ease-out) forwards; }
+.slab__stars i:nth-child(1) { left: -34px; }
+.slab__stars i:nth-child(2) { left: -8px; animation-delay: 80ms; }
+.slab__stars i:nth-child(3) { left: 20px; animation-delay: 160ms; }
+@keyframes star-rise {
+  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
+  25%  { opacity: 1; transform: translateY(-8px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.9); }
+}
+
+/* --- Keypad ---------------------------------------------------------------------- */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+  margin-top: auto;
+}
+.key {
+  font-family: var(--font-display);
+  font-size: var(--fs-key);
+  color: var(--ink);
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  border-radius: var(--radius);
+  min-height: var(--tap-key);
+  cursor: pointer;
+  box-shadow: var(--bevel-light), var(--key-drop-sm);
+  transition: transform var(--dur-press) var(--ease-out),
+              box-shadow var(--dur-press) var(--ease-out);
+}
+.key:active { transform: translateY(4px); box-shadow: var(--bevel-pressed); }
+.key--word { font-size: var(--fs-label); }
+.btn--check { width: 100%; }
+
+/* --- Round cleared / session complete ----------------------------------------------- */
+.big-title { font-family: var(--font-display); font-size: var(--fs-title); margin: var(--sp-6) 0 0; }
+.subtitle { color: var(--text-muted); font-size: var(--fs-label); margin: 0; }
+.stats { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
+.stats li {
+  background: var(--bg-card);
+  border: var(--border-w-thin) solid var(--divider);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-label);
+  display: flex; justify-content: space-between; gap: var(--sp-3);
+}
+.stats b { font-family: var(--font-display); font-size: var(--fs-body); font-weight: var(--fw-bold); }
+
+.round-bar {
+  border: var(--border-w) solid var(--border-btn);
+  background: var(--track);
+  padding: 2px;
+  height: 22px;
+}
+.round-bar__fill {
+  height: 100%;
+  background: linear-gradient(180deg, var(--fast-lo), var(--fast) 45%, var(--fast-hi));
+  background-image: repeating-linear-gradient(90deg, transparent 0 16px, rgba(0,0,0,.25) 16px 19px),
+    linear-gradient(180deg, var(--fast-lo), var(--fast) 45%, var(--fast-hi));
+  transition: width var(--dur-med) var(--ease-out);
+}
+.round-label { font-family: var(--font-display); font-size: var(--fs-hint); color: var(--text-tertiary); margin: 0; }
+
+.award {
+  font-family: var(--font-display);
+  font-size: var(--fs-award);
+  color: var(--emerald-dark);
+  text-align: center;
+  margin: 0;
+}
+#screen-complete { text-align: center; }
+#screen-complete .stats { text-align: left; }
+
+/* --- Factors card ---------------------------------------------------------------
+   Rows are the card's pairs sorted ascending. The worst case is 8 rows (144)
+   and it must share a portrait screen with the keypad, so rows stay compact
+   and the number shrinks relative to the ops slab. */
+.slab--factors { padding: var(--sp-4); gap: var(--sp-3); }
+.slab--factors .slab__problem { font-size: clamp(40px, 13vw, 56px); }
+
+.factors {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  width: 100%;
+  max-width: 240px;
+}
+.frow {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  line-height: 1.2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 26px;
+}
+.frow.is-solved { color: var(--correct-text); opacity: 0.72; }
+.frow.is-todo   { color: var(--text-disabled); }
+.frow.is-entry  { min-height: 32px; }
+.fbox {
+  display: inline-block;
+  min-width: 3ch;
+  text-align: center;
+  font-weight: var(--fw-bold);
+  border: var(--border-w-thin) solid var(--divider);
+  background: var(--bg-sunken);
+  padding: 0 var(--sp-1);
+}
+.fbox.is-focus { border-color: var(--border-btn); background: var(--bg-card); }
+/* A wrong pair is slate and still — it stays until she types again. */
+.frow.is-entry.is-wrong .fbox { border-color: var(--wrong); background: var(--wrong-soft); color: var(--wrong-text); }
+
+/* --- Parent area ------------------------------------------------------------------
+   Iron and neutral, per the routine app's doctrine: nothing a parent taps to
+   DO something is green; editable values take slate, the one accent the
+   child's side never uses; cancel is never a filled button. */
+.parents-chip {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  color: var(--on-dark);
+  background: var(--iron);
+  border: var(--border-w-thin) solid var(--iron-dark);
+  padding: var(--sp-1) var(--sp-3);
+  min-height: var(--tap-min);
+  cursor: pointer;
+}
+.parents-chip i {
+  width: 12px; height: 12px;
+  background: var(--iron-dark);
+  display: inline-block;
+}
+
+.screen--parent { background: var(--bg-parent); max-width: none; }
+.screen--parent > * { max-width: 420px; margin-inline: auto; width: 100%; }
+
+.iron-strip {
+  height: 8px;
+  background-image: url("../assets/tx-iron.png");
+  background-size: var(--tx-size-sm);
+  background-repeat: repeat-x;
+  image-rendering: pixelated;
+  border-bottom: var(--border-w-thin) solid var(--iron-dark);
+}
+.bar__title--parent { color: var(--text-parent); }
+.pvoice { font-size: var(--fs-micro); color: var(--text-muted); margin: 0; }
+.plabel {
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  color: var(--text-parent);
+  margin: 0 0 var(--sp-2);
+}
+.plink {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  color: var(--parent-edit);
+  background: none; border: none;
+  min-height: var(--tap-min);
+  cursor: pointer;
+}
+
+.psec {
+  background: var(--bg-card);
+  border: var(--border-w-thin) solid var(--divider);
+  padding: var(--sp-3) var(--sp-4);
+  display: flex; flex-direction: column;
+  gap: var(--sp-2);
+}
+.prow {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  font-size: var(--fs-label);
+  min-height: var(--tap-min);
+}
+.punit { display: inline-flex; align-items: center; gap: var(--sp-1); }
+
+/* Editable values: slate, the parent's accent. Native inputs are fine here —
+   this zone belongs to an adult with an OS keyboard. */
+.pinput {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  color: var(--parent-edit);
+  background: var(--bg-sunken);
+  border: var(--border-w-thin) solid var(--divider);
+  padding: var(--sp-1) var(--sp-2);
+  min-height: var(--tap-min);
+  width: 12ch;
+  text-align: right;
+}
+.pinput--num { width: 7ch; }
+
+/* ON/OFF: the bevel carries the state — raised light is on, pressed dark is off. */
+.pswitch {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  min-width: 72px; min-height: var(--tap-min);
+  cursor: pointer;
+  background: var(--iron-dark);
+  color: var(--divider);
+  border: var(--border-w) solid var(--border-ink);
+  box-shadow: var(--bevel-pressed);
+}
+.pswitch.is-on {
+  background: var(--divider);
+  color: var(--ink);
+  border-color: var(--iron-dark);
+  box-shadow: var(--bevel-small);
+}
+
+.pbtn {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  color: var(--ink);
+  background: var(--iron-light);
+  border: var(--border-w-thin) solid var(--iron-dark);
+  box-shadow: var(--bevel-small);
+  min-height: var(--tap-min);
+  padding-inline: var(--sp-3);
+  cursor: pointer;
+  text-align: left;
+}
+.pbtn:disabled { background: var(--bg-sunken); color: var(--text-muted); box-shadow: none; cursor: default; }
+.pbtn--reset.is-armed { background: var(--wrong-soft); border-color: var(--wrong); color: var(--wrong-text); }
+
+.btn--iron { background: var(--iron); }
+
+/* PIN dots */
+.pin-dots { display: flex; justify-content: center; gap: var(--sp-4); padding: var(--sp-4) 0; }
+.pin-dots i {
+  width: 18px; height: 18px;
+  background: var(--slot-fill);
+  border: var(--border-w-thin) solid var(--slot-edge-dark);
+  display: inline-block;
+}
+.pin-dots i.is-filled { background: var(--ink); }
+.pin-dots.is-shake { animation: pin-shake 240ms var(--ease-out); }
+@keyframes pin-shake {
+  0% { transform: translateX(0); } 25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); } 75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+#pin-pad { margin-top: 0; }
+
+/* --- Fact grid --------------------------------------------------------------------- */
+.gtab {
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  min-height: var(--tap-min);
+  padding-inline: var(--sp-3);
+  cursor: pointer;
+  background: var(--iron-dark); color: var(--divider);
+  border: var(--border-w-thin) solid var(--border-ink);
+  box-shadow: var(--bevel-pressed);
+}
+.gtab.is-on { background: var(--divider); color: var(--ink); box-shadow: var(--bevel-small); }
+
+.grid--ops { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; }
+.grid--factors { display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px; }
+.gcell {
+  aspect-ratio: 1;
+  border: 1px solid var(--divider);
+  font-family: var(--font-display);
+  font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink);
+}
+.gcell.is-label { border: none; color: var(--text-muted); background: none; }
+.gcell.is-unseen { background: var(--bg-sunken); }
+.gcell.is-t0 { background: var(--tier-wood); border-color: var(--tier-wood-dark); color: var(--on-dark); }
+.gcell.is-t1 { background: var(--tier-stone); border-color: var(--tier-stone-dark); color: var(--on-dark); }
+.gcell.is-t2 { background: var(--tier-iron); border-color: var(--tier-iron-dark); }
+.gcell.is-t3 { background: var(--tier-gold); border-color: var(--tier-gold-dark); color: var(--tier-gold-on); }
+.gcell.is-t4 { background: var(--tier-diamond); border-color: var(--tier-diamond-dark); color: var(--tier-diamond-deep); }
+
+.gsummary { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-3); font-size: var(--fs-micro); color: var(--text-parent); }
+.gsummary li { display: inline-flex; align-items: center; gap: var(--sp-1); }
+.gsummary b { font-family: var(--font-display); }
+.gswatch { width: 12px; height: 12px; display: inline-block; border: 1px solid var(--iron-dark); }
+.gswatch.is-unseen { background: var(--bg-sunken); }
+.gswatch.is-t0 { background: var(--tier-wood); }
+.gswatch.is-t1 { background: var(--tier-stone); }
+.gswatch.is-t2 { background: var(--tier-iron); }
+.gswatch.is-t3 { background: var(--tier-gold); }
+.gswatch.is-t4 { background: var(--tier-diamond); }
+
+/* --- Speed run -----------------------------------------------------------------
+   The one mode where the timer is visible and speed is the point. */
+.speedbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+}
+.speedbar__best { font-size: var(--fs-label); color: var(--text-muted); }
+
+/* --- Advancement toast -----------------------------------------------------------
+   The routine app's pattern: bevel card, gold title, sans subtitle. Slides in
+   from the top, dismisses itself, never blocks a tap. Fired only when a fact
+   reaches Gold or Diamond -- rare enough to stay special. */
+.toast {
+  position: fixed;
+  top: var(--sp-4);
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 220px;
+  background: var(--bg-toast);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-light), var(--key-drop-sm);
+  padding: var(--sp-2) var(--sp-4);
+  opacity: 1;
+  transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+}
+.toast[hidden] { display: flex; opacity: 0; transform: translate(-50%, -8px); visibility: hidden; }
+.toast b {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  color: var(--tier-gold-title);
+}
+.toast span { font-size: var(--fs-micro); color: var(--text-muted); }
+
+/* --- The award moment ----------------------------------------------------------
+   Emeralds arc DOWN into the balance so they read as becoming the number.
+   The only animation in the app allowed to take its time (~2s). */
+.chips--center { justify-content: center; }
+.arc-gem {
+  position: fixed;
+  z-index: 9;
+  width: 16px; height: 16px;
+  background: var(--emerald);
+  border: var(--border-w-thin) solid var(--emerald-deep);
+  box-shadow: inset 2px 2px 0 var(--emerald-light), inset -2px -2px 0 var(--emerald-dark);
+  pointer-events: none;
+  transition: transform 550ms cubic-bezier(0.4, 0, 0.8, 1), opacity 550ms linear;
+}
+.chip.is-pulse { animation: chip-pulse 120ms var(--ease-out); }
+@keyframes chip-pulse { 0% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+/* Closing lines hold back until the last emerald lands, then fade up 8px. */
+.fade-wait { opacity: 0; transform: translateY(8px); }
+#complete-note, #complete-stats { transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); }
