@@ -84,6 +84,28 @@ Completing a factors card gets the green wash; stars only when no pair was misse
 completion of an 8-pair card feels bigger than one ops card -- does it deserve a slightly
 bigger beat than the standard correct answer? Build currently holds 900ms vs 700ms.
 
+### 12. Parent settings apply immediately, not on Save
+The 3c artboard shows "Save and lock" with a Cancel. The build applies every edit the moment
+it is made and has a single LOCK button that closes the area -- there is no unsaved state to
+cancel out of, which is simpler and can't lose changes to a dead battery. Confirm the model,
+or the build adds a staged save.
+
+### 13. Native OS inputs in the parent zone
+Editable values (name, round sizes, thresholds, balance, PIN change) are native inputs rather
+than the slate-pencil pattern from the routine app. The zone belongs to an adult with an OS
+keyboard, and native inputs are honest about that. They are styled to the iron/slate doctrine.
+Confirm, or design the pencil flow.
+
+### 14. Two parent-area rules invented by the build
+- **The last enabled deck cannot be turned off** -- an app with nothing to practice is broken.
+  The 3c helper text should carry this.
+- **PARENTS chip placement**: bottom-right of Home, under the practice button (the routine app
+  has it above a tab bar this app doesn't have). Confirm.
+
+### 15. Fact grid detail interaction
+Cells show fact and tier on hover/long-press (a title), nothing on tap. Is a tap-for-detail
+(times, attempts) wanted, or is the heat map enough?
+
 ## Resolved
 
 *(nothing yet — move entries here as Design rules on them)*

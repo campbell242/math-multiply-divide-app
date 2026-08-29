@@ -10,9 +10,10 @@ import {
 } from "./engine.js";
 import * as store from "./store.js";
 import * as audio from "./audio.js";
+import { initParent } from "./parent.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["home", "select", "card", "cleared", "complete"];
+const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid"];
 
 function show(name) {
   // Instant, per the motion rules: a child taps fast and transitions are a tax.
@@ -492,4 +493,5 @@ function finishSession() {
 }
 $("go-home").addEventListener("click", renderHome);
 
+initParent({ show, renderHome });
 renderHome();

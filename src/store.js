@@ -170,3 +170,60 @@ export function addEmeralds(n) {
   get("profile").emeralds += n;
   touch("profile");
 }
+
+/* --- Backup (docs/DATA_MODEL.md) -----------------------------------------------
+
+   One file, exported from the parent area; import validates and REPLACES
+   wholesale -- a restore is "this device lost everything", not a merge.     */
+export function exportBackup() {
+  const s = get("settings");
+  s.lastBackupDay = dayNumber();
+  touch("settings");
+  flushNow();
+  return {
+    format: "times-table-backup",
+    schema: SCHEMA_VERSION,
+    exportedDay: dayNumber(),
+    data: {
+      profile: get("profile"),
+      settings: get("settings"),
+      cards: get("cards"),
+      streak: get("streak"),
+      sessions: get("sessions"),
+    },
+  };
+}
+
+export function importBackup(obj) {
+  if (!obj || obj.format !== "times-table-backup" || typeof obj.data !== "object")
+    return { ok: false, error: "That file is not a Times Table backup." };
+  if (typeof obj.schema !== "number" || obj.schema > SCHEMA_VERSION)
+    return { ok: false, error: "That backup is from a newer version of the app." };
+  const d = obj.data ?? {};
+  for (const name of Object.keys(DEFAULTS)) {
+    const dflt = structuredClone(DEFAULTS[name]);
+    if (Array.isArray(dflt)) memory[name] = Array.isArray(d[name]) ? d[name].slice(-60) : dflt;
+    else if (typeof d[name] === "object" && d[name] !== null) memory[name] = { ...dflt, ...d[name] };
+    else memory[name] = dflt;
+    dirty.add(name);
+  }
+  flushNow();
+  return { ok: true };
+}
+
+// Erases one deck's mastery records. Irreversible; the parent UI makes the
+// caller confirm before this runs.
+export function resetDeck(prefix) {
+  const cards = get("cards");
+  for (const id of Object.keys(cards)) if (id.startsWith(prefix)) delete cards[id];
+  touch("cards");
+  flushNow();
+}
+
+// Marks today as excused so a missed day bridges the streak instead of
+// silently resetting it.
+export function excuseToday(today = dayNumber()) {
+  const s = get("streak");
+  if (!s.excused.includes(today)) s.excused.push(today);
+  touch("streak");
+}

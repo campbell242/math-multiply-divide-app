@@ -172,4 +172,46 @@ test("matchPair is unordered and rejects non-factors", () => {
   assert.equal(matchPair(card, 5, 7), -1);
 });
 
+/* --- backup --- */
+test("backup round-trips wholesale and stamps lastBackupDay", () => {
+  backing.clear();
+  store.initStore();
+  store.recordAttempt("m:7x8", { correct: true, ms: 2000, newTier: 2, due: 103 });
+  store.addEmeralds(50);
+  store.bumpStreak(200);
+  const dump = store.exportBackup();
+  assert.equal(dump.format, "times-table-backup");
+  assert.equal(dump.data.profile.emeralds, 50);
+  assert.ok(dump.data.settings.lastBackupDay !== null);
+
+  backing.clear();
+  store.initStore(); // fresh device
+  assert.equal(store.get("profile").emeralds, 0);
+  const res = store.importBackup(JSON.parse(JSON.stringify(dump)));
+  assert.equal(res.ok, true);
+  assert.equal(store.get("profile").emeralds, 50);
+  assert.equal(store.getCard("m:7x8").t, 2);
+  assert.equal(store.get("streak").count, 1);
+});
+test("import rejects wrong format and newer schema, touching nothing", () => {
+  const before = store.get("profile").emeralds;
+  assert.equal(store.importBackup({ hello: 1 }).ok, false);
+  assert.equal(store.importBackup({ format: "times-table-backup", schema: 999, data: {} }).ok, false);
+  assert.equal(store.get("profile").emeralds, before, "failed import must not alter state");
+});
+test("resetDeck erases only that deck's records", () => {
+  store.recordAttempt("m:2x2", { correct: true, ms: 1000, newTier: 1, due: 5 });
+  store.recordAttempt("d:4/2", { correct: true, ms: 1000, newTier: 3, due: 9 });
+  store.resetDeck("m:");
+  assert.equal(store.getCard("m:2x2").n, 0, "mult record gone");
+  assert.equal(store.getCard("d:4/2").t, 3, "division record untouched");
+});
+test("excused today bridges tomorrow's gap", () => {
+  backing.clear();
+  store.initStore();
+  store.bumpStreak(300);
+  store.excuseToday(301);        // parent excuses the skipped day
+  assert.equal(store.bumpStreak(302), 2, "excused day does not break the streak");
+});
+
 console.log(`\n${n} tests passed`);

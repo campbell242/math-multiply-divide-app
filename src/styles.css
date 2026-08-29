@@ -375,3 +375,178 @@ body {
 .fbox.is-focus { border-color: var(--border-btn); background: var(--bg-card); }
 /* A wrong pair is slate and still — it stays until she types again. */
 .frow.is-entry.is-wrong .fbox { border-color: var(--wrong); background: var(--wrong-soft); color: var(--wrong-text); }
+
+/* --- Parent area ------------------------------------------------------------------
+   Iron and neutral, per the routine app's doctrine: nothing a parent taps to
+   DO something is green; editable values take slate, the one accent the
+   child's side never uses; cancel is never a filled button. */
+.parents-chip {
+  align-self: flex-end;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  color: var(--on-dark);
+  background: var(--iron);
+  border: var(--border-w-thin) solid var(--iron-dark);
+  padding: var(--sp-1) var(--sp-3);
+  min-height: var(--tap-min);
+  cursor: pointer;
+}
+.parents-chip i {
+  width: 12px; height: 12px;
+  background: var(--iron-dark);
+  display: inline-block;
+}
+
+.screen--parent { background: var(--bg-parent); max-width: none; }
+.screen--parent > * { max-width: 420px; margin-inline: auto; width: 100%; }
+
+.iron-strip {
+  height: 8px;
+  background-image: url("../assets/tx-iron.png");
+  background-size: var(--tx-size-sm);
+  background-repeat: repeat-x;
+  image-rendering: pixelated;
+  border-bottom: var(--border-w-thin) solid var(--iron-dark);
+}
+.bar__title--parent { color: var(--text-parent); }
+.pvoice { font-size: var(--fs-micro); color: var(--text-muted); margin: 0; }
+.plabel {
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  color: var(--text-parent);
+  margin: 0 0 var(--sp-2);
+}
+.plink {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  color: var(--parent-edit);
+  background: none; border: none;
+  min-height: var(--tap-min);
+  cursor: pointer;
+}
+
+.psec {
+  background: var(--bg-card);
+  border: var(--border-w-thin) solid var(--divider);
+  padding: var(--sp-3) var(--sp-4);
+  display: flex; flex-direction: column;
+  gap: var(--sp-2);
+}
+.prow {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--sp-3);
+  font-size: var(--fs-label);
+  min-height: var(--tap-min);
+}
+.punit { display: inline-flex; align-items: center; gap: var(--sp-1); }
+
+/* Editable values: slate, the parent's accent. Native inputs are fine here —
+   this zone belongs to an adult with an OS keyboard. */
+.pinput {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  color: var(--parent-edit);
+  background: var(--bg-sunken);
+  border: var(--border-w-thin) solid var(--divider);
+  padding: var(--sp-1) var(--sp-2);
+  min-height: var(--tap-min);
+  width: 12ch;
+  text-align: right;
+}
+.pinput--num { width: 7ch; }
+
+/* ON/OFF: the bevel carries the state — raised light is on, pressed dark is off. */
+.pswitch {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  min-width: 72px; min-height: var(--tap-min);
+  cursor: pointer;
+  background: var(--iron-dark);
+  color: var(--divider);
+  border: var(--border-w) solid var(--border-ink);
+  box-shadow: var(--bevel-pressed);
+}
+.pswitch.is-on {
+  background: var(--divider);
+  color: var(--ink);
+  border-color: var(--iron-dark);
+  box-shadow: var(--bevel-small);
+}
+
+.pbtn {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  color: var(--ink);
+  background: var(--iron-light);
+  border: var(--border-w-thin) solid var(--iron-dark);
+  box-shadow: var(--bevel-small);
+  min-height: var(--tap-min);
+  padding-inline: var(--sp-3);
+  cursor: pointer;
+  text-align: left;
+}
+.pbtn:disabled { background: var(--bg-sunken); color: var(--text-muted); box-shadow: none; cursor: default; }
+.pbtn--reset.is-armed { background: var(--wrong-soft); border-color: var(--wrong); color: var(--wrong-text); }
+
+.btn--iron { background: var(--iron); }
+
+/* PIN dots */
+.pin-dots { display: flex; justify-content: center; gap: var(--sp-4); padding: var(--sp-4) 0; }
+.pin-dots i {
+  width: 18px; height: 18px;
+  background: var(--slot-fill);
+  border: var(--border-w-thin) solid var(--slot-edge-dark);
+  display: inline-block;
+}
+.pin-dots i.is-filled { background: var(--ink); }
+.pin-dots.is-shake { animation: pin-shake 240ms var(--ease-out); }
+@keyframes pin-shake {
+  0% { transform: translateX(0); } 25% { transform: translateX(-8px); }
+  50% { transform: translateX(8px); } 75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+#pin-pad { margin-top: 0; }
+
+/* --- Fact grid --------------------------------------------------------------------- */
+.gtab {
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  min-height: var(--tap-min);
+  padding-inline: var(--sp-3);
+  cursor: pointer;
+  background: var(--iron-dark); color: var(--divider);
+  border: var(--border-w-thin) solid var(--border-ink);
+  box-shadow: var(--bevel-pressed);
+}
+.gtab.is-on { background: var(--divider); color: var(--ink); box-shadow: var(--bevel-small); }
+
+.grid--ops { display: grid; grid-template-columns: repeat(12, 1fr); gap: 2px; }
+.grid--factors { display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px; }
+.gcell {
+  aspect-ratio: 1;
+  border: 1px solid var(--divider);
+  font-family: var(--font-display);
+  font-size: 11px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink);
+}
+.gcell.is-label { border: none; color: var(--text-muted); background: none; }
+.gcell.is-unseen { background: var(--bg-sunken); }
+.gcell.is-t0 { background: var(--tier-wood); border-color: var(--tier-wood-dark); color: var(--on-dark); }
+.gcell.is-t1 { background: var(--tier-stone); border-color: var(--tier-stone-dark); color: var(--on-dark); }
+.gcell.is-t2 { background: var(--tier-iron); border-color: var(--tier-iron-dark); }
+.gcell.is-t3 { background: var(--tier-gold); border-color: var(--tier-gold-dark); color: var(--tier-gold-on); }
+.gcell.is-t4 { background: var(--tier-diamond); border-color: var(--tier-diamond-dark); color: var(--tier-diamond-deep); }
+
+.gsummary { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: var(--sp-3); font-size: var(--fs-micro); color: var(--text-parent); }
+.gsummary li { display: inline-flex; align-items: center; gap: var(--sp-1); }
+.gsummary b { font-family: var(--font-display); }
+.gswatch { width: 12px; height: 12px; display: inline-block; border: 1px solid var(--iron-dark); }
+.gswatch.is-unseen { background: var(--bg-sunken); }
+.gswatch.is-t0 { background: var(--tier-wood); }
+.gswatch.is-t1 { background: var(--tier-stone); }
+.gswatch.is-t2 { background: var(--tier-iron); }
+.gswatch.is-t3 { background: var(--tier-gold); }
+.gswatch.is-t4 { background: var(--tier-diamond); }

@@ -29,6 +29,7 @@
     </div>
     <div class="home-middle" id="home-note"></div>
     <button class="btn btn--big" id="go-practice">PRACTICE ›</button>
+    <button class="parents-chip" id="go-parent"><i></i>PARENTS</button>
   </main>
 
   <main class="screen" id="screen-select" hidden>
@@ -114,6 +115,125 @@
     <p class="subtitle" id="complete-note">Great job!</p>
     <ul class="stats" id="complete-stats"></ul>
     <button class="btn btn--big" id="go-home">Back to home ›</button>
+  </main>
+
+  <main class="screen screen--parent" id="screen-pin" hidden>
+    <div class="iron-strip"></div>
+    <div class="bar">
+      <h1 class="bar__title bar__title--parent">Parents</h1>
+    </div>
+    <p class="pvoice">Enter the parent PIN.</p>
+    <div class="pin-dots" id="pin-dots"><i></i><i></i><i></i><i></i></div>
+    <div class="keypad" id="pin-pad">
+      <button class="key" data-d="1">1</button>
+      <button class="key" data-d="2">2</button>
+      <button class="key" data-d="3">3</button>
+      <button class="key" data-d="4">4</button>
+      <button class="key" data-d="5">5</button>
+      <button class="key" data-d="6">6</button>
+      <button class="key" data-d="7">7</button>
+      <button class="key" data-d="8">8</button>
+      <button class="key" data-d="9">9</button>
+      <span></span>
+      <button class="key" data-d="0">0</button>
+      <button class="key key--word" data-act="back">⌫</button>
+    </div>
+    <button class="quiet" id="pin-back">Back</button>
+  </main>
+
+  <main class="screen screen--parent" id="screen-parent" hidden>
+    <div class="iron-strip"></div>
+    <div class="bar">
+      <h1 class="bar__title bar__title--parent">Settings</h1>
+      <button class="plink" id="p-grid">Fact grid ›</button>
+    </div>
+
+    <section class="psec">
+      <h2 class="plabel">CHILD</h2>
+      <label class="prow">Name <input class="pinput" id="p-name" maxlength="24"></label>
+      <p class="pvoice">The name appears in greetings. It is stored only on this device.</p>
+    </section>
+
+    <section class="psec">
+      <h2 class="plabel">DECKS IN ROTATION</h2>
+      <div class="prow">Multiplication <button class="pswitch" id="p-deck-mult">ON</button></div>
+      <div class="prow">Division <button class="pswitch" id="p-deck-div">ON</button></div>
+      <div class="prow">Factors <button class="pswitch" id="p-deck-factors">ON</button></div>
+      <p class="pvoice">A deck that is off keeps its progress and stops appearing in reviews.
+        The last deck cannot be turned off.</p>
+    </section>
+
+    <section class="psec">
+      <h2 class="plabel">ROUNDS AND FLUENCY</h2>
+      <label class="prow">Round size <input class="pinput pinput--num" id="p-round" type="number" min="10" max="60"></label>
+      <label class="prow">Factors round size <input class="pinput pinput--num" id="p-fround" type="number" min="6" max="20"></label>
+      <label class="prow">Promotes a tier under <span class="punit"><input class="pinput pinput--num" id="p-promote" type="number" step="0.5" min="1" max="30"> s</span></label>
+      <label class="prow">Lightning flourish under <span class="punit"><input class="pinput pinput--num" id="p-lightning" type="number" step="0.5" min="0.5" max="30"> s</span></label>
+      <p class="pvoice">Answering under the promotion time moves the fact up one tier. A correct
+        but slow answer holds the tier and never counts as a miss. The Lightning time controls
+        only the FAST chip and the round count — it does not affect tiering, and it cannot be
+        longer than promotion; a higher value is clamped to it.</p>
+    </section>
+
+    <section class="psec">
+      <h2 class="plabel">SPEED RUN AND SOUND</h2>
+      <div class="prow">Speed run available <button class="pswitch" id="p-speedrun">ON</button></div>
+      <div class="prow">All sounds <button class="pswitch" id="p-sound-all">ON</button></div>
+      <div class="prow">Correct-answer blips <button class="pswitch" id="p-sound-blips">ON</button></div>
+      <p class="pvoice">The blips can be silenced on their own for a car or a classroom; award
+        and round cues stay.</p>
+    </section>
+
+    <section class="psec">
+      <h2 class="plabel">EMERALDS</h2>
+      <label class="prow">Balance <input class="pinput pinput--num" id="p-balance" type="number" min="0"></label>
+      <p class="pvoice">Emeralds are a count of practice done, adjustable if something goes wrong.</p>
+    </section>
+
+    <section class="psec">
+      <h2 class="plabel">THIS WEEK</h2>
+      <button class="pbtn" id="p-excuse">Excuse today · streak continues</button>
+      <p class="pvoice">Sleepover, travel, sick day — the streak skips the day instead of breaking.</p>
+      <button class="pbtn pbtn--reset" id="p-reset-mult">Reset Multiplication</button>
+      <button class="pbtn pbtn--reset" id="p-reset-div">Reset Division</button>
+      <button class="pbtn pbtn--reset" id="p-reset-factors">Reset Factors</button>
+      <p class="pvoice">Resetting a deck erases its tiers and cannot be undone.</p>
+    </section>
+
+    <section class="psec">
+      <h2 class="plabel">DATA</h2>
+      <button class="pbtn" id="p-export">Export backup</button>
+      <p class="pvoice" id="p-backup-line"></p>
+      <button class="pbtn" id="p-import">Restore from file</button>
+      <input type="file" id="p-import-file" accept=".json,application/json" hidden>
+      <p class="pvoice" id="p-import-status"></p>
+      <p class="pvoice">A backup is a single file. Keep it anywhere you keep files. Restoring
+        replaces all current progress on this device.</p>
+    </section>
+
+    <section class="psec">
+      <h2 class="plabel">PARENT PIN</h2>
+      <label class="prow">4-digit PIN <input class="pinput pinput--num" id="p-pin" inputmode="numeric" maxlength="4"></label>
+    </section>
+
+    <button class="btn btn--iron" id="p-lock">LOCK ›</button>
+  </main>
+
+  <main class="screen screen--parent" id="screen-grid" hidden>
+    <div class="iron-strip"></div>
+    <div class="bar">
+      <button class="back" id="grid-back">‹</button>
+      <h1 class="bar__title bar__title--parent">Fact grid</h1>
+    </div>
+    <div class="chips">
+      <button class="gtab" id="g-mult">MULT</button>
+      <button class="gtab" id="g-div">DIV</button>
+      <button class="gtab" id="g-factors">FACTORS</button>
+    </div>
+    <div id="grid-box"></div>
+    <ul class="gsummary" id="grid-summary"></ul>
+    <p class="pvoice">Each square is one fact, coloured by its tier. Hover or long-press a
+      square to see which fact it is.</p>
   </main>
 
   <script type="module" src="src/app.js"></script>

@@ -127,8 +127,8 @@ about finishing, not about erasing the record.
 PIN-gated, in the routine app's iron/neutral language and plain factual voice.
 
 - **Child's name** — a text field, set once. See below.
-- Enable/disable decks; round size; **promotion threshold**; **Lightning threshold**;
-  allow speed-run mode
+- Enable/disable decks (the last enabled deck cannot be turned off); round size;
+  **promotion threshold**; **Lightning threshold**; allow speed-run mode
 - Sound toggles: one global, one separate for alarms, matching the routine app's pattern
 - Excuse a day, to protect a streak
 - Emerald balance adjust
