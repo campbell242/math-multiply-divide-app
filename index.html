@@ -48,6 +48,10 @@
         <span class="pick__name">Full review</span>
         <span class="pick__sub">the whole deck, in rounds</span>
       </button>
+      <button class="pick" id="mode-speed" hidden>
+        <span class="pick__name">Speed run</span>
+        <span class="pick__sub">18 cards · timer on · tiers safe</span>
+      </button>
       <div class="label">WHICH DECK?</div>
       <button class="pick" id="deck-mult">
         <span class="pick__name">Multiplication</span>
@@ -73,6 +77,10 @@
       <button class="back" id="card-back">‹</button>
       <h1 class="bar__title" id="card-deck">Multiplication</h1>
       <span class="bar__meta" id="card-meta"></span>
+    </div>
+    <div class="speedbar" id="speedbar" hidden>
+      <span id="run-timer">0.0 s</span>
+      <span class="speedbar__best" id="run-best">BEST –</span>
     </div>
     <section class="slab" id="slab">
       <p class="slab__problem" id="problem">7 × 8</p>

@@ -95,6 +95,12 @@ Two modes:
 
 1. **Full review** — every card in the chosen deck, in rounds.
 2. **Smart review** — only the cards the algorithm says are due.
+3. **Speed run** (when the parent allows it) — an 18-card dash drawn from the whole deck,
+   with the timer visible and a per-card best time shown. **Tiers and due dates are never
+   touched by a speed run**: a miss against the clock must not cost scheduled progress, or
+   she will avoid the mode. Times still land in the per-card history, emeralds pay by the
+   normal round formula, and the streak counts. Ops decks only — factors timing is per
+   pair, which is not a race.
 
 **The clearing rule, in both modes:** a round does not end until every card in it has been
 answered correctly. Missed cards return to the back of the queue within the same round.

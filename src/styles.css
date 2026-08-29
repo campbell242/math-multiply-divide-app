@@ -550,3 +550,14 @@ body {
 .gswatch.is-t2 { background: var(--tier-iron); }
 .gswatch.is-t3 { background: var(--tier-gold); }
 .gswatch.is-t4 { background: var(--tier-diamond); }
+
+/* --- Speed run -----------------------------------------------------------------
+   The one mode where the timer is visible and speed is the point. */
+.speedbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+}
+.speedbar__best { font-size: var(--fs-label); color: var(--text-muted); }

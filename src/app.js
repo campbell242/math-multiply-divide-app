@@ -81,16 +81,24 @@ function renderSelect() {
   $("smart-sub").textContent = due ? `${due} due` : "all caught up";
   $("mode-smart").disabled = due === 0;
   if (mode === "smart" && due === 0) mode = null;
+  const speedAllowed = store.get("settings").speedRun;
+  $("mode-speed").hidden = !speedAllowed;
+  if (mode === "speed" && !speedAllowed) mode = null;
+  // Factors timing is per pair, which is not a race; speed run is ops only.
+  if (mode === "speed" && DECKS[deckKey].kind === "factors") deckKey = "mult";
   $("mode-smart").classList.toggle("is-on", mode === "smart");
   $("mode-full").classList.toggle("is-on", mode === "full");
+  $("mode-speed").classList.toggle("is-on", mode === "speed");
 
   for (const key of Object.keys(DECKS)) {
     const btn = $(`deck-${key}`);
-    const on = enabled.includes(key);
+    const notInSpeed = mode === "speed" && DECKS[key].kind === "factors";
+    const on = enabled.includes(key) && !notInSpeed;
     btn.disabled = !on;
     btn.classList.toggle("is-on", on && key === deckKey);
-    btn.querySelector(".pick__sub").textContent = on
-      ? `${dueCount(key)} of ${DECKS[key].cards.length} due`
+    btn.querySelector(".pick__sub").textContent =
+      notInSpeed ? "not in speed run"
+      : on ? `${dueCount(key)} of ${DECKS[key].cards.length} due`
       : "turned off";
   }
 
@@ -105,6 +113,7 @@ $("go-practice").addEventListener("click", renderSelect);
 $("select-back").addEventListener("click", renderHome);
 $("mode-smart").addEventListener("click", () => { mode = "smart"; renderSelect(); });
 $("mode-full").addEventListener("click", () => { mode = "full"; renderSelect(); });
+$("mode-speed").addEventListener("click", () => { mode = "speed"; renderSelect(); });
 for (const key of Object.keys(DECKS)) {
   $(`deck-${key}`).addEventListener("click", () => {
     deckKey = key;
@@ -119,7 +128,14 @@ $("auto-toggle").addEventListener("click", () => {
 });
 
 /* --- Session state ------------------------------------------------------------------ */
+const SPEED_RUN_CARDS = 18;
 let session = null;
+let runTimer = null;
+
+function stopRunTimer() {
+  clearInterval(runTimer);
+  runTimer = null;
+}
 
 function startSession() {
   const today = store.dayNumber();
@@ -129,7 +145,9 @@ function startSession() {
     ? deck.cards.filter((c) => store.getCard(c.id).due <= today)
     : deck.cards;
   const roundSize = deck.kind === "factors" ? settings.factorsRound : settings.roundSize;
-  const rounds = splitIntoRounds(shuffle(pool), roundSize);
+  const rounds = mode === "speed"
+    ? [shuffle(pool).slice(0, SPEED_RUN_CARDS)]
+    : splitIntoRounds(shuffle(pool), roundSize);
   session = {
     mode, today, settings, deckKey,
     kind: deck.kind,
@@ -145,7 +163,7 @@ function startSession() {
   nextCardScreen();
 }
 $("start-session").addEventListener("click", startSession);
-$("card-back").addEventListener("click", () => { session = null; renderHome(); });
+$("card-back").addEventListener("click", () => { session = null; stopRunTimer(); renderHome(); });
 
 /* --- The card ------------------------------------------------------------------------- */
 let entry = "";
@@ -164,9 +182,10 @@ function expectedDigits(card) {
 
 function renderMeta() {
   const r = session.round;
-  $("card-meta").textContent = session.mode === "smart"
-    ? `SMART ${Math.min(r.cleared + 1, r.total)} / ${r.total}`
-    : `ROUND ${session.roundIndex + 1} OF ${session.rounds.length}`;
+  $("card-meta").textContent =
+    session.mode === "speed" ? `SPEED RUN ${Math.min(r.cleared + 1, r.total)} / ${r.total}` :
+    session.mode === "smart" ? `SMART ${Math.min(r.cleared + 1, r.total)} / ${r.total}` :
+    `ROUND ${session.roundIndex + 1} OF ${session.rounds.length}`;
 }
 
 function nextCardScreen() {
@@ -207,6 +226,21 @@ function nextCardScreen() {
   }
 
   renderMeta();
+
+  stopRunTimer();
+  $("speedbar").hidden = session.mode !== "speed";
+  if (session.mode === "speed") {
+    const rec = store.getCard(card.id);
+    $("run-best").textContent = rec.ms.length
+      ? `BEST ${(Math.min(...rec.ms) / 1000).toFixed(1)}`
+      : "BEST –";
+    $("run-timer").textContent = "0.0 s";
+    runTimer = setInterval(() => {
+      if (phase === "answer")
+        $("run-timer").textContent = `${((performance.now() - shownAt) / 1000).toFixed(1)} s`;
+    }, 100);
+  }
+
   show("card");
   shownAt = performance.now();
 }
@@ -229,12 +263,20 @@ function submit() {
   recordFirstAttempt(session.round, card.id, correct, ms);
   if (first) {
     const rec = store.getCard(card.id);
-    const newTier = tierAfterAnswer(rec.t, correct, ms, s.promoteMs);
-    if (newTier > rec.t) session.promoted++;
-    store.recordAttempt(card.id, {
-      correct, ms, newTier, due: dueAfter(newTier, session.today),
-    });
+    if (session.mode === "speed") {
+      // Tier and due stay put: a wrong answer against the clock must never
+      // cost her scheduled progress, or she will avoid the mode.
+      store.recordAttempt(card.id, { correct, ms, newTier: rec.t, due: rec.due });
+    } else {
+      const newTier = tierAfterAnswer(rec.t, correct, ms, s.promoteMs);
+      if (newTier > rec.t) session.promoted++;
+      store.recordAttempt(card.id, {
+        correct, ms, newTier, due: dueAfter(newTier, session.today),
+      });
+    }
   }
+  if (session.mode === "speed")
+    $("run-timer").textContent = `${(ms / 1000).toFixed(1)} s`;
 
   if (correct) {
     const fast = ms <= s.lightningMs;
@@ -428,6 +470,7 @@ document.addEventListener("keydown", (e) => {
 /* --- Round cleared --------------------------------------------------------------------- */
 function finishRound() {
   phase = "between"; // a stray tap must not re-bank the round
+  stopRunTimer();
   const s = session.settings;
   const stats = roundStats(session.round, s.lightningMs);
   session.banked += stats.emeralds;

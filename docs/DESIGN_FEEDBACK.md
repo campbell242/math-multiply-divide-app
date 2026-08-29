@@ -106,6 +106,20 @@ Confirm, or design the pencil flow.
 Cells show fact and tier on hover/long-press (a title), nothing on tap. Is a tap-for-detail
 (times, attempts) wanted, or is the heat map enough?
 
+### 16. Speed run: three decisions made in the build
+The 2h artboard shows the card (timer + BEST); the mode around it was undefined. The build:
+
+- **An 18-card dash** drawn from the whole deck (the artboard's "12 / 18"), one round, chosen
+  as a third option under HOW MUCH, visible only when the parent allows speed run.
+- **Tiers and due dates untouched.** A miss against the clock never costs scheduled progress;
+  times still land in the history and feed the parent grid. This is the most consequential
+  call in the mode -- confirm it.
+- **Ops decks only.** Factors timing is per pair, which is not a race; the factors pick shows
+  "not in speed run" while speed is selected.
+
+Also: BEST is the minimum stored time for the card, and the frozen final time stays on screen
+through the answer beat. The dash size (18) is a constant -- should it be parent-adjustable?
+
 ## Resolved
 
 *(nothing yet — move entries here as Design rules on them)*
