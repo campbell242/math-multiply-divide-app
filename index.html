@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6b4de6">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Times Table</title>
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="src/styles.css">
+</head>
+<body>
+  <main class="app">
+    <div class="app__bar">
+      <h1 class="app__title">Times Table</h1>
+      <button class="btn btn--ghost" id="theme-toggle" aria-label="Switch between light and dark">◐</button>
+    </div>
+
+    <section class="card problem">
+      <p class="problem__expression" id="expression">7 × 8</p>
+      <p class="problem__hint">Scaffold only — the real app lands here.</p>
+    </section>
+
+    <div class="row">
+      <span class="pill pill--streak">🔥 Streak 0</span>
+      <span class="pill pill--correct">✓ Correct</span>
+      <span class="pill pill--wrong">✗ Try again</span>
+    </div>
+
+    <button class="btn" id="roll">New problem</button>
+  </main>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

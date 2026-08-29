@@ -1,0 +1,11 @@
+{
+  "name": "Times Table",
+  "short_name": "Times Table",
+  "description": "Multiplication and division practice.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#fbfaff",
+  "theme_color": "#6b4de6",
+  "icons": []
+}

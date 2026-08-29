@@ -1,0 +1,143 @@
+/* App styles. Every value here comes from tokens.css — see that file first. */
+@import url("../tokens.css");
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-weight: var(--fw-normal);
+  font-size: var(--fs-md);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+  /* Kids will tap fast and repeatedly; kill the double-tap zoom and the
+     grey flash so it feels like an app rather than a web page. */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.app {
+  max-width: 34rem;
+  margin: 0 auto;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: var(--sp-4);
+  gap: var(--sp-5);
+}
+
+.app__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+}
+
+.app__title {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-heavy);
+  margin: 0;
+  letter-spacing: -0.01em;
+}
+
+/* --- Card ---------------------------------------------------------------- */
+.card {
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow-md);
+  padding: var(--sp-5);
+}
+
+.problem {
+  display: grid;
+  place-items: center;
+  gap: var(--sp-2);
+  text-align: center;
+  padding-block: var(--sp-6);
+}
+
+.problem__expression {
+  font-family: var(--font-numeral);
+  font-size: var(--fs-problem);
+  font-weight: var(--fw-heavy);
+  line-height: var(--lh-tight);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.problem__hint {
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+  margin: 0;
+}
+
+/* --- Button -------------------------------------------------------------- */
+.btn {
+  font-family: inherit;
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: var(--text-inverse);
+  background: var(--accent);
+  border: 0;
+  border-radius: var(--r-md);
+  min-height: var(--tap-min);
+  padding-inline: var(--sp-5);
+  cursor: pointer;
+  box-shadow: var(--shadow-key);
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out),
+              background var(--dur-fast) var(--ease-out);
+}
+
+.btn:hover { background: var(--accent-hover); }
+
+/* Travel the full 5px so the key visibly bottoms out when pressed. */
+.btn:active {
+  transform: translateY(5px);
+  box-shadow: 0 0 0 var(--accent-hover);
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.btn--ghost {
+  background: transparent;
+  color: var(--text-muted);
+  box-shadow: none;
+  border: 1px solid var(--border);
+  min-height: var(--tap-min);
+  min-width: var(--tap-min);
+  padding-inline: var(--sp-3);
+  font-size: var(--fs-lg);
+}
+
+.btn--ghost:hover { background: var(--bg-sunken); color: var(--text); }
+.btn--ghost:active { transform: none; }
+
+/* --- Status -------------------------------------------------------------- */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  border-radius: var(--r-full);
+  padding: var(--sp-2) var(--sp-4);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+}
+
+.pill--correct { background: var(--correct-soft); color: var(--correct); }
+.pill--wrong   { background: var(--wrong-soft);   color: var(--wrong); }
+.pill--streak  { background: var(--accent-soft);  color: var(--accent); }
+
+.stack { display: flex; flex-direction: column; gap: var(--sp-4); }
+.row   { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }

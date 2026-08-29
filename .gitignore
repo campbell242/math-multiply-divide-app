@@ -1,0 +1,12 @@
+node_modules/
+dist/
+.DS_Store
+Thumbs.db
+*.log
+
+# OneDrive / Windows cruft
+desktop.ini
+~$*
+
+# Design canvas working files that are not the committed source
+design/*.local.dc.html

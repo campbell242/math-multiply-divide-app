@@ -1,0 +1,166 @@
+/* ===========================================================================
+   tokens.css — the single source of truth for the app's visual language.
+   
+   Both surfaces read this file:
+     - the app          (src/styles.css imports it)
+     - design artboards (design/*.dc.html link to it)
+   
+   Change a value here and both move together. Do not hardcode a color,
+   size, or radius anywhere else in the project.
+   =========================================================================== */
+
+:root {
+  /* --- Brand ------------------------------------------------------------ */
+  --c-grape:        #6b4de6;
+  --c-grape-dark:   #5539c4;
+  --c-mint:         #16a97f;
+  --c-tangerine:    #e8703a;
+  --c-lemon:        #f2b230;
+  --c-berry:        #d94a6a;
+
+  /* --- Semantic (light) ------------------------------------------------- */
+  --bg:             #fbfaff;
+  --bg-raised:      #ffffff;
+  --bg-sunken:      #f1eefb;
+  --border:         #dcd6f0;
+  --border-strong:  #b9aee0;
+
+  --text:           #1e1a33;
+  --text-muted:     #5c5578;
+  --text-inverse:   #ffffff;
+
+  --accent:         var(--c-grape);
+  --accent-hover:   var(--c-grape-dark);
+  --accent-soft:    #ece6ff;
+
+  --correct:        var(--c-mint);
+  --correct-soft:   #dcf5ec;
+  --wrong:          var(--c-berry);
+  --wrong-soft:     #fbe3e8;
+  --streak:         var(--c-lemon);
+
+  /* --- Type ------------------------------------------------------------- */
+  /* Rounded, friendly, high legibility for an early reader. */
+  --font-ui:        "Baloo 2", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-numeral:   "Baloo 2", "Nunito", system-ui, sans-serif;
+
+  --fs-problem:     clamp(3.5rem, 18vw, 6rem);   /* 7 x 8 = ?  */
+  --fs-answer:      clamp(2.5rem, 12vw, 4rem);   /* keypad + entry */
+  --fs-xl:          1.75rem;
+  --fs-lg:          1.25rem;
+  --fs-md:          1rem;
+  --fs-sm:          0.875rem;
+
+  --fw-normal:      500;
+  --fw-bold:        700;
+  --fw-heavy:       800;
+
+  --lh-tight:       1.1;
+  --lh-normal:      1.5;
+
+  /* --- Space (4px base) ------------------------------------------------- */
+  --sp-1:  0.25rem;
+  --sp-2:  0.5rem;
+  --sp-3:  0.75rem;
+  --sp-4:  1rem;
+  --sp-5:  1.5rem;
+  --sp-6:  2rem;
+  --sp-7:  3rem;
+  --sp-8:  4rem;
+
+  /* --- Shape ------------------------------------------------------------ */
+  --r-sm:   8px;
+  --r-md:   14px;
+  --r-lg:   22px;
+  --r-xl:   32px;
+  --r-full: 999px;
+
+  /* --- Elevation -------------------------------------------------------- */
+  --shadow-sm: 0 1px 2px rgba(30, 26, 51, 0.08);
+  --shadow-md: 0 4px 12px rgba(30, 26, 51, 0.10);
+  --shadow-lg: 0 12px 32px rgba(30, 26, 51, 0.14);
+  /* Chunky "pressable" bottom edge on buttons — reads as a physical key. */
+  --shadow-key: 0 5px 0 var(--accent-hover);
+
+  /* --- Touch ------------------------------------------------------------ */
+  /* A 7-year-old's aim is imprecise. Nothing tappable goes below --tap-min. */
+  --tap-min:    56px;
+  --tap-comfy:  72px;
+
+  /* --- Motion ----------------------------------------------------------- */
+  --dur-fast:   120ms;
+  --dur-med:    240ms;
+  --dur-slow:   420ms;
+  --ease-out:   cubic-bezier(0.2, 0.8, 0.3, 1);
+  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* --- Semantic (dark) ----------------------------------------------------- */
+/* Two selectors so an explicit toggle wins in both directions and the
+   system default still works with no attribute set. */
+:root:not([data-theme="light"]) {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --bg:            #14121f;
+    --bg-raised:     #1f1c30;
+    --bg-sunken:     #0e0c17;
+    --border:        #322c4a;
+    --border-strong: #4a4170;
+
+    --text:          #f2f0fa;
+    --text-muted:    #a49ec2;
+
+    --accent:        #8b72ff;
+    --accent-hover:  #6f57e0;
+    --accent-soft:   #2a2344;
+
+    --correct:       #2fc79a;
+    --correct-soft:  #16302a;
+    --wrong:         #f2708d;
+    --wrong-soft:    #331d25;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --bg:            #14121f;
+  --bg-raised:     #1f1c30;
+  --bg-sunken:     #0e0c17;
+  --border:        #322c4a;
+  --border-strong: #4a4170;
+
+  --text:          #f2f0fa;
+  --text-muted:    #a49ec2;
+
+  --accent:        #8b72ff;
+  --accent-hover:  #6f57e0;
+  --accent-soft:   #2a2344;
+
+  --correct:       #2fc79a;
+  --correct-soft:  #16302a;
+  --wrong:         #f2708d;
+  --wrong-soft:    #331d25;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* Respect a child who gets motion-sick, and anyone testing on a low-end tablet. */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur-med:  0ms;
+    --dur-slow: 0ms;
+  }
+}
