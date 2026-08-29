@@ -129,6 +129,9 @@ PIN-gated, in the routine app's iron/neutral language and plain factual voice.
 - Reset a deck's mastery data
 - **A 12x12 fact grid** coloured by mastery tier — the fastest way to see which facts are
   weak, and the single most useful screen in the parent area
+- **Export and import a backup** — one JSON file. Progress lives in browser storage on one
+  device, so a cleared cache or a new phone would otherwise erase months of it. See
+  [DATA_MODEL.md](DATA_MODEL.md).
 
 ### The name is runtime config, never source
 
@@ -155,7 +158,8 @@ Design artboards may show a real name as sample data — the brief already tells
 plausible sample data, and a mockup reading "friend" would teach the wrong thing about the
 screen's tone.
 
-## Open
+## Storage
 
-`tokens.css` currently holds placeholder values from the initial scaffold. It is replaced
-wholesale once Design returns the artboards and the real Minecraft-derived tokens are known.
+See [DATA_MODEL.md](DATA_MODEL.md) for how all of this persists: card ids, tier transitions in
+code, the day-number scheme that keeps streaks and scheduling honest across midnight and DST,
+and the failure modes worth handling on a real phone.

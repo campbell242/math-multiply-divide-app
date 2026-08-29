@@ -43,3 +43,5 @@ the repo, and nothing syncs on its own.
 
 - [design/DESIGN_BRIEF.md](design/DESIGN_BRIEF.md) — the prompt for Claude Design
 - [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md) — decks, mastery model, session rules
+
+- [docs/DATA_MODEL.md](docs/DATA_MODEL.md) — storage, card ids, backup, failure modes
