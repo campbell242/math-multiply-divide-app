@@ -59,3 +59,10 @@ export function cuePromotion(enabled) {
   note(0, 659.25, 0.2, 0.14);   // E5
   note(0.18, 987.77, 0.2, 0.14); // B5
 }
+
+// Avatar / theme change: the quietest cue in the app — she'll tap these
+// dozens of times in a row.
+export function cuePick(enabled) {
+  if (!enabled) return;
+  note(0, 880.0, 0.1, 0.08); // A5
+}

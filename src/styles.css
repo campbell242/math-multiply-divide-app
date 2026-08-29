@@ -686,3 +686,73 @@ body {
 .gdetail__row b { font-family: var(--font-display); font-size: var(--fs-label); color: var(--ink); display: block; }
 .gcell:not(.is-label) { cursor: pointer; }
 .gcell.is-picked { outline: var(--border-w-thin) solid var(--parent-edit); outline-offset: -1px; }
+
+/* --- ME: avatar + theme picker (routine app board 1n) ----------------------- */
+.avatar-btn { background: none; border: none; padding: 0; cursor: pointer; min-width: var(--tap-comfy); min-height: var(--tap-comfy); }
+
+/* The theme's decorative surfaces: the trim strip and section labels. */
+.trim {
+  background-color: var(--theme-strip-color);
+  background-image: var(--theme-strip-img);
+}
+.label--theme, .label { color: var(--theme-deep); }
+
+.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-3); }
+.slot {
+  aspect-ratio: 1;
+  background: var(--slot-fill);
+  border: var(--border-w) solid;
+  border-color: var(--slot-edge-dark) var(--slot-edge-light) var(--slot-edge-light) var(--slot-edge-dark);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  min-height: var(--tap-comfy);
+}
+.slot img { width: 72%; image-rendering: pixelated; }
+/* Selected slot: 4px gold border + ink outline, the routine app's own rule. */
+.slot.is-picked, .trow.is-picked {
+  border: 4px solid var(--tier-gold);
+  outline: var(--border-w) solid var(--border-btn);
+}
+.me-note { font-size: var(--fs-label); color: var(--theme-deep); margin: 0; min-height: 1.4em; }
+
+.trow {
+  display: flex; align-items: center; gap: var(--sp-3);
+  width: 100%;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-ink);
+  padding: var(--sp-2) var(--sp-3);
+  min-height: var(--tap-comfy);
+  cursor: pointer;
+  font-family: inherit;
+}
+.trow__thumb {
+  width: 40px; height: 26px;
+  border: var(--border-w-thin) solid var(--border-btn);
+  background-size: var(--tx-size-sm);
+  image-rendering: pixelated;
+  flex: none;
+}
+.trow__thumb--overworld { background-image: url("../assets/tx-grass.png"); }
+.trow__thumb--nether    { background-image: url("../assets/tx-nether.png"); }
+.trow__thumb--end       { background: var(--th-end-2); }
+.trow__thumb--ocean     { background: var(--th-ocean-2); }
+.trow__thumb--cherry    { background: var(--th-cherry-1); }
+.trow__name { font-family: var(--font-display); font-size: var(--fs-body); }
+.trow__sw { margin-left: auto; display: flex; gap: 4px; }
+.trow__sw i { width: 13px; height: 13px; display: inline-block; }
+.sw--overworld-1 { background: var(--correct); }
+.sw--overworld-2 { background: var(--th-dirt); }
+.sw--overworld-3 { background: var(--fast); }
+.sw--nether-1 { background: var(--th-nether-1); }
+.sw--nether-2 { background: var(--th-nether-2); }
+.sw--nether-3 { background: var(--th-nether-3); }
+.sw--end-1 { background: var(--th-end-1); }
+.sw--end-2 { background: var(--th-end-2); }
+.sw--end-3 { background: var(--th-end-3); }
+.sw--ocean-1 { background: var(--th-ocean-1); }
+.sw--ocean-2 { background: var(--th-ocean-2); }
+.sw--ocean-3 { background: var(--th-ocean-3); }
+.sw--cherry-1 { background: var(--th-cherry-1); }
+.sw--cherry-2 { background: var(--th-cherry-2); }
+.sw--cherry-3 { background: var(--th-cherry-3); }

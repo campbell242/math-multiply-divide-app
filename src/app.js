@@ -13,7 +13,7 @@ import * as audio from "./audio.js";
 import { initParent } from "./parent.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid"];
+const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid", "me"];
 
 function show(name) {
   // Instant, per the motion rules: a child taps fast and transitions are a tax.
@@ -54,6 +54,7 @@ function maybeCelebratePromotion(card, oldTier, newTier, sound) {
 
 /* --- Boot ------------------------------------------------------------------- */
 const { storageOk } = store.initStore();
+document.documentElement.dataset.theme = store.get("profile").theme || "overworld";
 document.addEventListener("pointerdown", audio.unlock, { once: true });
 
 /* --- Home --------------------------------------------------------------------- */
@@ -642,6 +643,63 @@ function playAward(banked, oldBalance) {
   }
 }
 $("go-home").addEventListener("click", renderHome);
+
+/* --- ME: avatar + theme (routine app board 1n) ----------------------------------
+
+   Her screen, no PIN. The avatar on Home is the way in. A variant repaints
+   the trim strip and label accents only — the three semantic greens are
+   meaning, not decoration, and never move.                                  */
+const AVATARS = [
+  ["av-stormy", "Stormy"], ["av-axolotl", "Axolotl"], ["av-bear", "Bear"],
+  ["av-shadow", "Shadow"], ["av-cat", "Cat"], ["av-fox", "Fox"],
+  ["av-panda", "Panda"], ["av-bee", "Bee"], ["av-steve", "Steve"],
+  ["av-alex", "Alex"], ["av-creeper", "Creeper"],
+];
+const THEMES = [
+  ["overworld", "Overworld"], ["nether", "Nether"], ["end", "End"],
+  ["ocean", "Ocean"], ["cherry", "Cherry Grove"],
+];
+
+function renderMe(note = "") {
+  const p = store.get("profile");
+  $("me-clock").textContent = fmtClock();
+  $("avatar-grid").innerHTML = AVATARS.map(([key, label]) =>
+    `<button class="slot${key === p.avatar ? " is-picked" : ""}" data-av="${key}" aria-label="${label}">
+       <img src="assets/${key}.png" alt=""></button>`).join("");
+  $("theme-list").innerHTML = THEMES.map(([key, label]) =>
+    `<button class="trow${key === (p.theme || "overworld") ? " is-picked" : ""}" data-th="${key}">
+       <span class="trow__thumb trow__thumb--${key}"></span>
+       <span class="trow__name">${label}</span>
+       <span class="trow__sw"><i class="sw--${key}-1"></i><i class="sw--${key}-2"></i><i class="sw--${key}-3"></i></span>
+     </button>`).join("");
+  $("me-note").innerHTML = note || "&nbsp;";
+  show("me");
+}
+
+$("go-me").addEventListener("click", () => renderMe());
+$("me-back").addEventListener("click", renderHome);
+
+$("avatar-grid").addEventListener("click", (e) => {
+  const slot = e.target.closest(".slot");
+  if (!slot) return;
+  const p = store.get("profile");
+  p.avatar = slot.dataset.av;
+  store.touch("profile");
+  audio.cuePick(store.get("settings").sound.all);
+  const label = AVATARS.find(([k]) => k === p.avatar)[1];
+  renderMe(`${label} — good choice!`);
+});
+
+$("theme-list").addEventListener("click", (e) => {
+  const row = e.target.closest(".trow");
+  if (!row) return;
+  const p = store.get("profile");
+  p.theme = row.dataset.th;
+  store.touch("profile");
+  document.documentElement.dataset.theme = p.theme;
+  audio.cuePick(store.get("settings").sound.all);
+  renderMe();
+});
 
 initParent({ show, renderHome });
 renderHome();

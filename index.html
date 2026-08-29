@@ -20,7 +20,9 @@
 
   <main class="screen" id="screen-home" hidden>
     <div class="home-top">
-      <img class="avatar" id="home-avatar" src="assets/av-stormy.png" alt="">
+      <button class="avatar-btn" id="go-me" aria-label="Change my look">
+        <img class="avatar" id="home-avatar" src="assets/av-stormy.png" alt="">
+      </button>
       <div class="clock" id="clock">7:42</div>
     </div>
     <div class="chips">
@@ -124,6 +126,19 @@
     <p class="subtitle" id="complete-note">Great job!</p>
     <ul class="stats" id="complete-stats"></ul>
     <button class="btn btn--big" id="go-home">Back to home ›</button>
+  </main>
+
+  <main class="screen" id="screen-me" hidden>
+    <div class="bar">
+      <button class="back" id="me-back">‹</button>
+      <h1 class="bar__title">My look</h1>
+      <span class="bar__meta" id="me-clock"></span>
+    </div>
+    <div class="label label--theme">PICK YOUR AVATAR</div>
+    <div class="slot-grid" id="avatar-grid"></div>
+    <p class="me-note" id="me-note">&nbsp;</p>
+    <div class="label label--theme">PICK YOUR WORLD</div>
+    <div class="stack" id="theme-list"></div>
   </main>
 
   <main class="screen screen--parent" id="screen-pin" hidden>

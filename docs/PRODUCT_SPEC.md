@@ -148,6 +148,18 @@ PIN-gated, in the routine app's iron/neutral language and plain factual voice.
   device, so a cleared cache or a new phone would otherwise erase months of it. See
   [DATA_MODEL.md](DATA_MODEL.md).
 
+### My look: avatar and theme
+
+Her screen, no PIN, reached by tapping her avatar on Home. Two choices, straight from the
+routine app's customization board (1n): an avatar from a fixed set of eleven pixel faces,
+and a world theme -- Overworld (default), Nether, End, Ocean, Cherry Grove.
+
+A theme repaints decorative surfaces only: the trim strip and section-label accents. It
+never changes layout, text/background contrast, or the three semantic greens -- correct,
+FAST, and emerald carry meaning, not decoration, and never move. Selected slots take the
+routine app's own treatment: 4px gold border with an ink outline. Both choices persist in
+the profile and travel with backups.
+
 ### The name is runtime config, never source
 
 The child's name is stored on the device and read at render time. It is never hardcoded in a

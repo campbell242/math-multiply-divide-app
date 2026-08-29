@@ -6,7 +6,15 @@ Process the whole list at once — do not send these piecemeal.
 
 ## Open
 
-*(none — round one processed 2026-08-29; new items accumulate here for round two)*
+### 19. MY LOOK screen, built from the routine app's 1n — needs a math-app artboard
+Owner request: the routine app's avatar + theme customization, ported. **Build:** a ME screen
+reached by tapping the avatar on Home; eleven avatar slots and the five world themes with the
+1n swatches; selected slots take 1n's 4px-gold-plus-outline treatment; the A5 pick blip.
+A theme repaints only the trim strip and section-label accents — the three semantic greens
+never move. Three things for Design: (a) a math-app 2o artboard for this screen, (b) the
+entry point — the tappable avatar is provisional until the HOME/PRACTICE/ME tab bar from the
+v4 canvas is ruled on, and (c) which decorative surfaces beyond strip and labels each theme
+may claim.
 
 ## New in the v4 canvas, not yet built
 

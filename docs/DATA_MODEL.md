@@ -26,7 +26,7 @@ Everything lives under a `mt.` prefix so it never collides with anything else on
 | Key | Holds |
 |---|---|
 | `mt.schema` | Schema version, an integer. Read first, before anything else. |
-| `mt.profile` | Child's name, avatar, emerald balance. |
+| `mt.profile` | Child's name, avatar, theme, emerald balance. |
 | `mt.settings` | Everything in the parent area. |
 | `mt.cards` | The mastery record for all 295 cards. |
 | `mt.streak` | Streak count, last practice day, excused days. |
