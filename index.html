@@ -16,40 +16,103 @@
 <body>
   <div class="trim"></div>
 
-  <main class="app">
-    <div class="bar">
-      <h1 class="bar__title">Multiplication</h1>
-      <span class="bar__meta">13 / 18</span>
+  <!-- Screen changes are instant: sections toggle, nothing slides. -->
+
+  <main class="screen" id="screen-home" hidden>
+    <div class="home-top">
+      <img class="avatar" id="home-avatar" src="assets/av-stormy.png" alt="">
+      <div class="clock" id="clock">7:42</div>
     </div>
-
-    <section class="slab">
-      <p class="slab__problem" id="problem">7 × 8</p>
-      <p class="slab__note">Token check — the real app replaces this.</p>
-    </section>
-
     <div class="chips">
-      <span class="chip chip--correct">✔ CORRECT</span>
-      <span class="chip chip--fast">FAST</span>
-      <span class="chip chip--wrong">TRY AGAIN</span>
-      <span class="chip chip--emerald">14</span>
+      <span class="chip chip--emerald" id="home-emeralds">0</span>
+      <span class="chip chip--streak" id="home-streak" hidden>★ 0</span>
     </div>
+    <div class="home-middle" id="home-note"></div>
+    <button class="btn btn--big" id="go-practice">PRACTICE ›</button>
+  </main>
 
+  <main class="screen" id="screen-select" hidden>
+    <div class="bar">
+      <button class="back" id="select-back">‹</button>
+      <h1 class="bar__title">Practice</h1>
+      <span class="bar__meta"></span>
+    </div>
+    <div class="stack">
+      <div class="label">HOW MUCH?</div>
+      <button class="pick" id="mode-smart">
+        <span class="pick__name">Smart review</span>
+        <span class="pick__sub" id="smart-sub">just what's due</span>
+      </button>
+      <button class="pick" id="mode-full">
+        <span class="pick__name">Full review</span>
+        <span class="pick__sub">the whole deck, in rounds</span>
+      </button>
+      <div class="label">WHICH DECK?</div>
+      <button class="pick" id="deck-mult">
+        <span class="pick__name">Multiplication</span>
+        <span class="pick__sub" id="mult-sub"></span>
+      </button>
+      <button class="pick" id="deck-div" disabled>
+        <span class="pick__name">Division</span>
+        <span class="pick__sub">coming soon</span>
+      </button>
+      <button class="pick" id="deck-factors" disabled>
+        <span class="pick__name">Factors</span>
+        <span class="pick__sub">coming soon</span>
+      </button>
+      <button class="toggle" id="auto-toggle">AUTO CHECK · OFF</button>
+      <p class="hint">Auto check hands in your answer the moment it's long enough.
+        Turn it off to check answers yourself.</p>
+      <button class="btn btn--big" id="start-session" disabled>START ›</button>
+    </div>
+  </main>
+
+  <main class="screen" id="screen-card" hidden>
+    <div class="bar">
+      <button class="back" id="card-back">‹</button>
+      <h1 class="bar__title" id="card-deck">Multiplication</h1>
+      <span class="bar__meta" id="card-meta"></span>
+    </div>
+    <section class="slab" id="slab">
+      <p class="slab__problem" id="problem">7 × 8</p>
+      <p class="slab__entry" id="entry">&nbsp;</p>
+      <p class="slab__reveal" id="reveal" hidden></p>
+      <span class="chip chip--fast slab__fast" id="fast-chip" hidden>FAST</span>
+      <span class="slab__stars" id="stars" hidden><i></i><i></i><i></i></span>
+    </section>
     <div class="keypad" id="keypad">
-      <button class="key">1</button>
-      <button class="key">2</button>
-      <button class="key">3</button>
-      <button class="key">4</button>
-      <button class="key">5</button>
-      <button class="key">6</button>
-      <button class="key">7</button>
-      <button class="key">8</button>
-      <button class="key">9</button>
-      <button class="key key--wide">CLEAR</button>
-      <button class="key">0</button>
-      <button class="key key--wide">⌫</button>
+      <button class="key" data-d="1">1</button>
+      <button class="key" data-d="2">2</button>
+      <button class="key" data-d="3">3</button>
+      <button class="key" data-d="4">4</button>
+      <button class="key" data-d="5">5</button>
+      <button class="key" data-d="6">6</button>
+      <button class="key" data-d="7">7</button>
+      <button class="key" data-d="8">8</button>
+      <button class="key" data-d="9">9</button>
+      <button class="key key--word" data-act="clear">CLEAR</button>
+      <button class="key" data-d="0">0</button>
+      <button class="key key--word" data-act="back">⌫</button>
     </div>
+    <button class="btn btn--check" id="check">CHECK ›</button>
+  </main>
 
-    <button class="btn" id="roll">New problem</button>
+  <main class="screen" id="screen-cleared" hidden>
+    <h1 class="big-title" id="cleared-title">Round 1 cleared</h1>
+    <p class="subtitle">Every card in it answered right.</p>
+    <ul class="stats" id="cleared-stats"></ul>
+    <div class="round-bar"><div class="round-bar__fill" id="round-fill"></div></div>
+    <p class="round-label" id="round-label">ROUND 1 OF 3</p>
+    <button class="btn btn--big" id="next-round">Next round ›</button>
+    <button class="quiet" id="stop-here">Stop here — keep my emeralds</button>
+  </main>
+
+  <main class="screen" id="screen-complete" hidden>
+    <div class="gem gem--big"></div>
+    <h1 class="award" id="award-count">+14</h1>
+    <p class="subtitle" id="complete-note">Great job!</p>
+    <ul class="stats" id="complete-stats"></ul>
+    <button class="btn btn--big" id="go-home">Back to home ›</button>
   </main>
 
   <script type="module" src="src/app.js"></script>

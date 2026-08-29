@@ -14,14 +14,13 @@ body {
   font-size: var(--fs-body);
   line-height: 1.45;
   -webkit-font-smoothing: antialiased;
-  /* She taps fast and repeatedly. Kill double-tap zoom and the grey flash
-     so it reads as an app rather than a web page. */
+  /* She taps fast and repeatedly. Kill double-tap zoom and the grey flash. */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
+  user-select: none;
 }
 
-/* The grass/dirt strip along the top of every child screen. Texture is trim,
-   never a ground — it must never sit behind text. */
+/* Grass strip along the top of every child screen: trim, never a ground. */
 .trim {
   height: 10px;
   background-image: url("../assets/tx-grass.png");
@@ -31,79 +30,91 @@ body {
   border-bottom: var(--border-w) solid var(--border-btn);
 }
 
-.app {
+.screen {
   max-width: 420px;
   margin: 0 auto;
-  min-height: 100%;
+  min-height: calc(100% - 13px);
   display: flex;
   flex-direction: column;
   gap: var(--sp-4);
   padding: var(--sp-5);
 }
 
-.bar {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: var(--sp-3);
-}
+.stack { display: flex; flex-direction: column; gap: var(--sp-3); }
 
+/* --- Header bar ----------------------------------------------------------- */
+.bar { display: flex; align-items: center; gap: var(--sp-3); }
 .bar__title {
   font-family: var(--font-display);
   font-size: var(--fs-heading);
   font-weight: var(--fw-bold);
   margin: 0;
+  flex: 1;
 }
-
 .bar__meta {
   font-family: var(--font-display);
   font-size: var(--fs-label);
   color: var(--text-muted);
 }
-
-/* --- The problem slab ---------------------------------------------------- */
-.slab {
-  background: var(--bg-card);
-  border: var(--border-w) solid var(--border-btn);
-  box-shadow: var(--bevel-light);
-  display: grid;
-  place-items: center;
-  gap: var(--sp-2);
-  padding: var(--sp-7) var(--sp-4);
-}
-
-.slab__problem {
+.back {
   font-family: var(--font-display);
-  font-size: var(--fs-slab);
+  font-size: var(--fs-heading);
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  min-width: var(--tap-min);
+  min-height: var(--tap-min);
+  cursor: pointer;
+}
+
+/* --- Home ------------------------------------------------------------------ */
+.home-top { display: flex; align-items: center; gap: var(--sp-4); }
+.avatar {
+  width: 56px; height: 56px;
+  image-rendering: pixelated;
+  border: var(--border-w) solid var(--border-btn);
+  background: var(--slot-fill);
+  box-shadow: var(--bevel-chip);
+}
+.clock {
+  font-family: var(--font-display);
+  font-size: var(--fs-clock);
   line-height: 1;
-  margin: 0;
+  margin-left: auto;
 }
+.home-middle { flex: 1; color: var(--text-muted); font-size: var(--fs-label); }
 
-.slab__note {
-  font-size: var(--fs-hint);
-  color: var(--text-tertiary);
-  margin: 0;
-}
-
-/* --- Chips --------------------------------------------------------------- */
+/* --- Chips ------------------------------------------------------------------ */
 .chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
-
 .chip {
   font-family: var(--font-display);
-  font-size: var(--fs-hint);
+  font-size: var(--fs-label);
   border: var(--border-w-thin) solid var(--border-btn);
   box-shadow: var(--bevel-chip);
   padding: var(--sp-1) var(--sp-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
 }
-
 .chip--correct { background: var(--correct); color: var(--on-dark); }
 .chip--fast    { background: var(--fast);    color: var(--ink); }
-.chip--wrong   { background: var(--wrong);   color: var(--on-dark); }
-.chip--emerald { background: var(--emerald); color: var(--on-dark); }
+.chip--emerald { background: var(--emerald-soft); color: var(--emerald-dark); border-color: var(--emerald-dark); }
+.chip--streak  { background: var(--tier-gold-soft); color: var(--tier-gold-text); border-color: var(--tier-gold-dark); }
 
-/* --- Bevel button --------------------------------------------------------
-   The drop shadow is the affordance: it looks like a thing you push, and
-   pressing travels the full drop so it visibly bottoms out. */
+/* A pixel gem, until Design supplies an emerald sprite (docs/DESIGN_FEEDBACK.md). */
+.gem {
+  width: 14px; height: 14px;
+  background: var(--emerald);
+  border: var(--border-w-thin) solid var(--emerald-deep);
+  box-shadow: inset 2px 2px 0 var(--emerald-light), inset -2px -2px 0 var(--emerald-dark);
+  display: inline-block;
+}
+.chip--emerald::before { content: ""; }
+.chip--emerald .gem, .chip--emerald::before { margin-right: 0; }
+.gem--big { width: 56px; height: 56px; border-width: var(--border-w); margin: var(--sp-6) auto 0;
+  box-shadow: inset 6px 6px 0 var(--emerald-light), inset -6px -6px 0 var(--emerald-dark); }
+
+/* --- Buttons ------------------------------------------------------------------ */
 .btn {
   font-family: var(--font-display);
   font-size: var(--fs-button);
@@ -119,25 +130,154 @@ body {
   transition: transform var(--dur-press) var(--ease-out),
               box-shadow var(--dur-press) var(--ease-out);
 }
+.btn:active { transform: translateY(5px); box-shadow: var(--bevel-strong); }
+.btn:focus-visible { outline: var(--border-w) solid var(--parent-edit); outline-offset: 3px; }
+.btn--big { font-size: var(--fs-heading); min-height: 64px; margin-top: auto; }
+.btn:disabled { background: var(--stone-disabled); color: var(--text-disabled); box-shadow: var(--bevel-pressed); cursor: default; }
+.btn:disabled:active { transform: none; }
 
-.btn:active {
-  transform: translateY(5px);
-  box-shadow: var(--bevel-strong);
+/* The wrong-state continue is quiet: card ground, ink text, no celebration. */
+.btn--check.is-next { background: var(--bg-card); color: var(--ink); text-shadow: none; box-shadow: var(--bevel-light), var(--key-drop-sm); }
+
+.quiet {
+  font-family: var(--font-sans);
+  font-weight: var(--fw-sentence);
+  font-size: var(--fs-label);
+  color: var(--text-muted);
+  text-decoration: underline;
+  background: none; border: none;
+  min-height: var(--tap-min);
+  cursor: pointer;
 }
 
-.btn:focus-visible {
-  outline: var(--border-w) solid var(--parent-edit);
-  outline-offset: 3px;
+/* --- Deck / mode pickers -------------------------------------------------------- */
+.label {
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  color: var(--text-tertiary);
+  margin-top: var(--sp-2);
+}
+.pick {
+  display: flex; align-items: baseline; justify-content: space-between; gap: var(--sp-3);
+  font-family: inherit;
+  text-align: left;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-light), var(--key-drop-sm);
+  min-height: var(--tap-comfy);
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+  transition: transform var(--dur-press) var(--ease-out);
+}
+.pick:active { transform: translateY(4px); box-shadow: var(--bevel-light); }
+.pick__name { font-family: var(--font-display); font-size: var(--fs-button); }
+.pick__sub { font-size: var(--fs-hint); color: var(--text-muted); }
+.pick.is-on { border-color: var(--correct-dark); background: var(--correct-soft); }
+.pick.is-on .pick__name { color: var(--correct-text); }
+.pick:disabled { background: var(--bg-sunken); color: var(--text-disabled); box-shadow: none; cursor: default; }
+.pick:disabled .pick__name, .pick:disabled .pick__sub { color: var(--text-disabled); }
+
+/* Auto-check: iron toggle in the routine app's ON/OFF language. */
+.toggle {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  min-height: var(--tap-min);
+  cursor: pointer;
+  align-self: flex-start;
+  padding-inline: var(--sp-4);
+  background: var(--iron-dark);
+  color: var(--divider);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-pressed);
+}
+.toggle.is-on {
+  background: var(--divider);
+  color: var(--ink);
+  border-color: var(--iron-dark);
+  box-shadow: var(--bevel-small);
+}
+.hint { font-size: var(--fs-micro); color: var(--text-tertiary); margin: 0; }
+
+/* --- The problem slab -------------------------------------------------------------- */
+.slab {
+  position: relative;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-light);
+  display: grid;
+  place-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-6) var(--sp-4);
+  transition: transform var(--dur-press) var(--steps-press);
+}
+.slab__problem {
+  font-family: var(--font-display);
+  font-size: clamp(56px, 22vw, var(--fs-slab));
+  line-height: 1;
+  margin: 0;
+}
+.slab__entry {
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  min-height: 1.1em;
+  line-height: 1.1;
+  margin: 0;
+  color: var(--text-muted);
+  border-bottom: var(--border-w) solid var(--divider);
+  min-width: 3ch;
+  text-align: center;
+}
+.slab__reveal {
+  font-family: var(--font-sans);
+  font-size: var(--fs-label);
+  margin: 0;
+  color: var(--wrong-text);
+}
+.slab__fast { position: absolute; top: var(--sp-3); right: var(--sp-3); }
+
+/* Correct: the press, the green wash, the checkmark on the entry line. */
+.slab.is-correct { transform: scale(0.985); }
+.slab.is-correct::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: var(--correct);
+  opacity: 0.16;
+  pointer-events: none;
+}
+.slab.is-correct .slab__entry { color: var(--correct-text); border-color: var(--correct); }
+
+/* Wrong: slate and still. No motion, no sound — the state simply is. */
+.slab.is-wrong { background: var(--wrong-soft); border-color: var(--wrong); }
+.slab.is-wrong .slab__entry { color: var(--wrong-text); border-color: var(--wrong); text-decoration: line-through; }
+
+/* Stars: pop, rise 30px, fade — done inside the answer beat. */
+.slab__stars { position: absolute; top: 8%; left: 50%; pointer-events: none; }
+.slab__stars i {
+  position: absolute;
+  width: 16px; height: 16px;
+  background-image: url("../assets/icons/star.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  opacity: 0;
+}
+.slab__stars.is-burst i { animation: star-rise var(--dur-answer) var(--ease-out) forwards; }
+.slab__stars i:nth-child(1) { left: -34px; }
+.slab__stars i:nth-child(2) { left: -8px; animation-delay: 80ms; }
+.slab__stars i:nth-child(3) { left: 20px; animation-delay: 160ms; }
+@keyframes star-rise {
+  0%   { opacity: 0; transform: translateY(0) scale(0.4); }
+  25%  { opacity: 1; transform: translateY(-8px) scale(1.1); }
+  100% { opacity: 0; transform: translateY(-30px) scale(0.9); }
 }
 
-/* --- Keypad --------------------------------------------------------------
-   Keys are --tap-key tall, measured from the design canvas. */
+/* --- Keypad ---------------------------------------------------------------------- */
 .keypad {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-2);
+  margin-top: auto;
 }
-
 .key {
   font-family: var(--font-display);
   font-size: var(--fs-key);
@@ -151,10 +291,44 @@ body {
   transition: transform var(--dur-press) var(--ease-out),
               box-shadow var(--dur-press) var(--ease-out);
 }
+.key:active { transform: translateY(4px); box-shadow: var(--bevel-pressed); }
+.key--word { font-size: var(--fs-label); }
+.btn--check { width: 100%; }
 
-.key:active {
-  transform: translateY(4px);
-  box-shadow: var(--bevel-pressed);
+/* --- Round cleared / session complete ----------------------------------------------- */
+.big-title { font-family: var(--font-display); font-size: var(--fs-title); margin: var(--sp-6) 0 0; }
+.subtitle { color: var(--text-muted); font-size: var(--fs-label); margin: 0; }
+.stats { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--sp-2); }
+.stats li {
+  background: var(--bg-card);
+  border: var(--border-w-thin) solid var(--divider);
+  padding: var(--sp-2) var(--sp-3);
+  font-size: var(--fs-label);
+  display: flex; justify-content: space-between; gap: var(--sp-3);
 }
+.stats b { font-family: var(--font-display); font-size: var(--fs-body); font-weight: var(--fw-bold); }
 
-.key--wide { grid-column: span 1; font-size: var(--fs-label); }
+.round-bar {
+  border: var(--border-w) solid var(--border-btn);
+  background: var(--track);
+  padding: 2px;
+  height: 22px;
+}
+.round-bar__fill {
+  height: 100%;
+  background: linear-gradient(180deg, var(--fast-lo), var(--fast) 45%, var(--fast-hi));
+  background-image: repeating-linear-gradient(90deg, transparent 0 16px, rgba(0,0,0,.25) 16px 19px),
+    linear-gradient(180deg, var(--fast-lo), var(--fast) 45%, var(--fast-hi));
+  transition: width var(--dur-med) var(--ease-out);
+}
+.round-label { font-family: var(--font-display); font-size: var(--fs-hint); color: var(--text-tertiary); margin: 0; }
+
+.award {
+  font-family: var(--font-display);
+  font-size: var(--fs-award);
+  color: var(--emerald-dark);
+  text-align: center;
+  margin: 0;
+}
+#screen-complete { text-align: center; }
+#screen-complete .stats { text-align: left; }
