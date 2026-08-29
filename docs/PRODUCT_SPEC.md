@@ -108,8 +108,10 @@ answered correctly. Missed cards return to the back of the queue within the same
 **For factors cards** the rule is already satisfied by completion: every pair must eventually
 be entered correctly before the card ends, so a completed card never requeues. A wrong pair
 along the way makes the card count as a miss for tier and stats -- the miss is recorded, not
-repeated. Duplicate entry of an already-found pair is neither correct nor wrong; the boxes
-simply clear. Fluency is judged on the average time per pair, per the threshold section.
+repeated. Duplicate entry of an already-found pair is neither correct nor wrong: it marks the
+row she already solved (an acknowledgement, not a celebration) and clears on her next input.
+Fluency is judged on the average time per pair, per the threshold section; per-pair Lightning
+shows as the orb on the solved row, never a chip.
 
 A missed-then-corrected card still counts as a miss for tier purposes. Clearing the round is
 about finishing, not about erasing the record.
@@ -140,7 +142,8 @@ PIN-gated, in the routine app's iron/neutral language and plain factual voice.
 - Emerald balance adjust
 - Reset a deck's mastery data
 - **A 12x12 fact grid** coloured by mastery tier — the fastest way to see which facts are
-  weak, and the single most useful screen in the parent area
+  weak, and the single most useful screen in the parent area. Tapping a cell opens a detail
+  panel: fact, tier and due date, median time, times seen, times missed, last practised.
 - **Export and import a backup** — one JSON file. Progress lives in browser storage on one
   device, so a cleared cache or a new phone would otherwise erase months of it. See
   [DATA_MODEL.md](DATA_MODEL.md).

@@ -210,6 +210,14 @@
   --steps-press: steps(3);
   --steps-fade:  steps(2);
 
+  /* --- Emerald sprite sizes (assets/emerald.png 16px, emerald-32.png 32px).
+     Display ONLY at these four sizes: 16/48 from the small sprite, 32/64
+     from the large — anything else blurs the pixel art.               */
+  --gem-sm: 16px;
+  --gem-md: 32px;
+  --gem-lg: 48px;
+  --gem-xl: 64px;
+
   /* --- Texture tiles -------------------------------------------------------
      Thin strips only, never behind text. 16px, or 12px on small chips.   */
   --tx-size: 16px;

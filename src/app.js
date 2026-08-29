@@ -114,13 +114,12 @@ function renderSelect() {
   for (const key of Object.keys(DECKS)) {
     const btn = $(`deck-${key}`);
     const notInSpeed = mode === "speed" && DECKS[key].kind === "factors";
-    const on = enabled.includes(key) && !notInSpeed;
-    btn.disabled = !on;
-    btn.classList.toggle("is-on", on && key === deckKey);
+    btn.hidden = !enabled.includes(key); // off = hidden, not greyed (ruling 6)
+    btn.disabled = notInSpeed;
+    btn.classList.toggle("is-on", !notInSpeed && key === deckKey);
     btn.querySelector(".pick__sub").textContent =
-      notInSpeed ? "not in speed run"
-      : on ? `${dueCount(key)} of ${DECKS[key].cards.length} due`
-      : "turned off";
+      notInSpeed ? "NOT IN SPEED RUN"
+      : `${dueCount(key)} of ${DECKS[key].cards.length} due`;
   }
 
   const auto = store.get("settings").autoSubmit;
@@ -233,11 +232,13 @@ function nextCardScreen() {
       active: 0,
       wrongs: 0,
       wrongShown: false,
+      dupIndex: -1,
       cardStart: performance.now(),
       pairStart: performance.now(),
     };
     $("entry").hidden = true;
     $("factors-rows").hidden = false;
+    $("check").textContent = "ADD PAIR ›";
     renderFactorRows();
   } else {
     fs = null;
@@ -318,9 +319,10 @@ function submit() {
     phase = "wrong-hold";
     session.runIndex = 0;
     $("slab").classList.add("is-wrong");
-    $("reveal").textContent = `${card.text} = ${card.answer} — we'll come back to it.`;
+    $("problem").textContent = `${card.text} = ${card.answer}`;
+    $("reveal").textContent = `You put ${entry} — we'll come back to it.`;
     $("reveal").hidden = false;
-    $("check").textContent = "NEXT ›";
+    $("check").textContent = "Next card ›";
     $("check").classList.add("is-next");
     answerCard(session.round, false);
   }
@@ -335,14 +337,15 @@ function renderFactorRows() {
   const rows = fs.card.pairs.map(([a, b], i) => {
     if (fs.solved.has(i)) {
       const fast = fs.solved.get(i).fast;
-      return `<li class="frow is-solved">${a} × ${b} ✔${fast ? " ⚡" : ""}</li>`;
+      const dup = i === fs.dupIndex ? " is-dup" : "";
+      return `<li class="frow is-solved${dup}">${a} × ${b} ✔${fast ? ' <i class="orb"></i>' : ""}</li>`;
     }
     return null;
   });
   const entryAt = fs.card.pairs.findIndex((_, i) => !fs.solved.has(i));
   if (entryAt >= 0) {
     const box = (i) =>
-      `<b class="fbox${fs.active === i ? " is-focus" : ""}">${fs.boxes[i] || "&nbsp;"}</b>`;
+      `<b class="fbox${fs.active === i ? " is-focus" : ""}" data-box="${i}">${fs.boxes[i] || "&nbsp;"}</b>`;
     rows[entryAt] =
       `<li class="frow is-entry${fs.wrongShown ? " is-wrong" : ""}">${box(0)} × ${box(1)}</li>`;
     for (let i = entryAt + 1; i < rows.length; i++)
@@ -360,20 +363,20 @@ function submitPair() {
   if (idx >= 0 && !fs.solved.has(idx)) {
     const pairMs = performance.now() - fs.pairStart;
     fs.pairStart = performance.now();
+    // Per-pair lightning is the orb on the row, never a chip — a chip would
+    // flicker eight times on one card (ruling 10).
     const fast = pairMs <= session.settings.lightningMs;
     fs.solved.set(idx, { fast });
     fs.wrongShown = false;
+    fs.dupIndex = -1;
     audio.cueCorrect(session.runIndex++, session.settings.sound.all && session.settings.sound.blips);
-    if (fast) {
-      $("fast-chip").hidden = false;
-      clearTimeout(fastChipTimer);
-      fastChipTimer = setTimeout(() => { $("fast-chip").hidden = true; }, 800);
-    }
     renderFactorRows();
     if (fs.solved.size === fs.card.pairs.length) completeFactorCard();
   } else if (idx >= 0) {
-    // Already found: not a miss, just cleared — she can see it in the list.
+    // Already found: mark the row she solved (ruling 10) — an
+    // acknowledgement, not a miss. Clears on her next input.
     fs.wrongShown = false;
+    fs.dupIndex = idx;
     renderFactorRows();
   } else {
     // Wrong pair: slate on the entry row, silent, and it stays until she
@@ -381,6 +384,7 @@ function submitPair() {
     fs.wrongs++;
     session.runIndex = 0;
     fs.wrongShown = true;
+    fs.dupIndex = -1;
     renderFactorRows();
   }
 }
@@ -415,15 +419,25 @@ function completeFactorCard() {
   }
   clearTimeout(fastChipTimer);
   $("fast-chip").hidden = !(correct && avgMs <= s.lightningMs);
-  advanceTimer = setTimeout(advance, 900);
+  advanceTimer = setTimeout(advance, 700);
 }
 
 function factorType(d) {
   if (fs.boxes[fs.active].length >= 3) return;
   fs.boxes[fs.active] += d;
   fs.wrongShown = false;
+  fs.dupIndex = -1;
   renderFactorRows();
 }
+
+// Tapping either box of the live row focuses it — a typo in the first
+// number must not cost the pair (ruling 10).
+$("factors-rows").addEventListener("click", (e) => {
+  const box = e.target.closest(".fbox");
+  if (!box || phase !== "answer" || !fs) return;
+  fs.active = Number(box.dataset.box);
+  renderFactorRows();
+});
 
 function factorCheck() {
   if (fs.boxes[0] !== "" && fs.boxes[1] !== "") submitPair();
@@ -509,8 +523,8 @@ function finishRound() {
 
   $("cleared-title").textContent = `Round ${session.roundIndex + 1} cleared`;
   $("cleared-stats").innerHTML = [
-    [`right first try`, `${stats.firstTry} / ${stats.total}`],
-    [`emeralds earned`, `${stats.emeralds}${stats.clean ? " · clean round!" : ""}`],
+    ...(stats.clean ? [["clean round", "✔"]] : []),
+    [`emeralds earned`, `${stats.emeralds}`],
     [`lightning-fast answers`, `${stats.fast}`],
   ].map(([k, v]) => `<li><span>${k}</span><b>${v}</b></li>`).join("");
   const done = (session.roundIndex + 1) / session.rounds.length;
