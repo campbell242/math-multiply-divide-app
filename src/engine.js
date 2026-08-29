@@ -135,3 +135,34 @@ export function roundStats(round, lightningMs) {
     emeralds: roundEmeralds(round.total, clean),
   };
 }
+
+/* --- Factors -----------------------------------------------------------------
+
+   One number, all its factor pairs. Pairs are unordered and include 1 x n
+   (the spec's own example counts it). Stored sorted ascending by the smaller
+   factor, which is also the display order.                                  */
+export function factorPairs(n) {
+  const pairs = [];
+  for (let d = 1; d * d <= n; d++)
+    if (n % d === 0) pairs.push([d, n / d]);
+  return pairs;
+}
+
+export function factorsDeck() {
+  const products = new Set();
+  for (let a = 2; a <= 12; a++)
+    for (let b = 2; b <= 12; b++) products.add(a * b);
+  return [...products].sort((x, y) => x - y).map((n) => ({
+    id: `f:${n}`,
+    text: String(n),
+    n,
+    pairs: factorPairs(n),
+  }));
+}
+
+// Unordered match: (36, 1) and (1, 36) are the same answer. Returns the
+// pair's index in the card's sorted list, or -1 for a wrong pair.
+export function matchPair(card, a, b) {
+  const lo = Math.min(a, b), hi = Math.max(a, b);
+  return card.pairs.findIndex(([x, y]) => x === lo && y === hi);
+}

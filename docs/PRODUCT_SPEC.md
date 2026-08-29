@@ -99,6 +99,12 @@ Two modes:
 **The clearing rule, in both modes:** a round does not end until every card in it has been
 answered correctly. Missed cards return to the back of the queue within the same round.
 
+**For factors cards** the rule is already satisfied by completion: every pair must eventually
+be entered correctly before the card ends, so a completed card never requeues. A wrong pair
+along the way makes the card count as a miss for tier and stats -- the miss is recorded, not
+repeated. Duplicate entry of an already-found pair is neither correct nor wrong; the boxes
+simply clear. Fluency is judged on the average time per pair, per the threshold section.
+
 A missed-then-corrected card still counts as a miss for tier purposes. Clearing the round is
 about finishing, not about erasing the record.
 

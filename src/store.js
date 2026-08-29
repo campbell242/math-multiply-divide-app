@@ -16,7 +16,7 @@ export function dayNumber(d = new Date()) {
 const DEFAULTS = {
   profile: { name: "", avatar: "av-stormy", emeralds: 0 },
   settings: {
-    decks: { mult: true, div: true, factors: false },
+    decks: { mult: true, div: true, factors: true },
     roundSize: 40,
     factorsRound: 12,
     promoteMs: 5000,

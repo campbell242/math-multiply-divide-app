@@ -3,7 +3,8 @@
 // but the seams between them and the DOM.
 
 import {
-  multiplicationDeck, divisionDeck, splitIntoRounds, shuffle,
+  multiplicationDeck, divisionDeck, factorsDeck, matchPair,
+  splitIntoRounds, shuffle,
   createRound, currentCard, answerCard, recordFirstAttempt, roundDone,
   tierAfterAnswer, dueAfter, roundStats,
 } from "./engine.js";
@@ -21,10 +22,12 @@ function show(name) {
 /* --- Decks --------------------------------------------------------------------
 
    Keyed by the settings.decks key, so the parent toggle and the picker speak
-   the same language. Factors joins here when its interaction is built.      */
+   the same language. "ops" cards have one numeric answer; "factors" cards
+   want every factor pair.                                                    */
 const DECKS = {
-  mult: { name: "Multiplication", cards: multiplicationDeck() },
-  div:  { name: "Division",       cards: divisionDeck() },
+  mult:    { name: "Multiplication", cards: multiplicationDeck(), kind: "ops" },
+  div:     { name: "Division",       cards: divisionDeck(),       kind: "ops" },
+  factors: { name: "Factors",        cards: factorsDeck(),        kind: "factors" },
 };
 
 /* --- Boot ------------------------------------------------------------------- */
@@ -104,8 +107,7 @@ $("mode-full").addEventListener("click", () => { mode = "full"; renderSelect(); 
 for (const key of Object.keys(DECKS)) {
   $(`deck-${key}`).addEventListener("click", () => {
     deckKey = key;
-    // Smart eligibility depends on the deck now picked, so re-derive.
-    renderSelect();
+    renderSelect(); // smart eligibility depends on the deck now picked
   });
 }
 $("auto-toggle").addEventListener("click", () => {
@@ -125,9 +127,11 @@ function startSession() {
   const pool = mode === "smart"
     ? deck.cards.filter((c) => store.getCard(c.id).due <= today)
     : deck.cards;
-  const rounds = splitIntoRounds(shuffle(pool), settings.roundSize);
+  const roundSize = deck.kind === "factors" ? settings.factorsRound : settings.roundSize;
+  const rounds = splitIntoRounds(shuffle(pool), roundSize);
   session = {
     mode, today, settings, deckKey,
+    kind: deck.kind,
     rounds,
     roundIndex: 0,
     round: createRound(rounds[0]),
@@ -147,6 +151,11 @@ let entry = "";
 let shownAt = 0;
 let phase = "answer"; // "answer" | "correct-hold" | "wrong-hold" | "between"
 let advanceTimer = null;
+let fastChipTimer = null;
+
+// Factors working state: which pairs are solved, the two entry boxes, and
+// which box the keypad is filling.
+let fs = null;
 
 function expectedDigits(card) {
   return String(card.answer).length;
@@ -164,15 +173,38 @@ function nextCardScreen() {
   entry = "";
   phase = "answer";
   clearTimeout(advanceTimer);
+  clearTimeout(fastChipTimer);
   $("slab").classList.remove("is-correct", "is-wrong");
+  $("slab").classList.toggle("slab--factors", session.kind === "factors");
   $("stars").classList.remove("is-burst");
   $("stars").hidden = true;
   $("fast-chip").hidden = true;
   $("reveal").hidden = true;
   $("problem").textContent = card.text;
-  $("entry").innerHTML = "&nbsp;";
   $("check").textContent = "CHECK ›";
   $("check").classList.remove("is-next");
+
+  if (session.kind === "factors") {
+    fs = {
+      card,
+      solved: new Map(), // pair index -> { fast }
+      boxes: ["", ""],
+      active: 0,
+      wrongs: 0,
+      wrongShown: false,
+      cardStart: performance.now(),
+      pairStart: performance.now(),
+    };
+    $("entry").hidden = true;
+    $("factors-rows").hidden = false;
+    renderFactorRows();
+  } else {
+    fs = null;
+    $("entry").hidden = false;
+    $("factors-rows").hidden = true;
+    $("entry").innerHTML = "&nbsp;";
+  }
+
   renderMeta();
   show("card");
   shownAt = performance.now();
@@ -182,6 +214,7 @@ function renderEntry() {
   $("entry").textContent = entry || " ";
 }
 
+/* --- Ops cards (multiplication, division) ------------------------------------------------ */
 function submit() {
   if (phase !== "answer" || entry === "") return;
   const card = currentCard(session.round);
@@ -227,6 +260,116 @@ function submit() {
   }
 }
 
+/* --- Factors cards --------------------------------------------------------------------------
+
+   Rows are the card's pairs sorted ascending; solved pairs land in their
+   sorted slot, and the entry boxes sit at the first unsolved slot. Pairs are
+   unordered — (36, 1) fills the 1 x 36 row — and each is accepted once.    */
+function renderFactorRows() {
+  const rows = fs.card.pairs.map(([a, b], i) => {
+    if (fs.solved.has(i)) {
+      const fast = fs.solved.get(i).fast;
+      return `<li class="frow is-solved">${a} × ${b} ✔${fast ? " ⚡" : ""}</li>`;
+    }
+    return null;
+  });
+  const entryAt = fs.card.pairs.findIndex((_, i) => !fs.solved.has(i));
+  if (entryAt >= 0) {
+    const box = (i) =>
+      `<b class="fbox${fs.active === i ? " is-focus" : ""}">${fs.boxes[i] || "&nbsp;"}</b>`;
+    rows[entryAt] =
+      `<li class="frow is-entry${fs.wrongShown ? " is-wrong" : ""}">${box(0)} × ${box(1)}</li>`;
+    for (let i = entryAt + 1; i < rows.length; i++)
+      if (rows[i] === null) rows[i] = `<li class="frow is-todo">? × ?</li>`;
+  }
+  $("factors-rows").innerHTML = rows.join("");
+}
+
+function submitPair() {
+  const [a, b] = fs.boxes.map(Number);
+  const idx = matchPair(fs.card, a, b);
+  fs.boxes = ["", ""];
+  fs.active = 0;
+
+  if (idx >= 0 && !fs.solved.has(idx)) {
+    const pairMs = performance.now() - fs.pairStart;
+    fs.pairStart = performance.now();
+    const fast = pairMs <= session.settings.lightningMs;
+    fs.solved.set(idx, { fast });
+    fs.wrongShown = false;
+    audio.cueCorrect(session.runIndex++, session.settings.sound.all && session.settings.sound.blips);
+    if (fast) {
+      $("fast-chip").hidden = false;
+      clearTimeout(fastChipTimer);
+      fastChipTimer = setTimeout(() => { $("fast-chip").hidden = true; }, 800);
+    }
+    renderFactorRows();
+    if (fs.solved.size === fs.card.pairs.length) completeFactorCard();
+  } else if (idx >= 0) {
+    // Already found: not a miss, just cleared — she can see it in the list.
+    fs.wrongShown = false;
+    renderFactorRows();
+  } else {
+    // Wrong pair: slate on the entry row, silent, and it stays until she
+    // types again. No answer is revealed — finding them is the exercise.
+    fs.wrongs++;
+    session.runIndex = 0;
+    fs.wrongShown = true;
+    renderFactorRows();
+  }
+}
+
+function completeFactorCard() {
+  const s = session.settings;
+  const totalMs = performance.now() - fs.cardStart;
+  // The spec measures factors fluency per pair, not per card.
+  const avgMs = totalMs / fs.card.pairs.length;
+  const correct = fs.wrongs === 0;
+
+  // avg drives session lightning stats; the persisted time is the total.
+  recordFirstAttempt(session.round, fs.card.id, correct, avgMs);
+  const rec = store.getCard(fs.card.id);
+  const newTier = tierAfterAnswer(rec.t, correct, avgMs, s.promoteMs);
+  if (newTier > rec.t) session.promoted++;
+  store.recordAttempt(fs.card.id, {
+    correct, ms: totalMs, newTier, due: dueAfter(newTier, session.today),
+  });
+
+  // A completed factors card never requeues: every pair was eventually
+  // entered correctly, which is what "answered correctly" means here. A
+  // wrong pair along the way already counted as the miss.
+  answerCard(session.round, true);
+  phase = "correct-hold";
+  $("slab").classList.add("is-correct");
+  if (correct) {
+    $("stars").hidden = false;
+    requestAnimationFrame(() => $("stars").classList.add("is-burst"));
+  }
+  clearTimeout(fastChipTimer);
+  $("fast-chip").hidden = !(correct && avgMs <= s.lightningMs);
+  advanceTimer = setTimeout(advance, 900);
+}
+
+function factorType(d) {
+  if (fs.boxes[fs.active].length >= 3) return;
+  fs.boxes[fs.active] += d;
+  fs.wrongShown = false;
+  renderFactorRows();
+}
+
+function factorCheck() {
+  if (fs.boxes[0] !== "" && fs.boxes[1] !== "") submitPair();
+  else if (fs.active === 0 && fs.boxes[0] !== "") { fs.active = 1; renderFactorRows(); }
+}
+
+function factorBack() {
+  if (fs.boxes[fs.active] === "" && fs.active === 1) fs.active = 0;
+  else fs.boxes[fs.active] = fs.boxes[fs.active].slice(0, -1);
+  fs.wrongShown = false;
+  renderFactorRows();
+}
+
+/* --- Shared input routing --------------------------------------------------------------- */
 function advance() {
   clearTimeout(advanceTimer);
   if (!session || phase === "between") return;
@@ -235,11 +378,12 @@ function advance() {
 }
 
 function typeDigit(d) {
+  if (session.kind === "factors") return factorType(d);
   if (entry.length >= 3) return;
   entry += d;
   renderEntry();
-  // Auto check: hand the answer in the moment it is long enough. OFF means
-  // CHECK is the deliberate extra step and she can edit freely first.
+  // Auto check: ops decks only — a factor's length is unknowable in advance,
+  // so factors always use CHECK to move and submit.
   if (store.get("settings").autoSubmit &&
       entry.length === expectedDigits(currentCard(session.round))) {
     submit();
@@ -249,15 +393,21 @@ function typeDigit(d) {
 $("keypad").addEventListener("click", (e) => {
   const key = e.target.closest(".key");
   if (!key || phase !== "answer") return;
-  if (key.dataset.act === "clear") { entry = ""; renderEntry(); }
-  else if (key.dataset.act === "back") { entry = entry.slice(0, -1); renderEntry(); }
-  else typeDigit(key.dataset.d);
+  if (key.dataset.act === "clear") {
+    if (session.kind === "factors") { fs.boxes = ["", ""]; fs.active = 0; fs.wrongShown = false; renderFactorRows(); }
+    else { entry = ""; renderEntry(); }
+  } else if (key.dataset.act === "back") {
+    if (session.kind === "factors") factorBack();
+    else { entry = entry.slice(0, -1); renderEntry(); }
+  } else typeDigit(key.dataset.d);
 });
 
 $("check").addEventListener("click", () => {
   if ($("screen-card").hidden || !session) return;
-  if (phase === "answer") submit();
-  else advance(); // correct-hold: skip the wait; wrong-hold: move on
+  if (phase === "answer") {
+    if (session.kind === "factors") factorCheck();
+    else submit();
+  } else advance(); // correct-hold: skip the wait; wrong-hold: move on
 });
 
 // Desktop convenience — she'll use the keypad, you'll use a keyboard.
@@ -265,8 +415,13 @@ document.addEventListener("keydown", (e) => {
   if ($("screen-card").hidden || !session) return;
   if (phase !== "answer") { if (e.key === "Enter") advance(); return; }
   if (/^[0-9]$/.test(e.key)) typeDigit(e.key);
-  else if (e.key === "Backspace") { entry = entry.slice(0, -1); renderEntry(); }
-  else if (e.key === "Enter") submit();
+  else if (e.key === "Backspace") {
+    if (session.kind === "factors") factorBack();
+    else { entry = entry.slice(0, -1); renderEntry(); }
+  } else if (e.key === "Enter") {
+    if (session.kind === "factors") factorCheck();
+    else submit();
+  }
 });
 
 /* --- Round cleared --------------------------------------------------------------------- */

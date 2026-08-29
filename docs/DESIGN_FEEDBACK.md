@@ -61,6 +61,29 @@ Spec says "daily streak" without pinning when it ticks. **Build:** on session co
 including "Stop here" after at least one cleared round. Practising but quitting mid-round
 does not extend the streak. Confirm.
 
+### 10. Factors: four interaction decisions made in the build
+The artboards show the layout (2i-2k) but not the mechanics. What the build does:
+
+- **CHECK is the box-advance.** Typing fills the active box; CHECK with only the first box
+  filled moves to the second; CHECK with both filled submits the pair. There is no x key and
+  no tapping between boxes. Confirm, or design a dedicated affordance.
+- **A wrong pair goes slate and stays** until she types again -- nothing is revealed, since
+  finding the pairs is the exercise. Silent, per the tone rules.
+- **A duplicate pair just clears the boxes.** Not a miss, no feedback beyond the row she can
+  already see solved. Should it flash the existing row instead?
+- **Solved pairs land in their sorted slot** while the entry boxes sit at the first unsolved
+  slot -- so a pair can land above or below where she typed it. Fine in testing; confirm the
+  intended feel.
+
+Also: **AUTO CHECK does not apply to factors** (a factor's length is unknowable in advance),
+and the per-pair Lightning shows as a brief FAST chip plus a small lightning mark on the
+solved row. Both need a designed treatment.
+
+### 11. Factors completion beat
+Completing a factors card gets the green wash; stars only when no pair was missed. The
+completion of an 8-pair card feels bigger than one ops card -- does it deserve a slightly
+bigger beat than the standard correct answer? Build currently holds 900ms vs 700ms.
+
 ## Resolved
 
 *(nothing yet — move entries here as Design rules on them)*

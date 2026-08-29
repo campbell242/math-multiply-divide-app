@@ -7,6 +7,7 @@ import {
   multiplicationDeck, divisionDeck, roundSizes, splitIntoRounds,
   createRound, currentCard, answerCard, recordFirstAttempt, roundDone,
   tierAfterAnswer, dueAfter, roundEmeralds, roundStats,
+  factorsDeck, factorPairs, matchPair,
 } from "../src/engine.js";
 
 // localStorage shim so store.js loads under node.
@@ -144,6 +145,31 @@ test("store: defaults merge under stored settings (new fields appear)", () => {
   assert.equal(s.promoteMs, 4000, "stored value wins");
   assert.equal(s.autoSubmit, false, "new default present");
   assert.equal(s.lightningMs, 3000);
+});
+
+/* --- factors --- */
+test("factors deck matches the computed spec table exactly", () => {
+  const deck = factorsDeck();
+  assert.equal(deck.length, 53);
+  assert.equal(deck.reduce((s, c) => s + c.pairs.length, 0), 192);
+  const dist = {};
+  for (const c of deck) dist[c.pairs.length] = (dist[c.pairs.length] ?? 0) + 1;
+  assert.deepEqual(dist, { 2: 17, 3: 12, 4: 11, 5: 4, 6: 7, 8: 2 });
+  assert.equal(deck[0].n, 4);
+  assert.equal(deck.at(-1).n, 144);
+});
+test("factor pairs include 1 x n and the square-root pair once", () => {
+  assert.deepEqual(factorPairs(36), [[1, 36], [2, 18], [3, 12], [4, 9], [6, 6]]);
+  assert.deepEqual(factorPairs(144),
+    [[1, 144], [2, 72], [3, 48], [4, 36], [6, 24], [8, 18], [9, 16], [12, 12]]);
+});
+test("matchPair is unordered and rejects non-factors", () => {
+  const card = factorsDeck().find((c) => c.n === 36);
+  assert.equal(matchPair(card, 1, 36), 0);
+  assert.equal(matchPair(card, 36, 1), 0, "either order is the same answer");
+  assert.equal(matchPair(card, 9, 4), 3);
+  assert.equal(matchPair(card, 6, 6), 4);
+  assert.equal(matchPair(card, 5, 7), -1);
 });
 
 console.log(`\n${n} tests passed`);
