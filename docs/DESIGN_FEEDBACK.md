@@ -7,22 +7,27 @@ Process the whole list at once — do not send these piecemeal.
 ## Open
 
 ### 19. MY LOOK screen, built from the routine app's 1n — needs a math-app artboard
-Owner request: the routine app's avatar + theme customization, ported. **Build:** a ME screen
-reached by tapping the avatar on Home; eleven avatar slots and the five world themes with the
-1n swatches; selected slots take 1n's 4px-gold-plus-outline treatment; the A5 pick blip.
-A theme repaints only the trim strip and section-label accents — the three semantic greens
-never move. Three things for Design: (a) a math-app 2o artboard for this screen, (b) the
-entry point — the tappable avatar is provisional until the HOME/PRACTICE/ME tab bar from the
-v4 canvas is ruled on, and (c) which decorative surfaces beyond strip and labels each theme
-may claim.
+Owner request: the routine app's avatar + theme customization, ported. **Build:** a My Look
+screen with eleven avatar slots and the five world themes with the 1n swatches; selected
+slots take 1n's 4px-gold-plus-outline treatment; the A5 pick blip. A theme repaints only the
+trim strip and section-label accents — the three semantic greens never move. For Design:
+(a) a math-app artboard for this screen, and (b) which decorative surfaces beyond strip and
+labels each theme may claim.
+
+### 20. The tab bar is built; the ME tab opens My Look, not the mastery view
+Owner decision: the v4 canvas's HOME / PRACTICE / ME bar is now built exactly as drawn (dark
+ground, gold active, stone inactive, on Home / Deck select / My Look only — never on a card
+mid-round, never in the parent zone). The v4 "ME tab" artboard shows a MASTERY view ("2 facts
+are one round away from Iron") that is not built; until it is, ME opens My Look. Design
+should say how ME's mastery content and My Look share the tab.
 
 ## New in the v4 canvas, not yet built
 
 Design's round-one artboards carry work beyond the eighteen rulings. Tracked here so it is a
 decision, not a drift:
 
-- **A bottom tab bar (HOME / PRACTICE / ME)** on child screens, implying a ME tab — the 2n
-  mastery screen from the original brief, never built. This is the largest piece.
+- ~~A bottom tab bar (HOME / PRACTICE / ME)~~ — built 2026-08-29 (item 20); the 2n mastery
+  CONTENT for the ME tab remains unbuilt.
 - **Deck rows on 2c carry symbols (×, ÷, □×□), DUE chips, and per-deck tier bars** — "the
   same five materials as the fact grid, so the shape of her progress looks identical to her
   and to a parent."

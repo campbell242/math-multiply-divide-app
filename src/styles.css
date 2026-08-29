@@ -756,3 +756,28 @@ body {
 .sw--cherry-1 { background: var(--th-cherry-1); }
 .sw--cherry-2 { background: var(--th-cherry-2); }
 .sw--cherry-3 { background: var(--th-cherry-3); }
+
+/* --- Tab bar (v4 canvas: Home, Deck select, ME only) -------------------------
+   Dark ground, three equal cells, gold active, stone inactive, >=56px tall.
+   Never on a card mid-round, never in the parent zone. */
+.tabbar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  background: var(--bg-dark);
+  border-top: var(--border-w) solid var(--border-ink);
+  z-index: 8;
+}
+.tab {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  color: var(--stone);
+  background: none;
+  border: none;
+  padding: var(--sp-4) 0;
+  min-height: var(--tap-comfy);
+  cursor: pointer;
+}
+.tab.is-active { color: var(--tier-gold); }
+.screen--tabbed { padding-bottom: calc(var(--tap-comfy) + var(--sp-5)); }

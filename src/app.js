@@ -15,9 +15,16 @@ import { initParent } from "./parent.js";
 const $ = (id) => document.getElementById(id);
 const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid", "me"];
 
+const TAB_OF = { home: "home", select: "practice", me: "me" };
+
 function show(name) {
   // Instant, per the motion rules: a child taps fast and transitions are a tax.
   for (const s of screens) $(`screen-${s}`).hidden = s !== name;
+  const tab = TAB_OF[name];
+  $("tabbar").hidden = !tab; // never on a card mid-round, never in the parent zone
+  if (tab)
+    for (const el of document.querySelectorAll(".tab"))
+      el.classList.toggle("is-active", el.dataset.tab === tab);
 }
 
 /* --- Decks --------------------------------------------------------------------
@@ -677,6 +684,13 @@ function renderMe(note = "") {
 }
 
 $("go-me").addEventListener("click", () => renderMe());
+$("tabbar").addEventListener("click", (e) => {
+  const tab = e.target.closest(".tab");
+  if (!tab) return;
+  if (tab.dataset.tab === "home") renderHome();
+  else if (tab.dataset.tab === "practice") renderSelect();
+  else renderMe();
+});
 $("me-back").addEventListener("click", renderHome);
 
 $("avatar-grid").addEventListener("click", (e) => {
