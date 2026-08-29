@@ -118,8 +118,9 @@
   </main>
 
   <main class="screen" id="screen-complete" hidden>
-    <div class="gem gem--big"></div>
+    <div class="gem gem--big" id="award-gem"></div>
     <h1 class="award" id="award-count">+14</h1>
+    <div class="chips chips--center"><span class="chip chip--emerald" id="complete-balance">0</span></div>
     <p class="subtitle" id="complete-note">Great job!</p>
     <ul class="stats" id="complete-stats"></ul>
     <button class="btn btn--big" id="go-home">Back to home ›</button>
@@ -243,6 +244,11 @@
     <p class="pvoice">Each square is one fact, coloured by its tier. Hover or long-press a
       square to see which fact it is.</p>
   </main>
+
+  <div class="toast" id="toast" hidden>
+    <b id="toast-title"></b>
+    <span id="toast-sub"></span>
+  </div>
 
   <script type="module" src="src/app.js"></script>
 </body>

@@ -235,16 +235,26 @@ body {
 }
 .slab__fast { position: absolute; top: var(--sp-3); right: var(--sp-3); }
 
-/* Correct: the press, the green wash, the checkmark on the entry line. */
+/* Correct: the press, the green wash rising in steps, the answer popping. */
 .slab.is-correct { transform: scale(0.985); }
 .slab.is-correct::after {
   content: "";
   position: absolute; inset: 0;
   background: var(--correct);
-  opacity: 0.16;
   pointer-events: none;
+  opacity: 0.16;
+  animation: wash-in 90ms var(--steps-fade) backwards;
 }
-.slab.is-correct .slab__entry { color: var(--correct-text); border-color: var(--correct); }
+@keyframes wash-in { from { opacity: 0; } to { opacity: 0.16; } }
+.slab.is-correct .slab__entry {
+  color: var(--correct-text); border-color: var(--correct);
+  animation: pop-in 180ms var(--ease-pop);
+}
+@keyframes pop-in {
+  0% { transform: scale(0.2); }
+  60% { transform: scale(1.18); }
+  100% { transform: scale(1); }
+}
 
 /* Wrong: slate and still. No motion, no sound — the state simply is. */
 .slab.is-wrong { background: var(--wrong-soft); border-color: var(--wrong); }
@@ -261,7 +271,7 @@ body {
   image-rendering: pixelated;
   opacity: 0;
 }
-.slab__stars.is-burst i { animation: star-rise var(--dur-answer) var(--ease-out) forwards; }
+.slab__stars.is-burst i { animation: star-rise var(--dur-star) var(--ease-out) forwards; }
 .slab__stars i:nth-child(1) { left: -34px; }
 .slab__stars i:nth-child(2) { left: -8px; animation-delay: 80ms; }
 .slab__stars i:nth-child(3) { left: 20px; animation-delay: 160ms; }
@@ -561,3 +571,54 @@ body {
   font-size: var(--fs-heading);
 }
 .speedbar__best { font-size: var(--fs-label); color: var(--text-muted); }
+
+/* --- Advancement toast -----------------------------------------------------------
+   The routine app's pattern: bevel card, gold title, sans subtitle. Slides in
+   from the top, dismisses itself, never blocks a tap. Fired only when a fact
+   reaches Gold or Diamond -- rare enough to stay special. */
+.toast {
+  position: fixed;
+  top: var(--sp-4);
+  left: 50%;
+  transform: translate(-50%, 0);
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 220px;
+  background: var(--bg-toast);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-light), var(--key-drop-sm);
+  padding: var(--sp-2) var(--sp-4);
+  opacity: 1;
+  transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+}
+.toast[hidden] { display: flex; opacity: 0; transform: translate(-50%, -8px); visibility: hidden; }
+.toast b {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  color: var(--tier-gold-title);
+}
+.toast span { font-size: var(--fs-micro); color: var(--text-muted); }
+
+/* --- The award moment ----------------------------------------------------------
+   Emeralds arc DOWN into the balance so they read as becoming the number.
+   The only animation in the app allowed to take its time (~2s). */
+.chips--center { justify-content: center; }
+.arc-gem {
+  position: fixed;
+  z-index: 9;
+  width: 16px; height: 16px;
+  background: var(--emerald);
+  border: var(--border-w-thin) solid var(--emerald-deep);
+  box-shadow: inset 2px 2px 0 var(--emerald-light), inset -2px -2px 0 var(--emerald-dark);
+  pointer-events: none;
+  transition: transform 550ms cubic-bezier(0.4, 0, 0.8, 1), opacity 550ms linear;
+}
+.chip.is-pulse { animation: chip-pulse 120ms var(--ease-out); }
+@keyframes chip-pulse { 0% { transform: scale(1.18); } 100% { transform: scale(1); } }
+
+/* Closing lines hold back until the last emerald lands, then fade up 8px. */
+.fade-wait { opacity: 0; transform: translateY(8px); }
+#complete-note, #complete-stats { transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); }

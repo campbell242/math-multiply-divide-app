@@ -120,6 +120,20 @@ The 2h artboard shows the card (timer + BEST); the mode around it was undefined.
 Also: BEST is the minimum stored time for the card, and the frozen final time stays on screen
 through the answer beat. The dash size (18) is a constant -- should it be parent-adjustable?
 
+### 17. Promotion toast fires only for Gold and Diamond
+The advancement toast (bevel card, gold title, sans subtitle, self-dismissing, never blocking
+a tap) fires when a fact REACHES Gold or Diamond, with the rising-third cue. Every promotion
+would fire forty times a round and become wallpaper; these two are rare enough to stay
+special. Wood-to-Stone and Stone-to-Iron pass silently. Confirm the threshold.
+
+### 18. The award chain, as built
+Session complete plays: +N rolls from 0 (500ms, ten steps), eight emeralds arc down into the
+balance chip shrinking to 0.38, the counter answers each landing with a 1.18 pulse, and the
+closing lines hold back until the last one lands (~2s total). State is final before any of it
+plays, so an interruption costs the show, never the emeralds. Reduced motion or a hidden tab
+gets the numbers instantly. Matches the routine app's retimed reward release; flagged only so
+Design can review the real thing against 2m.
+
 ## Resolved
 
 *(nothing yet — move entries here as Design rules on them)*

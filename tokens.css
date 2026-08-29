@@ -203,6 +203,7 @@
   --dur-fast:   180ms;
   --dur-med:    240ms;
   --dur-answer: 380ms;  /* the whole correct-answer burst */
+  --dur-star:   220ms;  /* one star; +160ms stagger ends at 380 */
   --dur-pop:    450ms;
   --ease-out:   cubic-bezier(.2, .8, .3, 1);
   --ease-pop:   cubic-bezier(.34, 1.56, .64, 1);
@@ -223,6 +224,7 @@
     --dur-fast: 0ms;
     --dur-med: 0ms;
     --dur-answer: 0ms;
+    --dur-star: 0ms;
     --dur-pop: 0ms;
   }
 }

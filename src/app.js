@@ -31,6 +31,27 @@ const DECKS = {
   factors: { name: "Factors",        cards: factorsDeck(),        kind: "factors" },
 };
 
+const TIER_LABELS = ["Wood", "Stone", "Iron", "Gold", "Diamond"];
+
+/* --- Advancement toast: never blocks a tap, dismisses itself. -------------------- */
+let toastTimer = null;
+function showToast(title, sub) {
+  $("toast-title").textContent = title;
+  $("toast-sub").textContent = sub;
+  $("toast").hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { $("toast").hidden = true; }, 3000);
+}
+
+// Only reaching Gold or Diamond earns the toast and the rising third --
+// per-tier toasts would fire forty times a round and become wallpaper.
+function maybeCelebratePromotion(card, oldTier, newTier, sound) {
+  if (newTier > oldTier && newTier >= 3) {
+    showToast(`${TIER_LABELS[newTier]}!`, `${card.text} is now a ${TIER_LABELS[newTier].toLowerCase()} fact`);
+    audio.cuePromotion(sound);
+  }
+}
+
 /* --- Boot ------------------------------------------------------------------- */
 const { storageOk } = store.initStore();
 document.addEventListener("pointerdown", audio.unlock, { once: true });
@@ -263,6 +284,7 @@ function submit() {
   recordFirstAttempt(session.round, card.id, correct, ms);
   if (first) {
     const rec = store.getCard(card.id);
+    const oldTier = rec.t; // recordAttempt mutates the live record; read first
     if (session.mode === "speed") {
       // Tier and due stay put: a wrong answer against the clock must never
       // cost her scheduled progress, or she will avoid the mode.
@@ -273,6 +295,7 @@ function submit() {
       store.recordAttempt(card.id, {
         correct, ms, newTier, due: dueAfter(newTier, session.today),
       });
+      maybeCelebratePromotion(card, oldTier, newTier, s.sound.all);
     }
   }
   if (session.mode === "speed")
@@ -372,11 +395,13 @@ function completeFactorCard() {
   // avg drives session lightning stats; the persisted time is the total.
   recordFirstAttempt(session.round, fs.card.id, correct, avgMs);
   const rec = store.getCard(fs.card.id);
+  const oldTier = rec.t; // recordAttempt mutates the live record; read first
   const newTier = tierAfterAnswer(rec.t, correct, avgMs, s.promoteMs);
   if (newTier > rec.t) session.promoted++;
   store.recordAttempt(fs.card.id, {
     correct, ms: totalMs, newTier, due: dueAfter(newTier, session.today),
   });
+  maybeCelebratePromotion(fs.card, oldTier, newTier, s.sound.all);
 
   // A completed factors card never requeues: every pair was eventually
   // entered correctly, which is what "answered correctly" means here. A
@@ -506,7 +531,9 @@ $("stop-here").addEventListener("click", finishSession);
 /* --- Session complete: the one place emeralds are released ------------------------------- */
 function finishSession() {
   const s = session.settings;
-  store.addEmeralds(session.banked);
+  const banked = session.banked;
+  const oldBalance = store.get("profile").emeralds;
+  store.addEmeralds(banked);
   const streakCount = store.bumpStreak(session.today);
   store.logSession({
     day: session.today,
@@ -515,14 +542,14 @@ function finishSession() {
     cards: session.cardsCleared,
     firstTry: session.firstTry,
     fast: session.fast,
-    emeralds: session.banked,
+    emeralds: banked,
     promoted: session.promoted,
     seconds: Math.round((Date.now() - session.startedAt) / 1000),
   });
   store.flushNow();
+  stopRunTimer();
 
   const name = store.get("profile").name || "";
-  $("award-count").textContent = `+${session.banked}`;
   $("complete-note").textContent = name ? `Great job, ${name}!` : "Great job!";
   $("complete-stats").innerHTML = [
     [`cards cleared`, session.cardsCleared],
@@ -530,9 +557,75 @@ function finishSession() {
     [`facts moved up a tier`, session.promoted],
     [`streak`, `★ ${streakCount}`],
   ].map(([k, v]) => `<li><span>${k}</span><b>${v}</b></li>`).join("");
-  audio.cueAward(s.sound.all);
   session = null;
   show("complete");
+  audio.cueAward(s.sound.all);
+  playAward(banked, oldBalance);
+}
+
+/* --- The award chain (2m): +N rolls from 0, eight emeralds arc into the
+   balance, the counter answers each landing, and the closing lines hold back
+   until the last one lands. State is already final before any of this plays,
+   so an interruption can cost only the show, never the emeralds.            */
+function playAward(banked, oldBalance) {
+  const balEl = $("complete-balance");
+  const award = $("award-count");
+  const finalBal = oldBalance + banked;
+  const setBal = (v) => { balEl.innerHTML = `<span class="gem"></span> ${v}`; };
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches || document.hidden;
+
+  const note = $("complete-note");
+  const stats = $("complete-stats");
+  const finish = () => {
+    award.textContent = `+${banked}`;
+    setBal(finalBal);
+    note.classList.remove("fade-wait");
+    stats.classList.remove("fade-wait");
+  };
+
+  setBal(oldBalance);
+  if (reduce) { finish(); return; }
+  note.classList.add("fade-wait");
+  stats.classList.add("fade-wait");
+
+  // +N rolls from 0 over 500ms in stepped increments.
+  award.textContent = "+0";
+  let step = 0;
+  const roll = setInterval(() => {
+    step++;
+    award.textContent = `+${Math.round((banked * step) / 10)}`;
+    if (step >= 10) clearInterval(roll);
+  }, 50);
+
+  // Eight emeralds spawn at the big gem, staggered 60ms, and arc down into
+  // the balance chip, shrinking as they go.
+  const from = $("award-gem").getBoundingClientRect();
+  const to = balEl.getBoundingClientRect();
+  const per = Math.floor(banked / 8);
+  let shown = oldBalance;
+  let landed = 0;
+  for (let i = 0; i < 8; i++) {
+    setTimeout(() => {
+      const g = document.createElement("i");
+      g.className = "arc-gem";
+      g.style.left = `${from.left + from.width / 2 - 8 + (i - 3.5) * 6}px`;
+      g.style.top = `${from.top + from.height / 2 - 8}px`;
+      document.body.appendChild(g);
+      const dx = to.left + to.width / 2 - (from.left + from.width / 2);
+      const dy = to.top + to.height / 2 - (from.top + from.height / 2);
+      setTimeout(() => { g.style.transform = `translate(${dx}px, ${dy}px) scale(0.38)`; }, 20);
+      setTimeout(() => {
+        g.remove();
+        landed++;
+        shown = landed === 8 ? finalBal : shown + per;
+        setBal(shown);
+        balEl.classList.remove("is-pulse");
+        void balEl.offsetWidth;
+        balEl.classList.add("is-pulse");
+        if (landed === 8) setTimeout(finish, 200);
+      }, 620);
+    }, 350 + i * 60);
+  }
 }
 $("go-home").addEventListener("click", renderHome);
 
