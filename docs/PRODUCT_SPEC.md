@@ -62,7 +62,7 @@ Leitner boxes themed as Minecraft tool materials, so progress is legible to a ch
 
 Transitions, tuned to encourage rather than punish:
 
-- **Correct and under the fluency threshold** → promote one tier.
+- **Correct and under the promotion threshold** → promote one tier.
 - **Correct but slow** → hold. Knowing it slowly is not yet knowing it.
 - **Wrong** → demote **one** tier, never all the way back to Wood.
 
@@ -73,18 +73,21 @@ different questions, and conflating them is what caused the mismatch.
 
 | Threshold | Default | Job |
 |---|---|---|
-| **Promotion** | 5.0s | Did she know it well enough to advance a tier? Parent-adjustable. |
+| **Promotion** | 5.0s | Did she know it well enough to advance a tier? |
 | **Lightning** | 3.0s | Was that *fast*? Earns the flourish, never affects tiering. |
 
-Measured per pair rather than per card for factors.
+Measured per pair rather than per card for factors. **Both are set independently in parent
+settings**, so the bar for praise can be tuned without touching the bar for progress — the
+two serve different purposes and a parent will want to move them at different times.
+
+Lightning must be less than or equal to Promotion. If a parent sets it higher, clamp it to
+Promotion rather than refusing the input: a Lightning bar above the promotion bar would mean
+praising an answer too slow to advance, which is incoherent.
 
 The promotion threshold has to be the forgiving one, because of how it interacts with
 tiering: *correct but slow* holds the card at its current tier. Set promotion at 3s and a
 child averaging 4s promotes nothing — every card stalls forever and the app quietly stops
 feeling like progress. 5s advances her while 3s is still worth celebrating.
-
-Only the promotion threshold appears in parent settings. Lightning is fixed at 60% of it, so
-adjusting one keeps the pair sensible.
 
 ## Session model
 
@@ -118,7 +121,8 @@ about finishing, not about erasing the record.
 PIN-gated, in the routine app's iron/neutral language and plain factual voice.
 
 - **Child's name** — a text field, set once. See below.
-- Enable/disable decks; round size; fluency threshold; allow speed-run mode
+- Enable/disable decks; round size; **promotion threshold**; **Lightning threshold**;
+  allow speed-run mode
 - Sound toggles: one global, one separate for alarms, matching the routine app's pattern
 - Excuse a day, to protect a streak
 - Emerald balance adjust

@@ -139,7 +139,7 @@ The one adapted rule: green still means Haley acted, gold still means coins are 
 
   <div style="display:flex;gap:18px;flex-wrap:wrap">
     <div style="flex:1;min-width:360px;background:#fffdf6;border:3px solid #2b2b24;padding:16px">
-      <div style="font-family:'Jersey 25',monospace;font-size:20px;margin-bottom:2px">3 · The problem slab — three states</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:20px;margin-bottom:2px">3 · The problem slab — three states, and Lightning</div>
       <div style="font-size:12.5px;color:#6b675c;font-weight:600;line-height:1.55;margin-bottom:12px">The most looked-at element in the app. Stone trim top and bottom, 92px Jersey 25, readable at arm's length. Colour never animates: the correct state is a green overlay <i>fading in</i> over the neutral slab.</div>
       <div style="display:flex;flex-direction:column;gap:12px">
         <div>
@@ -164,6 +164,23 @@ The one adapted rule: green still means Haley acted, gold still means coins are 
             <div style="text-align:center;font-size:13px;font-weight:700;color:#42607c;padding:0 0 14px">Seven eights are fifty-six. We'll come back to it.</div>
           </div>
           <div style="font-family:'Jersey 25',monospace;font-size:15px;color:#42607c;margin-top:6px">WRONG · slate #e8eef4 / #6d89a3 / #42607c — silent, still, no red</div>
+        </div>
+        <div>
+          <div style="position:relative;border:3px solid #2c5c1a;box-shadow:0 5px 0 rgba(43,43,36,.14),inset 0 0 0 3px #d9ff8a;background:#eaf5df">
+            <div style="height:8px;background:url('assets/tx-stone.png');background-size:16px"></div>
+            <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:66px;line-height:1.05;padding:14px 0 4px;color:#2c5c1a">7 × 8 = 56</div>
+            <div style="display:flex;justify-content:flex-end;padding:0 13px 11px"><div style="font-family:'Jersey 25',monospace;font-size:15px;color:#20241a;background:#7fe237;border:2px solid #2c5c1a;padding:1px 7px">FAST</div></div>
+            <div style="position:absolute;left:13px;top:17px;font-family:'Jersey 25',monospace;font-size:22px;color:#57a636">✔</div>
+            <img src="assets/icons/orb.png" alt="" style="position:absolute;left:54px;top:0;width:14px;height:14px">
+            <img src="assets/icons/orb.png" alt="" style="position:absolute;left:124px;top:-9px;width:18px;height:18px">
+            <img src="assets/icons/orb.png" alt="" style="position:absolute;right:76px;top:-2px;width:14px;height:14px">
+          </div>
+          <div style="font-family:'Jersey 25',monospace;font-size:15px;color:#3d7a22;margin-top:6px">LIGHTNING · #d9ff8a inset rim, XP orbs instead of stars, one word. On the real card (<a href="#2o">2o</a>) the chip sits top-right, where the 92px slab has room beside the answer.</div>
+        </div>
+        <div style="background:#eaf5df;border:3px solid #2c5c1a;padding:12px 13px;font-size:12px;color:#2b2b24;font-weight:600;line-height:1.6">
+          <b>Lightning modifies the correct state; it never stacks on it.</b> Same event, same 380ms, three substitutions: the rim, the particle, the word. Under 3.0s — the flourish only, never tiering.<br><br>
+          <b>Why XP green and not gold.</b> Gold is streaks and the Gold tier, so a gold mark on a card face would read as tier or streak movement — the two things Lightning explicitly does not do. Emerald would read as payment. XP green #7fe237 and its bright #d9ff8a are the one green in either app that means bonus energy rather than a balance or a tier, and they already appear only as a momentary brightness. The orb is the routine app's existing XP/bonus icon, unmodified.<br><br>
+          A <b>correct-but-slow</b> answer gets the ordinary correct state above, unmarked. There is no slow state, in any form.
         </div>
       </div>
     </div>
@@ -618,6 +635,62 @@ Three tabs: <b>HOME / PRACTICE / ME</b>, gold when active, ≥56px tall — the 
 </sc-if>
 </div>
 
+<div class="dv-opt" id="2o"><div class="dv-olabel"><a class="dv-oid" href="#2o">2o</a>Correct, Lightning — the variant of <a href="#2e">2e</a></div>
+<div class="dv-card" data-screen-label="Correct lightning" style="width:390px;background:#f3eee1;color:#2b2b24;display:flex;flex-direction:column;min-height:780px">
+  <div style="height:12px;background:url('assets/tx-stone.png');background-size:16px"></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:12px 16px 6px">
+    <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578">‹</span>
+    <div style="font-family:'Jersey 25',monospace;font-size:19px">Multiplication</div>
+    <span style="font-family:'Jersey 25',monospace;font-size:13px;padding:3px 8px;border:2px solid #12c46b;color:#0a7a44;background:#e4f7ec">SMART</span>
+    <span style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:17px;color:#3d7a22">13 / 18</span>
+  </div>
+  <div style="padding:2px 16px 0">
+    <div style="height:16px;border:3px solid #20241a;background:#2f2f28;padding:2px">
+      <div style="height:100%;width:72%;background:repeating-linear-gradient(90deg,transparent 0 16px,rgba(0,0,0,.25) 16px 19px),linear-gradient(#b4f06a,#7fe237 45%,#59c01c)"></div>
+    </div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:16px;padding:18px 16px">
+    <div style="position:relative;animation:ms-press 3.2s steps(3) infinite">
+      <div style="background:#fffdf6;border:3px solid #2b2b24;box-shadow:0 5px 0 rgba(43,43,36,.14)">
+        <div style="height:8px;background:url('assets/tx-stone.png');background-size:16px"></div>
+        <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:92px;line-height:1;padding:18px 0 22px">7 × 8</div>
+      </div>
+      <div style="position:absolute;inset:0;background:#eaf5df;border:3px solid #2c5c1a;box-shadow:inset 0 0 0 3px #d9ff8a;animation:ms-green 3.2s steps(1) infinite">
+        <div style="height:8px;background:url('assets/tx-stone.png');background-size:16px"></div>
+        <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:92px;line-height:1;padding:18px 0 22px;color:#2c5c1a">56</div>
+        <div style="position:absolute;left:14px;top:20px;font-family:'Jersey 25',monospace;font-size:30px;color:#57a636">✔</div>
+        <div style="position:absolute;right:14px;top:22px;font-family:'Jersey 25',monospace;font-size:19px;color:#20241a;background:#7fe237;border:2px solid #2c5c1a;padding:2px 9px">FAST</div>
+      </div>
+      <img src="assets/icons/orb.png" alt="" style="position:absolute;left:64px;top:26px;width:16px;height:16px;animation:ms-star 3.2s steps(3) infinite">
+      <img src="assets/icons/orb.png" alt="" style="position:absolute;left:170px;top:8px;width:22px;height:22px;animation:ms-star 3.2s steps(3) .08s infinite">
+      <img src="assets/icons/orb.png" alt="" style="position:absolute;right:56px;top:30px;width:16px;height:16px;animation:ms-star 3.2s steps(3) .16s infinite">
+      <img src="assets/icons/orb.png" alt="" style="position:absolute;right:118px;top:-4px;width:13px;height:13px;animation:ms-star 3.2s steps(3) .24s infinite">
+    </div>
+    <div style="height:66px;background:#57a636;border:3px solid;border-color:#2c5c1a #a8e07f #a8e07f #2c5c1a;display:flex;align-items:center;justify-content:center;font-family:'Jersey 25',monospace;font-size:42px;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.3)">56</div>
+  </div>
+  <div style="padding:0 16px 16px;opacity:.5">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">1</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">2</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">3</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">4</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">5</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">6</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">7</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">8</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">9</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:20px;line-height:1.15;text-align:center;padding:24px 0;background:#d9d6cd;border:3px solid #20241a;color:#6b675c">CLEAR</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:32px;line-height:1.15;text-align:center;padding:18px 0;background:#fffdf6;border:3px solid #20241a">0</div>
+      <div style="font-family:'Jersey 25',monospace;font-size:28px;line-height:1.15;text-align:center;padding:20px 0;background:#d9d6cd;border:3px solid #20241a;color:#6b675c">⌫</div>
+    </div>
+    <div style="font-family:'Jersey 25',monospace;font-size:24px;color:#fff;text-align:center;padding:15px;background:#57a636;border:3px solid #20241a;box-shadow:inset 0 4px 0 rgba(255,255,255,.35),inset 0 -6px 0 rgba(0,0,0,.28);text-shadow:0 2px 0 rgba(0,0,0,.3);margin-top:8px">CHECK ›</div>
+  </div>
+</div>
+<sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
+<div style="width:390px;font-size:11.5px;color:#6b675c;font-weight:700;line-height:1.5">Hold this beside <a href="#2e">2e</a>: same layout, same duration, same green. The three differences are the bright inset rim, the orbs, and the word — and only the rim and the word survive with transforms dropped, which is why the mark cannot be motion alone.<br>There is no visible clock on this screen, so the word does the teaching. FAST rather than LIGHTNING: one syllable, and it names what happened instead of naming a feature.</div>
+</sc-if>
+</div>
+
 <div class="dv-opt" id="2f"><div class="dv-olabel"><a class="dv-oid" href="#2f">2f</a>Wrong — slate, silent, still</div>
 <div class="dv-card" data-screen-label="Wrong" style="width:390px;background:#f3eee1;color:#2b2b24;display:flex;flex-direction:column;min-height:780px">
   <div style="height:12px;background:url('assets/tx-stone.png');background-size:16px"></div>
@@ -1014,6 +1087,10 @@ Three tabs: <b>HOME / PRACTICE / ME</b>, gold when active, ≥56px tall — the 
         </div>
         <span style="font-size:12.5px;font-weight:700;color:#4a463a">2 facts moved up a tier</span>
       </div>
+      <div style="display:flex;align-items:center;gap:9px;margin-top:11px;padding-top:11px;border-top:2px solid #cfc8b2">
+        <img src="assets/icons/orb.png" alt="" style="width:24px;height:24px;flex:none">
+        <span style="font-size:12.5px;font-weight:700;color:#4a463a">14 lightning-fast answers</span>
+      </div>
       <div style="margin-top:13px">
         <div style="display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:#6b675c;margin-bottom:5px"><span>DECK PROGRESS</span><span>ROUND 1 OF 3</span></div>
         <div style="height:18px;border:3px solid #20241a;background:#2f2f28;padding:2px">
@@ -1027,7 +1104,7 @@ Three tabs: <b>HOME / PRACTICE / ME</b>, gold when active, ≥56px tall — the 
   </div>
 </div>
 <sc-if value="{{ showNotes }}" hint-placeholder-val="{{ true }}">
-<div style="width:390px;font-size:11.5px;color:#6b675c;font-weight:700;line-height:1.5">"Emeralds earned" is a count, not a payout — they arc into the balance in 2m, once, whether she stops here or plays four more rounds. Stopping is never framed as quitting: the stone button says the gems are already hers. Sound is the short resolving figure; the round-cleared screen itself doesn't animate.</div>
+<div style="width:390px;font-size:11.5px;color:#6b675c;font-weight:700;line-height:1.5">"Emeralds earned" is a count, not a payout — they arc into the balance in 2m, once, whether she stops here or plays four more rounds. Stopping is never framed as quitting: the stone button says the gems are already hers. Sound is the short resolving figure; the round-cleared screen itself doesn't animate.<br>The lightning count lives here rather than being a moment on every card: a flourish that fires thirty times can only be a texture, so the per-card mark stays minimal and the accumulation becomes one number. It appears only when the count is at least one — never a ratio, never a percentage, and its absence says nothing.</div>
 </sc-if>
 </div>
 
@@ -1383,6 +1460,15 @@ Inherited rules, no exceptions: transform and opacity only, <span style="font-fa
         <b>deferred</b> — the round bar's next segment flips <span style="font-family:'Jersey 25',monospace">scaleX(0→1)</span> from the left, 160ms.<br>
         She will see this several hundred times a week. Everything is over before she can look up from the keypad, and the next card is already tappable underneath.
       </div>
+      <div style="background:#eaf5df;border:3px solid #2c5c1a;box-shadow:inset 0 0 0 3px #d9ff8a;padding:12px 13px;margin-top:12px">
+        <div style="font-family:'Jersey 25',monospace;font-size:17px;color:#2c5c1a;margin-bottom:6px">Lightning — the same 380ms, three substitutions</div>
+        <div style="font-size:12px;color:#2b2b24;font-weight:600;line-height:1.6">
+          <b>0ms</b> — the green overlay lands in <span style="font-family:'Jersey 25',monospace">steps(1)</span> instead of fading in <span style="font-family:'Jersey 25',monospace">steps(2)</span> at 60ms. Earlier, not longer.<br>
+          <b>0ms</b> — the slab carries a 3px <span style="font-family:'Jersey 25',monospace">#d9ff8a</span> inset rim and the FAST chip. Both static, which is what makes the mark legible under <span style="font-family:'Jersey 25',monospace">prefers-reduced-motion</span> once every transform is dropped.<br>
+          <b>110ms</b> — the particles are XP orbs, not stars. Same pop, same 30px rise, same 80ms stagger, same finish.<br>
+          Total unchanged at 380ms, next card unaffected. Nothing is added to the sequence; three things are swapped inside it.
+        </div>
+      </div>
     </div>
     <div style="flex:1;min-width:300px;background:#fffdf6;border:3px solid #2b2b24;padding:16px">
       <div style="font-family:'Jersey 25',monospace;font-size:19px;margin-bottom:10px">Wrong answer — nothing</div>
@@ -1464,7 +1550,7 @@ Inherited rules, no exceptions: transform and opacity only, <span style="font-fa
     <div style="display:flex;flex-direction:column;gap:11px">
       <div style="display:flex;gap:14px;flex-wrap:wrap;padding-bottom:11px;border-bottom:2px solid #cfc8b2">
         <div style="width:150px;flex:none"><div style="font-family:'Jersey 25',monospace;font-size:18px">Correct answer</div><div style="font-size:11px;font-weight:800;color:#0a7a44">EVERY CARD</div></div>
-        <div style="flex:1;min-width:280px;font-size:12px;font-weight:600;color:#4a463a;line-height:1.65">One blip, <span style="font-family:'Jersey 25',monospace">dur .10</span>, gain <span style="font-family:'Jersey 25',monospace">.10</span>. Pitch <b>climbs a pentatonic run through the round</b>, one step per correct card: C6 <span style="font-family:'Jersey 25',monospace">1046.50</span> · D6 <span style="font-family:'Jersey 25',monospace">1174.66</span> · E6 <span style="font-family:'Jersey 25',monospace">1318.51</span> · G6 <span style="font-family:'Jersey 25',monospace">1567.98</span> · A6 <span style="font-family:'Jersey 25',monospace">1760.00</span>, then <b>holds at A6</b> for the rest of the round. The index resets at round start and does <b>not</b> reset on a miss — the run only ever goes up, so a round audibly fills. Same mechanic as the checklist's scale, at half the duration because there are forty of them.</div>
+        <div style="flex:1;min-width:280px;font-size:12px;font-weight:600;color:#4a463a;line-height:1.65">One blip, <span style="font-family:'Jersey 25',monospace">dur .10</span>, gain <span style="font-family:'Jersey 25',monospace">.10</span>. Pitch <b>climbs a pentatonic run through the round</b>, one step per correct card: C6 <span style="font-family:'Jersey 25',monospace">1046.50</span> · D6 <span style="font-family:'Jersey 25',monospace">1174.66</span> · E6 <span style="font-family:'Jersey 25',monospace">1318.51</span> · G6 <span style="font-family:'Jersey 25',monospace">1567.98</span> · A6 <span style="font-family:'Jersey 25',monospace">1760.00</span>, then <b>holds at A6</b> for the rest of the round. The index resets at round start and does <b>not</b> reset on a miss — the run only ever goes up, so a round audibly fills. Same mechanic as the checklist's scale, at half the duration because there are forty of them. <b>Lightning does not alter this cue in any way.</b></div>
       </div>
       <div style="display:flex;gap:14px;flex-wrap:wrap;padding-bottom:11px;border-bottom:2px solid #cfc8b2">
         <div style="width:150px;flex:none"><div style="font-family:'Jersey 25',monospace;font-size:18px">Round cleared</div><div style="font-size:11px;font-weight:800;color:#8a8578">PER ROUND</div></div>
@@ -1484,9 +1570,10 @@ Inherited rules, no exceptions: transform and opacity only, <span style="font-fa
     <div style="flex:1;min-width:320px;background:#e8eef4;border:3px solid #6d89a3;padding:16px">
       <div style="font-family:'Jersey 25',monospace;font-size:20px;color:#42607c;margin-bottom:10px">Silent, always</div>
       <div style="font-size:12.5px;color:#42607c;font-weight:700;line-height:1.9">
-        A wrong answer · a slow answer · a duplicate or invalid factor pair · a broken streak · a card coming back around · every keypad press, including CLEAR and CHECK · every screen change · the speed-run timer, running or expired · every round-cleared screen after the cue itself · the entire parent area, PIN to lock.
+        A wrong answer · a slow answer · a duplicate or invalid factor pair · a broken streak · a card coming back around · every keypad press, including CLEAR and CHECK · every screen change · the speed-run timer, running or expired · every round-cleared screen after the cue itself · a Lightning answer · the entire parent area, PIN to lock.
       </div>
       <div style="font-size:12px;color:#42607c;font-weight:700;line-height:1.6;margin-top:12px;border-top:2px solid #6d89a3;padding-top:10px">Silence here is the design, not an omission. The app has exactly four sounds; three of them are rare, and the fourth is 100ms long.</div>
+      <div style="font-size:12px;color:#42607c;font-weight:700;line-height:1.6;margin-top:10px"><b>Lightning is silent, and here silence is load-bearing rather than restful.</b> The correct blip is a climbing run whose whole job is to make a round sound like it is finishing; a second sound on fast answers would break the run. Worse, once fast answers have their own sound, an ordinary correct answer becomes audibly lesser — a "you were slow" cue by omission. The eye gets the flourish; the ear stays neutral.</div>
     </div>
     <div style="flex:1;min-width:280px;background:#fffdf6;border:3px solid #2b2b24;padding:16px">
       <div style="font-family:'Jersey 25',monospace;font-size:20px;margin-bottom:10px">What the round sounds like</div>
