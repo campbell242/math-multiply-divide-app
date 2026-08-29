@@ -38,3 +38,8 @@ the mockups and the shipped app stop resembling each other.
 See [design/README.md](design/README.md). Short version: artboards are committed
 source, edits made in the published canvas must be explicitly pulled back into
 the repo, and nothing syncs on its own.
+
+## Specs
+
+- [design/DESIGN_BRIEF.md](design/DESIGN_BRIEF.md) — the prompt for Claude Design
+- [docs/PRODUCT_SPEC.md](docs/PRODUCT_SPEC.md) — decks, mastery model, session rules
