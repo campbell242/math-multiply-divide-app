@@ -1,143 +1,160 @@
-/* App styles. Every value here comes from tokens.css — see that file first. */
+/* App styles. Every value comes from tokens.css — see that file first.
+   Nothing here may introduce a colour, size, or radius of its own. */
 @import url("../tokens.css");
 
 *, *::before, *::after { box-sizing: border-box; }
 
-html, body {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-}
+html, body { margin: 0; padding: 0; height: 100%; }
 
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: var(--font-ui);
-  font-weight: var(--fw-normal);
-  font-size: var(--fs-md);
-  line-height: var(--lh-normal);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-weight: var(--fw-sentence);
+  font-size: var(--fs-body);
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
-  /* Kids will tap fast and repeatedly; kill the double-tap zoom and the
-     grey flash so it feels like an app rather than a web page. */
+  /* She taps fast and repeatedly. Kill double-tap zoom and the grey flash
+     so it reads as an app rather than a web page. */
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
+/* The grass/dirt strip along the top of every child screen. Texture is trim,
+   never a ground — it must never sit behind text. */
+.trim {
+  height: 10px;
+  background-image: url("../assets/tx-grass.png");
+  background-size: var(--tx-size);
+  background-repeat: repeat-x;
+  image-rendering: pixelated;
+  border-bottom: var(--border-w) solid var(--border-btn);
+}
+
 .app {
-  max-width: 34rem;
+  max-width: 420px;
   margin: 0 auto;
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  padding: var(--sp-4);
-  gap: var(--sp-5);
+  gap: var(--sp-4);
+  padding: var(--sp-5);
 }
 
-.app__bar {
+.bar {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: var(--sp-3);
 }
 
-.app__title {
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-heavy);
+.bar__title {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  font-weight: var(--fw-bold);
   margin: 0;
-  letter-spacing: -0.01em;
 }
 
-/* --- Card ---------------------------------------------------------------- */
-.card {
-  background: var(--bg-raised);
-  border: 1px solid var(--border);
-  border-radius: var(--r-lg);
-  box-shadow: var(--shadow-md);
-  padding: var(--sp-5);
+.bar__meta {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  color: var(--text-muted);
 }
 
-.problem {
+/* --- The problem slab ---------------------------------------------------- */
+.slab {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-light);
   display: grid;
   place-items: center;
   gap: var(--sp-2);
-  text-align: center;
-  padding-block: var(--sp-6);
+  padding: var(--sp-7) var(--sp-4);
 }
 
-.problem__expression {
-  font-family: var(--font-numeral);
-  font-size: var(--fs-problem);
-  font-weight: var(--fw-heavy);
-  line-height: var(--lh-tight);
-  letter-spacing: -0.02em;
+.slab__problem {
+  font-family: var(--font-display);
+  font-size: var(--fs-slab);
+  line-height: 1;
   margin: 0;
 }
 
-.problem__hint {
-  color: var(--text-muted);
-  font-size: var(--fs-sm);
+.slab__note {
+  font-size: var(--fs-hint);
+  color: var(--text-tertiary);
   margin: 0;
 }
 
-/* --- Button -------------------------------------------------------------- */
+/* --- Chips --------------------------------------------------------------- */
+.chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
+
+.chip {
+  font-family: var(--font-display);
+  font-size: var(--fs-hint);
+  border: var(--border-w-thin) solid var(--border-btn);
+  box-shadow: var(--bevel-chip);
+  padding: var(--sp-1) var(--sp-3);
+}
+
+.chip--correct { background: var(--correct); color: var(--on-dark); }
+.chip--fast    { background: var(--fast);    color: var(--ink); }
+.chip--wrong   { background: var(--wrong);   color: var(--on-dark); }
+.chip--emerald { background: var(--emerald); color: var(--on-dark); }
+
+/* --- Bevel button --------------------------------------------------------
+   The drop shadow is the affordance: it looks like a thing you push, and
+   pressing travels the full drop so it visibly bottoms out. */
 .btn {
-  font-family: inherit;
-  font-size: var(--fs-lg);
-  font-weight: var(--fw-bold);
-  color: var(--text-inverse);
-  background: var(--accent);
-  border: 0;
-  border-radius: var(--r-md);
-  min-height: var(--tap-min);
+  font-family: var(--font-display);
+  font-size: var(--fs-button);
+  color: var(--on-dark);
+  text-shadow: var(--text-emboss);
+  background: var(--correct);
+  border: var(--border-w) solid var(--border-btn);
+  border-radius: var(--radius);
+  min-height: var(--tap-comfy);
   padding-inline: var(--sp-5);
   cursor: pointer;
-  box-shadow: var(--shadow-key);
-  transition: transform var(--dur-fast) var(--ease-out),
-              box-shadow var(--dur-fast) var(--ease-out),
-              background var(--dur-fast) var(--ease-out);
+  box-shadow: var(--bevel-strong), var(--key-drop);
+  transition: transform var(--dur-press) var(--ease-out),
+              box-shadow var(--dur-press) var(--ease-out);
 }
 
-.btn:hover { background: var(--accent-hover); }
-
-/* Travel the full 5px so the key visibly bottoms out when pressed. */
 .btn:active {
   transform: translateY(5px);
-  box-shadow: 0 0 0 var(--accent-hover);
+  box-shadow: var(--bevel-strong);
 }
 
 .btn:focus-visible {
-  outline: 3px solid var(--accent);
+  outline: var(--border-w) solid var(--parent-edit);
   outline-offset: 3px;
 }
 
-.btn--ghost {
-  background: transparent;
-  color: var(--text-muted);
-  box-shadow: none;
-  border: 1px solid var(--border);
-  min-height: var(--tap-min);
-  min-width: var(--tap-min);
-  padding-inline: var(--sp-3);
-  font-size: var(--fs-lg);
-}
-
-.btn--ghost:hover { background: var(--bg-sunken); color: var(--text); }
-.btn--ghost:active { transform: none; }
-
-/* --- Status -------------------------------------------------------------- */
-.pill {
-  display: inline-flex;
-  align-items: center;
+/* --- Keypad --------------------------------------------------------------
+   Keys are --tap-key tall, measured from the design canvas. */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--sp-2);
-  border-radius: var(--r-full);
-  padding: var(--sp-2) var(--sp-4);
-  font-size: var(--fs-sm);
-  font-weight: var(--fw-bold);
 }
 
-.pill--correct { background: var(--correct-soft); color: var(--correct); }
-.pill--wrong   { background: var(--wrong-soft);   color: var(--wrong); }
-.pill--streak  { background: var(--accent-soft);  color: var(--accent); }
+.key {
+  font-family: var(--font-display);
+  font-size: var(--fs-key);
+  color: var(--ink);
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  border-radius: var(--radius);
+  min-height: var(--tap-key);
+  cursor: pointer;
+  box-shadow: var(--bevel-light), var(--key-drop-sm);
+  transition: transform var(--dur-press) var(--ease-out),
+              box-shadow var(--dur-press) var(--ease-out);
+}
 
-.stack { display: flex; flex-direction: column; gap: var(--sp-4); }
-.row   { display: flex; flex-wrap: wrap; gap: var(--sp-3); align-items: center; }
+.key:active {
+  transform: translateY(4px);
+  box-shadow: var(--bevel-pressed);
+}
+
+.key--wide { grid-column: span 1; font-size: var(--fs-label); }

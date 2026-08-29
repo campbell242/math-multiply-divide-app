@@ -1,166 +1,228 @@
 /* ===========================================================================
    tokens.css — the single source of truth for the app's visual language.
-   
+
+   Extracted from design/Haley Math App.dc.html, where every value is inline
+   on the element. Usage counts below are from that file, so a token that
+   looks arbitrary is not: it is what the design actually uses.
+
    Both surfaces read this file:
      - the app          (src/styles.css imports it)
-     - design artboards (design/*.dc.html link to it)
-   
-   Change a value here and both move together. Do not hardcode a color,
-   size, or radius anywhere else in the project.
+     - design artboards (reference; the canvas carries its own inline copies)
+
+   Fonts are loaded by a <link> in index.html, not @import here — an @import
+   in CSS blocks rendering. This file only names the families.
+
+   THIS DESIGN IS LIGHT-ONLY BY INTENT. The parchment ground, the bevel
+   highlights, and the whole material language assume a light surface; the
+   only dark screens are deliberate inversions (a running timer in the routine
+   app). There is no dark-mode token block and adding one would fight the
+   design rather than extend it.
    =========================================================================== */
 
 :root {
-  /* --- Brand ------------------------------------------------------------ */
-  --c-grape:        #6b4de6;
-  --c-grape-dark:   #5539c4;
-  --c-mint:         #16a97f;
-  --c-tangerine:    #e8703a;
-  --c-lemon:        #f2b230;
-  --c-berry:        #d94a6a;
-
-  /* --- Semantic (light) ------------------------------------------------- */
-  --bg:             #fbfaff;
-  --bg-raised:      #ffffff;
-  --bg-sunken:      #f1eefb;
-  --border:         #dcd6f0;
-  --border-strong:  #b9aee0;
-
-  --text:           #1e1a33;
-  --text-muted:     #5c5578;
-  --text-inverse:   #ffffff;
-
-  --accent:         var(--c-grape);
-  --accent-hover:   var(--c-grape-dark);
-  --accent-soft:    #ece6ff;
-
-  --correct:        var(--c-mint);
-  --correct-soft:   #dcf5ec;
-  --wrong:          var(--c-berry);
-  --wrong-soft:     #fbe3e8;
-  --streak:         var(--c-lemon);
-
-  /* --- Type ------------------------------------------------------------- */
-  /* Rounded, friendly, high legibility for an early reader. */
-  --font-ui:        "Baloo 2", "Nunito", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-numeral:   "Baloo 2", "Nunito", system-ui, sans-serif;
-
-  --fs-problem:     clamp(3.5rem, 18vw, 6rem);   /* 7 x 8 = ?  */
-  --fs-answer:      clamp(2.5rem, 12vw, 4rem);   /* keypad + entry */
-  --fs-xl:          1.75rem;
-  --fs-lg:          1.25rem;
-  --fs-md:          1rem;
-  --fs-sm:          0.875rem;
-
-  --fw-normal:      500;
-  --fw-bold:        700;
-  --fw-heavy:       800;
-
-  --lh-tight:       1.1;
-  --lh-normal:      1.5;
-
-  /* --- Space (4px base) ------------------------------------------------- */
-  --sp-1:  0.25rem;
-  --sp-2:  0.5rem;
-  --sp-3:  0.75rem;
-  --sp-4:  1rem;
-  --sp-5:  1.5rem;
-  --sp-6:  2rem;
-  --sp-7:  3rem;
-  --sp-8:  4rem;
-
-  /* --- Shape ------------------------------------------------------------ */
-  --r-sm:   8px;
-  --r-md:   14px;
-  --r-lg:   22px;
-  --r-xl:   32px;
-  --r-full: 999px;
-
-  /* --- Elevation -------------------------------------------------------- */
-  --shadow-sm: 0 1px 2px rgba(30, 26, 51, 0.08);
-  --shadow-md: 0 4px 12px rgba(30, 26, 51, 0.10);
-  --shadow-lg: 0 12px 32px rgba(30, 26, 51, 0.14);
-  /* Chunky "pressable" bottom edge on buttons — reads as a physical key. */
-  --shadow-key: 0 5px 0 var(--accent-hover);
-
-  /* --- Touch ------------------------------------------------------------ */
-  /* A 7-year-old's aim is imprecise. Nothing tappable goes below --tap-min. */
-  --tap-min:    56px;
-  --tap-comfy:  72px;
-
-  /* --- Motion ----------------------------------------------------------- */
-  --dur-fast:   120ms;
-  --dur-med:    240ms;
-  --dur-slow:   420ms;
-  --ease-out:   cubic-bezier(0.2, 0.8, 0.3, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-/* --- Semantic (dark) ----------------------------------------------------- */
-/* Two selectors so an explicit toggle wins in both directions and the
-   system default still works with no attribute set. */
-:root:not([data-theme="light"]) {
   color-scheme: light;
+
+  /* --- Type -------------------------------------------------------------
+     Jersey 25 for anything numeric or shouted: headings, the problem slab,
+     the keypad, chips, counts. Nunito Sans for anything sentence-shaped.
+     Jersey 25 replaced Pixelify Sans upstream because its digits were
+     ambiguous — 5 read as S. Never set Jersey below 13px.               */
+  --font-display: "Jersey 25", "Nunito Sans", system-ui, sans-serif;
+  --font-sans:    "Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fw-sentence: 600;   /* Nunito's working weight throughout */
+  --fw-bold:     700;
+  --fw-heavy:    800;
+
+  /* Type scale, from the canvas's actual sizes */
+  --fs-slab:     92px;  /* the problem: 7 x 8              */
+  --fs-clock:    74px;  /* home clock                      */
+  --fs-award:    66px;  /* emerald award number            */
+  --fs-display:  32px;  /* screen titles, big counts       */
+  --fs-title:    30px;
+  --fs-heading:  24px;
+  --fs-key:      26px;  /* keypad digits                   */
+  --fs-button:   20px;
+  --fs-body:     17px;
+  --fs-label:    15px;
+  --fs-hint:     13px;  /* Jersey floor — never go below   */
+  --fs-micro:    12px;  /* Nunito only                     */
+
+  /* --- Ground and surfaces ---------------------------------------------- */
+  --bg:            #f3eee1;  /* parchment — every child screen     */
+  --bg-card:       #fffdf6;  /* cards, rows, the slab              */
+  --bg-card-warm:  #fffdf4;
+  --bg-sunken:     #f4f2ec;
+  --bg-toast:      #efe9d8;
+  --bg-parent:     #e8e6e0;  /* parent zone: cooler, iron-trimmed  */
+  --bg-dark:       #20241a;  /* inverted screens                   */
+
+  /* --- Ink and text ------------------------------------------------------ */
+  --ink:           #2b2b24;
+  --ink-strong:    #1a1a1a;
+  --text-muted:    #6b675c;
+  --text-tertiary: #8a8578;
+  --text-parent:   #4a463a;
+  --text-disabled: #d5d2c9;
+  --on-dark:       #ffffff;
+
+  /* --- Lines ------------------------------------------------------------- */
+  --border-btn:    #20241a;  /* every bevel button border          */
+  --border-ink:    #2b2b24;
+  --divider:       #cfc8b2;
+  --divider-soft:  #d9d6cd;
+  --divider-warm:  #d9d3c2;
+  --divider-pale:  #e6e0cd;
+
+  /* --- Correct / wrong / fast -------------------------------------------
+     Three separate greens with three separate jobs. They are ~60deg of hue
+     apart and must not be swapped: correct is what she did, FAST is how
+     quickly, emerald is what she earned.                                */
+  --correct:       #57a636;  /* grass green                        */
+  --correct-dark:  #2c5c1a;  /* checked-slot dark edge             */
+  --correct-light: #a8e07f;  /* checked-slot light edge            */
+  --correct-text:  #3d7a22;  /* green text on light ground         */
+  --correct-soft:  #eaf5df;
+
+  --fast:          #7fe237;  /* the FAST chip                      */
+  --fast-bright:   #d9ff8a;
+  --fast-lo:       #b4f06a;
+  --fast-hi:       #59c01c;
+
+  /* Wrong is calm slate. Never red. This is the load-bearing tone rule of
+     the whole app — a child who feels judged by a flashcard stops using it. */
+  --wrong:         #6d89a3;
+  --wrong-text:    #42607c;
+  --wrong-soft:    #e8eef4;
+  --wrong-pale:    #dfe6ee;
+  --wrong-edge:    #8ba4bb;
+
+  /* --- Emerald: the currency --------------------------------------------- */
+  --emerald:        #12c46b;
+  --emerald-dark:   #0a7a44;
+  --emerald-deep:   #08351f;
+  --emerald-light:  #7df3b0;
+  --emerald-soft:   #e4f7ec;
+  --emerald-pale:   #d8ffec;
+
+  /* --- Mastery tiers: wood, stone, iron, gold, diamond -------------------- */
+  --tier-wood:        #a9713c;
+  --tier-wood-dark:   #6b4520;
+  --tier-wood-light:  #d09a63;
+
+  --tier-stone:       #8f8f8f;
+  --tier-stone-dark:  #4f4f4f;
+  --tier-stone-light: #c4c4c4;
+
+  --tier-iron:        #dcdcdc;
+  --tier-iron-dark:   #6b6b6b;
+
+  --tier-gold:        #f8c53a;
+  --tier-gold-dark:   #c8961e;
+  --tier-gold-text:   #8a6200;
+  --tier-gold-title:  #b07d00;
+  --tier-gold-on:     #3d2c00;  /* text ON a gold fill              */
+  --tier-gold-soft:   #fdf3d6;
+  --tier-gold-light:  #ffe89a;
+
+  --tier-diamond:       #4de6e0;
+  --tier-diamond-dark:  #1f7f7d;
+  --tier-diamond-deep:  #12484a;
+  --tier-diamond-light: #c6fffd;
+  --tier-diamond-mid:   #2a9fa0;
+
+  /* --- Parent zone: iron and slate, never green ---------------------------
+     Green reports what she did. Nothing a parent taps to *do* something is
+     green. Editable values and the pencil affordance take slate — the one
+     accent her side never uses.                                          */
+  --iron:          #6f6f6f;
+  --iron-dark:     #4a4a44;
+  --iron-mid:      #4f4f4f;
+  --iron-light:    #dcdcdc;
+  --stone:         #9a9a9a;
+  --stone-disabled:#7d7d7d;
+  --parent-edit:   #3f5f78;  /* editable values, the pencil       */
+  --link:          #2a78d6;
+
+  /* --- Inventory slot ----------------------------------------------------
+     Dark top/left, light bottom/right: the pressed-in look.            */
+  --slot-fill:       #8b8b8b;
+  --slot-edge-dark:  #3f3f3f;
+  --slot-edge-light: #ffffff;
+  --track:           #2f2f28;
+
+  /* --- Bevel language ----------------------------------------------------
+     No border-radius anywhere. The bevel carries state, not colour: a
+     raised inset highlight means available, a pressed one means active.  */
+  --border-w: 3px;
+  --border-w-thin: 2px;
+  --radius: 0;
+
+  /* Light fills (cards, chips, parent toggles that are ON) */
+  --bevel-light: inset 0 4px 0 rgba(255, 255, 255, .85),
+                 inset 0 -6px 0 rgba(0, 0, 0, .14);
+  --bevel-mid:   inset 0 4px 0 rgba(255, 255, 255, .6),
+                 inset 0 -6px 0 rgba(0, 0, 0, .14);
+  /* Saturated fills (green, gold, emerald buttons) */
+  --bevel-strong: inset 0 4px 0 rgba(255, 255, 255, .35),
+                  inset 0 -6px 0 rgba(0, 0, 0, .28);
+  --bevel-small: inset 0 3px 0 rgba(255, 255, 255, .8),
+                 inset 0 -5px 0 rgba(0, 0, 0, .12);
+  --bevel-chip:  inset 0 3px 0 rgba(255, 255, 255, .55),
+                 inset 0 -4px 0 rgba(0, 0, 0, .16);
+  /* Pressed / recessed — parent toggles that are OFF, locked slots */
+  --bevel-pressed: inset 0 5px 0 rgba(0, 0, 0, .16);
+
+  /* The drop under a key, so it reads as a physical thing to push */
+  --key-drop:     0 5px 0 rgba(43, 43, 36, .14);
+  --key-drop-sm:  0 4px 0 rgba(43, 43, 36, .14);
+  --text-emboss:  0 2px 0 rgba(0, 0, 0, .3);
+
+  /* --- Space (4px base) --------------------------------------------------- */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 18px;   /* screen padding */
+  --sp-6: 24px;
+  --sp-7: 32px;
+  --sp-8: 48px;
+
+  /* --- Touch ---------------------------------------------------------------
+     A ten-year-old's aim is imprecise and she taps fast. Nothing
+     interactive goes below --tap-min.                                    */
+  --tap-min:    44px;
+  --tap-comfy:  56px;
+  --tap-key:    74px;   /* keypad digits, measured from the canvas */
+
+  /* --- Motion --------------------------------------------------------------
+     Transform and opacity only. steps() for anything pixel-art, easing for
+     fades. Nothing over 500ms except the award chain. Screen changes are
+     instant — a child taps fast and transitions become a tax.            */
+  --dur-press:  120ms;
+  --dur-fast:   180ms;
+  --dur-med:    240ms;
+  --dur-answer: 380ms;  /* the whole correct-answer burst */
+  --dur-pop:    450ms;
+  --ease-out:   cubic-bezier(.2, .8, .3, 1);
+  --ease-pop:   cubic-bezier(.34, 1.56, .64, 1);
+  --steps-press: steps(3);
+  --steps-fade:  steps(2);
+
+  /* --- Texture tiles -------------------------------------------------------
+     Thin strips only, never behind text. 16px, or 12px on small chips.   */
+  --tx-size: 16px;
+  --tx-size-sm: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-
-    --bg:            #14121f;
-    --bg-raised:     #1f1c30;
-    --bg-sunken:     #0e0c17;
-    --border:        #322c4a;
-    --border-strong: #4a4170;
-
-    --text:          #f2f0fa;
-    --text-muted:    #a49ec2;
-
-    --accent:        #8b72ff;
-    --accent-hover:  #6f57e0;
-    --accent-soft:   #2a2344;
-
-    --correct:       #2fc79a;
-    --correct-soft:  #16302a;
-    --wrong:         #f2708d;
-    --wrong-soft:    #331d25;
-
-    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-    --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
-  }
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-
-  --bg:            #14121f;
-  --bg-raised:     #1f1c30;
-  --bg-sunken:     #0e0c17;
-  --border:        #322c4a;
-  --border-strong: #4a4170;
-
-  --text:          #f2f0fa;
-  --text-muted:    #a49ec2;
-
-  --accent:        #8b72ff;
-  --accent-hover:  #6f57e0;
-  --accent-soft:   #2a2344;
-
-  --correct:       #2fc79a;
-  --correct-soft:  #16302a;
-  --wrong:         #f2708d;
-  --wrong-soft:    #331d25;
-
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.6);
-}
-
-/* Respect a child who gets motion-sick, and anyone testing on a low-end tablet. */
+/* She may get motion-sick, and it may run on a slow tablet. Keep the fades,
+   drop the transforms — the award still reads as number, count, tier. */
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --dur-press: 0ms;
     --dur-fast: 0ms;
-    --dur-med:  0ms;
-    --dur-slow: 0ms;
+    --dur-med: 0ms;
+    --dur-answer: 0ms;
+    --dur-pop: 0ms;
   }
 }

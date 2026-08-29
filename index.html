@@ -3,28 +3,50 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#6b4de6">
+  <meta name="theme-color" content="#f3eee1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <title>Times Table</title>
   <link rel="manifest" href="manifest.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Jersey+25&display=swap">
   <link rel="stylesheet" href="src/styles.css">
 </head>
 <body>
+  <div class="trim"></div>
+
   <main class="app">
-    <div class="app__bar">
-      <h1 class="app__title">Times Table</h1>
-      <button class="btn btn--ghost" id="theme-toggle" aria-label="Switch between light and dark">◐</button>
+    <div class="bar">
+      <h1 class="bar__title">Multiplication</h1>
+      <span class="bar__meta">13 / 18</span>
     </div>
 
-    <section class="card problem">
-      <p class="problem__expression" id="expression">7 × 8</p>
-      <p class="problem__hint">Scaffold only — the real app lands here.</p>
+    <section class="slab">
+      <p class="slab__problem" id="problem">7 × 8</p>
+      <p class="slab__note">Token check — the real app replaces this.</p>
     </section>
 
-    <div class="row">
-      <span class="pill pill--streak">🔥 Streak 0</span>
-      <span class="pill pill--correct">✓ Correct</span>
-      <span class="pill pill--wrong">✗ Try again</span>
+    <div class="chips">
+      <span class="chip chip--correct">✔ CORRECT</span>
+      <span class="chip chip--fast">FAST</span>
+      <span class="chip chip--wrong">TRY AGAIN</span>
+      <span class="chip chip--emerald">14</span>
+    </div>
+
+    <div class="keypad" id="keypad">
+      <button class="key">1</button>
+      <button class="key">2</button>
+      <button class="key">3</button>
+      <button class="key">4</button>
+      <button class="key">5</button>
+      <button class="key">6</button>
+      <button class="key">7</button>
+      <button class="key">8</button>
+      <button class="key">9</button>
+      <button class="key key--wide">CLEAR</button>
+      <button class="key">0</button>
+      <button class="key key--wide">⌫</button>
     </div>
 
     <button class="btn" id="roll">New problem</button>
