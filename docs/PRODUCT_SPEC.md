@@ -1,0 +1,104 @@
+# Product spec
+
+The decisions behind the app, settled before design started. `design/DESIGN_BRIEF.md` is the
+visual half of this; this file is the behavioural half, and it is what the implementation
+should be built from.
+
+The user is one ten-year-old. Every rule below bends toward her using this daily without
+dreading it.
+
+## Decisions
+
+| Question | Decision |
+|---|---|
+| Factor entry | Two boxes with a fixed x between them; she types both numbers, never the x. **Pairs are unordered** — 1,36 and 36,1 are the same answer, each pair accepted once, in either order. |
+| Full-review scope | One deck at a time, chunked into rounds of 40 for multiplication and division. |
+| Timing | Silent by default; time recorded and fed to the algorithm. Opt-in speed-run mode shows a visible timer. |
+| Currency | Emeralds. Distinct from the routine app's gold Minecoins; the two apps stay independent. |
+
+## Decks
+
+**Multiplication** — a x b, both 2 through 12. Ordered pairs kept distinct: 7x8 and 8x7 are
+separate cards, because recall of the two genuinely differs at this age.
+**121 cards**, rounds of 40 (41 / 40 / 40).
+
+**Division** — p / b = a, where p = a x b and both are 2 through 12.
+**121 cards**, rounds of 40.
+
+**Factors** — the distinct products of the 2-12 table. **53 cards**, values 4 to 144, rounds
+of 12.
+
+Factors deck shape, computed from the deck definition:
+
+| Pairs on the card | Cards | Example |
+|---|---|---|
+| 2 | 17 | 4 → 1x4, 2x2 |
+| 3 | 12 | |
+| 4 | 11 | 24 → 1x24, 2x12, 3x8, 4x6 |
+| 5 | 4 | 36 → 1x36, 2x18, 3x12, 4x9, 6x6 |
+| 6 | 7 | 72 → 1x72, 2x36, 3x24, 4x18, 6x12, 8x9 |
+| 8 | 2 | 120 and 144 → 1x144, 2x72, 3x48, 4x36, 6x24, 8x18, 9x16, 12x12 |
+
+192 pairs total, averaging 3.6 per card. Card length varies fourfold between the easiest and
+hardest card, so the factors screen must hold 2 rows and 8 rows without a redesign. `1 x n`
+counts as a pair.
+
+## Mastery model
+
+Leitner boxes themed as Minecraft tool materials, so progress is legible to a child.
+
+| Tier | Interval until due again |
+|---|---|
+| Wood | same session |
+| Stone | 1 day |
+| Iron | 3 days |
+| Gold | 7 days |
+| Diamond | 16 days (mastered) |
+
+Transitions, tuned to encourage rather than punish:
+
+- **Correct and under the fluency threshold** → promote one tier.
+- **Correct but slow** → hold. Knowing it slowly is not yet knowing it.
+- **Wrong** → demote **one** tier, never all the way back to Wood.
+
+Fluency threshold: **5 seconds** for multiplication and division; measured per pair rather
+than per card for factors. Parent-adjustable.
+
+## Session model
+
+Two modes:
+
+1. **Full review** — every card in the chosen deck, in rounds.
+2. **Smart review** — only the cards the algorithm says are due.
+
+**The clearing rule, in both modes:** a round does not end until every card in it has been
+answered correctly. Missed cards return to the back of the queue within the same round.
+
+A missed-then-corrected card still counts as a miss for tier purposes. Clearing the round is
+about finishing, not about erasing the record.
+
+## Reinforcement
+
+- **Emeralds** awarded per round cleared, with a bonus for a clean round.
+- **Daily streak** as a star chip, positive-only. A broken streak shows *nothing* — never a
+  message about loss. Inherited from the routine app's tone rules.
+- **Star burst and a rising sine cue** on each correct answer.
+- **Tier promotion** fires an advancement toast.
+- **Wrong answers are slate, silent, and still.** Never red, never a sound.
+
+## Parent area
+
+PIN-gated, in the routine app's iron/neutral language and plain factual voice.
+
+- Enable/disable decks; round size; fluency threshold; allow speed-run mode
+- Sound toggles: one global, one separate for alarms, matching the routine app's pattern
+- Excuse a day, to protect a streak
+- Emerald balance adjust
+- Reset a deck's mastery data
+- **A 12x12 fact grid** coloured by mastery tier — the fastest way to see which facts are
+  weak, and the single most useful screen in the parent area
+
+## Open
+
+`tokens.css` currently holds placeholder values from the initial scaffold. It is replaced
+wholesale once Design returns the artboards and the real Minecraft-derived tokens are known.

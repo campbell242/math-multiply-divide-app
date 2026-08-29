@@ -41,3 +41,10 @@ canvas URL below once it exists so future sessions update rather than fork:
 Artboards must pull their colors, type, and spacing from `../tokens.css` rather
 than hardcoding hex values. That file is the contract between design and app —
 if an artboard invents its own blue, the app will never match it.
+
+## The brief
+
+`DESIGN_BRIEF.md` is the prompt to paste into Claude Design, with the routine-app zip
+attached alongside it. It defines the screens, the adapted colour doctrine, and the six
+pieces of new visual vocabulary the math app needs. Behaviour lives in
+[../docs/PRODUCT_SPEC.md](../docs/PRODUCT_SPEC.md).
