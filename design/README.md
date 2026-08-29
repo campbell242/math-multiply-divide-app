@@ -69,3 +69,26 @@ What this means:
 Known read limits: text only (binaries report size and must be copied), 20 paths per
 `github_read_files` call, 300 tree entries by default, and `github_search_code` is bounded —
 a low match count is not proof of absence.
+
+## The canvas
+
+`Haley Math App.dc.html` is the design deliverable, committed exactly as Design exported it.
+It needs two things beside it to render: `support.js` (the canvas runtime, referenced as
+`./support.js`) and `assets/`. Both live in this folder for that reason.
+
+The same PNGs are also at the repository root in `assets/` — that copy is the production one
+the app links to. The duplication is deliberate: one is a frozen design artifact, the other
+is live app content, and they will diverge the moment the app needs a size or format the
+mockup does not.
+
+Verified on import (2026-08-29): 20 artboards, 24 images, zero broken references, no console
+errors. No red-family colour anywhere across 68 distinct hexes. The 8-pair factors card
+renders at 796px in a 844px viewport with the keypad at 74px keys — the hardest constraint in
+the brief, and it holds without scrolling.
+
+## Open design items
+
+- **The Lightning flourish has no visual treatment.** The 3.0s fast-answer marker was added
+  to the spec after this design pass. Design flagged it rather than inventing something, which
+  is the right call — it needs to read as celebratory without competing with the correct-answer
+  burst that fires on the same event.
