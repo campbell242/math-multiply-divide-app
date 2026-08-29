@@ -48,3 +48,24 @@ if an artboard invents its own blue, the app will never match it.
 attached alongside it. It defines the screens, the adapted colour doctrine, and the six
 pieces of new visual vocabulary the math app needs. Behaviour lives in
 [../docs/PRODUCT_SPEC.md](../docs/PRODUCT_SPEC.md).
+
+## What Claude Design can and cannot do with this repo
+
+Probed 2026-08-29. **Read-only, confirmed by testing rather than by asking.**
+
+It has: `github_list_repos`, `github_get_tree`, `github_read_files`, `github_search_code`,
+`github_copy_files`, `github_compare`. It has no tool that commits, branches, opens a pull
+request, or comments. `github_copy_files` copies *from* the repo into its own project; it is
+not a write path.
+
+What this means:
+
+- **Design reads the specs directly.** Point it at `design/DESIGN_BRIEF.md` and
+  `docs/PRODUCT_SPEC.md` by path rather than pasting them. They stay current as we revise,
+  which is how the three mismatches of 2026-08-29 got caught.
+- **Getting artboards back is still manual.** Design exports the `.dc.html`; a human or
+  Claude Code commits it. The round trip above is unchanged.
+
+Known read limits: text only (binaries report size and must be copied), 20 paths per
+`github_read_files` call, 300 tree entries by default, and `github_search_code` is bounded —
+a low match count is not proof of absence.

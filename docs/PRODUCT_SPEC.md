@@ -20,10 +20,15 @@ dreading it.
 
 **Multiplication** — a x b, both 2 through 12. Ordered pairs kept distinct: 7x8 and 8x7 are
 separate cards, because recall of the two genuinely differs at this age.
-**121 cards**, rounds of 40 (41 / 40 / 40).
+**121 cards**, rounds of 41 / 40 / 40.
 
 **Division** — p / b = a, where p = a x b and both are 2 through 12.
-**121 cards**, rounds of 40.
+**121 cards**, rounds of 41 / 40 / 40.
+
+121 does not divide by 40, and the remainder is front-loaded so the longest round happens
+while she is freshest. **The card count is never displayed to her** — the round screen reads
+"Round 1 of 3" over a progress bar. She experiences rounds as thirds of a deck, so the
+uneven split never surfaces, and no artboard needs to commit to a number.
 
 **Factors** — the distinct products of the 2-12 table. **53 cards**, values 4 to 144, rounds
 of 12.
@@ -61,8 +66,25 @@ Transitions, tuned to encourage rather than punish:
 - **Correct but slow** → hold. Knowing it slowly is not yet knowing it.
 - **Wrong** → demote **one** tier, never all the way back to Wood.
 
-Fluency threshold: **5 seconds** for multiplication and division; measured per pair rather
-than per card for factors. Parent-adjustable.
+### Two thresholds, two jobs
+
+Design's artboards showed 3.0s where this spec said 5s. Both numbers are right; they answer
+different questions, and conflating them is what caused the mismatch.
+
+| Threshold | Default | Job |
+|---|---|---|
+| **Promotion** | 5.0s | Did she know it well enough to advance a tier? Parent-adjustable. |
+| **Lightning** | 3.0s | Was that *fast*? Earns the flourish, never affects tiering. |
+
+Measured per pair rather than per card for factors.
+
+The promotion threshold has to be the forgiving one, because of how it interacts with
+tiering: *correct but slow* holds the card at its current tier. Set promotion at 3s and a
+child averaging 4s promotes nothing — every card stalls forever and the app quietly stops
+feeling like progress. 5s advances her while 3s is still worth celebrating.
+
+Only the promotion threshold appears in parent settings. Lightning is fixed at 60% of it, so
+adjusting one keeps the pair sensible.
 
 ## Session model
 
@@ -79,7 +101,12 @@ about finishing, not about erasing the record.
 
 ## Reinforcement
 
-- **Emeralds** awarded per round cleared, with a bonus for a clean round.
+- **Emeralds** are *earned* per round cleared, with a bonus for a clean round, but they are
+  *released* once, at session end. Design was right about this and the earlier spec was
+  wrong. The round-cleared screen (2l) shows the round's earnings as a plain number so the
+  effort is acknowledged immediately; the emerald arc into the balance plays only at 2m.
+  Three award animations in one sitting would spend the moment the routine app deliberately
+  keeps singular.
 - **Daily streak** as a star chip, positive-only. A broken streak shows *nothing* — never a
   message about loss. Inherited from the routine app's tone rules.
 - **Star burst and a rising sine cue** on each correct answer.
