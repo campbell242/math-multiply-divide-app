@@ -3,7 +3,7 @@
 // but the seams between them and the DOM.
 
 import {
-  multiplicationDeck, splitIntoRounds, shuffle,
+  multiplicationDeck, divisionDeck, splitIntoRounds, shuffle,
   createRound, currentCard, answerCard, recordFirstAttempt, roundDone,
   tierAfterAnswer, dueAfter, roundStats,
 } from "./engine.js";
@@ -18,6 +18,15 @@ function show(name) {
   for (const s of screens) $(`screen-${s}`).hidden = s !== name;
 }
 
+/* --- Decks --------------------------------------------------------------------
+
+   Keyed by the settings.decks key, so the parent toggle and the picker speak
+   the same language. Factors joins here when its interaction is built.      */
+const DECKS = {
+  mult: { name: "Multiplication", cards: multiplicationDeck() },
+  div:  { name: "Division",       cards: divisionDeck() },
+};
+
 /* --- Boot ------------------------------------------------------------------- */
 const { storageOk } = store.initStore();
 document.addEventListener("pointerdown", audio.unlock, { once: true });
@@ -29,6 +38,17 @@ function fmtClock(d = new Date()) {
 }
 setInterval(() => { $("clock").textContent = fmtClock(); }, 10_000);
 
+function dueCount(deckKey, today = store.dayNumber()) {
+  return DECKS[deckKey].cards.filter((c) => store.getCard(c.id).due <= today).length;
+}
+
+// A deck the parent has toggled off keeps its progress and stops appearing
+// in smart review — so it also stops counting toward "cards ready".
+function enabledDeckKeys() {
+  const on = store.get("settings").decks;
+  return Object.keys(DECKS).filter((k) => on[k]);
+}
+
 function renderHome() {
   const profile = store.get("profile");
   const streak = store.get("streak");
@@ -38,7 +58,7 @@ function renderHome() {
   const alive = store.streakAlive();
   $("home-streak").hidden = !alive;
   if (alive) $("home-streak").textContent = `★ ${streak.count}`;
-  const due = dueCount();
+  const due = enabledDeckKeys().reduce((n, k) => n + dueCount(k), 0);
   $("home-note").textContent = storageOk
     ? (due ? `${due} ${due === 1 ? "card is" : "cards are"} ready for you.` : "All caught up — nothing due right now.")
     : "Heads up: progress won't be saved on this browser.";
@@ -46,22 +66,30 @@ function renderHome() {
 }
 
 /* --- Deck select ----------------------------------------------------------------- */
-const DECK = { name: "Multiplication", cards: multiplicationDeck() };
-let mode = null; // "smart" | "full"
-
-function dueCount(today = store.dayNumber()) {
-  return DECK.cards.filter((c) => store.getCard(c.id).due <= today).length;
-}
+let mode = null;      // "smart" | "full"
+let deckKey = "mult"; // last picked deck wins; mult is the default
 
 function renderSelect() {
-  const due = dueCount();
+  const enabled = enabledDeckKeys();
+  if (!enabled.includes(deckKey)) deckKey = enabled[0] ?? "mult";
+
+  const due = dueCount(deckKey);
   $("smart-sub").textContent = due ? `${due} due` : "all caught up";
   $("mode-smart").disabled = due === 0;
   if (mode === "smart" && due === 0) mode = null;
-  $("mult-sub").textContent = `${DECK.cards.length} cards`;
   $("mode-smart").classList.toggle("is-on", mode === "smart");
   $("mode-full").classList.toggle("is-on", mode === "full");
-  $("deck-mult").classList.add("is-on"); // only live deck; pre-picked
+
+  for (const key of Object.keys(DECKS)) {
+    const btn = $(`deck-${key}`);
+    const on = enabled.includes(key);
+    btn.disabled = !on;
+    btn.classList.toggle("is-on", on && key === deckKey);
+    btn.querySelector(".pick__sub").textContent = on
+      ? `${dueCount(key)} of ${DECKS[key].cards.length} due`
+      : "turned off";
+  }
+
   const auto = store.get("settings").autoSubmit;
   $("auto-toggle").textContent = `AUTO CHECK · ${auto ? "ON" : "OFF"}`;
   $("auto-toggle").classList.toggle("is-on", auto);
@@ -73,6 +101,13 @@ $("go-practice").addEventListener("click", renderSelect);
 $("select-back").addEventListener("click", renderHome);
 $("mode-smart").addEventListener("click", () => { mode = "smart"; renderSelect(); });
 $("mode-full").addEventListener("click", () => { mode = "full"; renderSelect(); });
+for (const key of Object.keys(DECKS)) {
+  $(`deck-${key}`).addEventListener("click", () => {
+    deckKey = key;
+    // Smart eligibility depends on the deck now picked, so re-derive.
+    renderSelect();
+  });
+}
 $("auto-toggle").addEventListener("click", () => {
   const s = store.get("settings");
   s.autoSubmit = !s.autoSubmit;
@@ -86,12 +121,13 @@ let session = null;
 function startSession() {
   const today = store.dayNumber();
   const settings = store.get("settings");
+  const deck = DECKS[deckKey];
   const pool = mode === "smart"
-    ? DECK.cards.filter((c) => store.getCard(c.id).due <= today)
-    : DECK.cards;
+    ? deck.cards.filter((c) => store.getCard(c.id).due <= today)
+    : deck.cards;
   const rounds = splitIntoRounds(shuffle(pool), settings.roundSize);
   session = {
-    mode, today, settings,
+    mode, today, settings, deckKey,
     rounds,
     roundIndex: 0,
     round: createRound(rounds[0]),
@@ -100,6 +136,7 @@ function startSession() {
     startedAt: Date.now(),
     runIndex: 0,        // pentatonic position; resets on a miss
   };
+  $("card-deck").textContent = deck.name;
   nextCardScreen();
 }
 $("start-session").addEventListener("click", startSession);
@@ -108,7 +145,7 @@ $("card-back").addEventListener("click", () => { session = null; renderHome(); }
 /* --- The card ------------------------------------------------------------------------- */
 let entry = "";
 let shownAt = 0;
-let phase = "answer"; // "answer" | "correct-hold" | "wrong-hold"
+let phase = "answer"; // "answer" | "correct-hold" | "wrong-hold" | "between"
 let advanceTimer = null;
 
 function expectedDigits(card) {
@@ -142,7 +179,7 @@ function nextCardScreen() {
 }
 
 function renderEntry() {
-  $("entry").textContent = entry || " ";
+  $("entry").textContent = entry || " ";
 }
 
 function submit() {
@@ -192,16 +229,14 @@ function submit() {
 
 function advance() {
   clearTimeout(advanceTimer);
+  if (!session || phase === "between") return;
   if (roundDone(session.round)) return finishRound();
   nextCardScreen();
 }
 
-$("keypad").addEventListener("click", (e) => {
-  const key = e.target.closest(".key");
-  if (!key || phase !== "answer") return;
-  if (key.dataset.act === "clear") entry = "";
-  else if (key.dataset.act === "back") entry = entry.slice(0, -1);
-  else if (entry.length < 3) entry += key.dataset.d;
+function typeDigit(d) {
+  if (entry.length >= 3) return;
+  entry += d;
   renderEntry();
   // Auto check: hand the answer in the moment it is long enough. OFF means
   // CHECK is the deliberate extra step and she can edit freely first.
@@ -209,27 +244,34 @@ $("keypad").addEventListener("click", (e) => {
       entry.length === expectedDigits(currentCard(session.round))) {
     submit();
   }
+}
+
+$("keypad").addEventListener("click", (e) => {
+  const key = e.target.closest(".key");
+  if (!key || phase !== "answer") return;
+  if (key.dataset.act === "clear") { entry = ""; renderEntry(); }
+  else if (key.dataset.act === "back") { entry = entry.slice(0, -1); renderEntry(); }
+  else typeDigit(key.dataset.d);
 });
 
 $("check").addEventListener("click", () => {
+  if ($("screen-card").hidden || !session) return;
   if (phase === "answer") submit();
   else advance(); // correct-hold: skip the wait; wrong-hold: move on
 });
 
 // Desktop convenience — she'll use the keypad, you'll use a keyboard.
 document.addEventListener("keydown", (e) => {
-  if ($("screen-card").hidden) return;
+  if ($("screen-card").hidden || !session) return;
   if (phase !== "answer") { if (e.key === "Enter") advance(); return; }
-  if (/^[0-9]$/.test(e.key) && entry.length < 3) {
-    entry += e.key; renderEntry();
-    if (store.get("settings").autoSubmit &&
-        entry.length === expectedDigits(currentCard(session.round))) submit();
-  } else if (e.key === "Backspace") { entry = entry.slice(0, -1); renderEntry(); }
+  if (/^[0-9]$/.test(e.key)) typeDigit(e.key);
+  else if (e.key === "Backspace") { entry = entry.slice(0, -1); renderEntry(); }
   else if (e.key === "Enter") submit();
 });
 
 /* --- Round cleared --------------------------------------------------------------------- */
 function finishRound() {
+  phase = "between"; // a stray tap must not re-bank the round
   const s = session.settings;
   const stats = roundStats(session.round, s.lightningMs);
   session.banked += stats.emeralds;
@@ -269,7 +311,7 @@ function finishSession() {
   const streakCount = store.bumpStreak(session.today);
   store.logSession({
     day: session.today,
-    deck: "mult",
+    deck: session.deckKey,
     mode: session.mode,
     cards: session.cardsCleared,
     firstTry: session.firstTry,
