@@ -90,6 +90,7 @@ about finishing, not about erasing the record.
 
 PIN-gated, in the routine app's iron/neutral language and plain factual voice.
 
+- **Child's name** — a text field, set once. See below.
 - Enable/disable decks; round size; fluency threshold; allow speed-run mode
 - Sound toggles: one global, one separate for alarms, matching the routine app's pattern
 - Excuse a day, to protect a streak
@@ -97,6 +98,31 @@ PIN-gated, in the routine app's iron/neutral language and plain factual voice.
 - Reset a deck's mastery data
 - **A 12x12 fact grid** coloured by mastery tier — the fastest way to see which facts are
   weak, and the single most useful screen in the parent area
+
+### The name is runtime config, never source
+
+The child's name is stored on the device and read at render time. It is never hardcoded in a
+template, and it never enters the repository.
+
+```js
+const profile = JSON.parse(localStorage.getItem("mt-profile") ?? "{}");
+const name = profile.name ?? "friend";
+```
+
+Every greeting, toast, and session-complete line reads from that, with a neutral fallback so
+the app is coherent before the field is filled in.
+
+Three reasons, only one of which is about privacy:
+
+- The repository is public. Runtime config keeps a real child's name out of a public git
+  history and out of anything a search engine indexes.
+- A second copy costs nothing. Another child means a different name typed into a different
+  browser, not a fork.
+- The spec stays readable as a spec rather than as a description of one particular child.
+
+Design artboards may show a real name as sample data — the brief already tells Design to use
+plausible sample data, and a mockup reading "friend" would teach the wrong thing about the
+screen's tone.
 
 ## Open
 
