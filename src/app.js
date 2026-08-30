@@ -577,6 +577,7 @@ function typeDigit(d) {
 }
 
 $("keypad").addEventListener("click", (e) => {
+  if ($("screen-card").hidden || !session) return; // same guard as its siblings
   if (leaveArmTimer) disarmLeave(); // typing again means she chose to stay
   const key = e.target.closest(".key");
   if (!key || phase !== "answer") return;
