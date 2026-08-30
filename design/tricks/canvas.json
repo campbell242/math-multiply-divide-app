@@ -1,0 +1,14 @@
+{
+  "artboards": [
+    { "file": "Main.dc.html", "x": 0, "y": 0, "w": 390, "h": 820, "title": "Trick picker" },
+    { "file": "Nines.dc.html", "x": 490, "y": 0, "w": 390, "h": 820, "title": "Nines — take a row away", "is_interactive": true },
+    { "file": "Fives.dc.html", "x": 980, "y": 0, "w": 390, "h": 820, "title": "Fives — fives make tens", "is_interactive": true },
+    { "file": "Fours.dc.html", "x": 1470, "y": 0, "w": 390, "h": 820, "title": "Fours — double the double", "is_interactive": true }
+  ],
+  "annotations": [
+    { "id": "grammar", "x": 0, "y": -230, "w": 430, "text": "One visual grammar for every trick: the same array of dirt counting blocks, rearranged. Built from tens, fives, and doubles — which is the real math underneath.\nNew vocabulary here: the counting block (dirt fill + chip bevel), the ten-frame (ink border + 10 tag), and the taken-away row (calm slate, never red — removal is not a mistake).\nEverything else is inherited: Jersey 25 / Nunito Sans, 3px ink borders, no radius, parchment ground." },
+    { "id": "behavior", "x": 490, "y": -230, "w": 430, "text": "Zero stakes by design: no timer, no emeralds, no tracking anywhere in Tricks. She can wander in mid-frustration and it costs nothing.\nEach page loops its animation on its own; tapping a number chip replays the trick with that number. The three ledger lines light up in step with the blocks." },
+    { "id": "scope", "x": 980, "y": -230, "w": 430, "text": "Open decision: where Tricks lives. Leaning toward a HOME entry under Today's practice rather than a fourth tab. The picker keeps the tab bar; trick pages drop it, like practice cards do — the back arrow returns to the picker.\nThese three pages lock the three animation families: take-away (9, with 11 and 12 as add-a-row variants), pairing (5, 6, and 7's five-rows-and-two split), doubling (2, 3, 4, 8). ×10's slide-in-a-zero and The Flip's rotation get their own small animations but keep this exact page anatomy." }
+  ],
+  "launch": { "view": "canvas" }
+}

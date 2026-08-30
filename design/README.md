@@ -35,6 +35,7 @@ from a *new* path claims a *new* URL and orphans the old canvas. Record the
 canvas URL below once it exists so future sessions update rather than fork:
 
 - Canvas URL: _(not yet published)_
+- Tricks canvas URL (artboards in `tricks/`): https://claude.ai/code/artifact/f571d5ad-7881-4186-bf33-cadc3bf62788
 
 ## Tokens
 

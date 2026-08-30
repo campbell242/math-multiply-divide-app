@@ -10,3 +10,7 @@ desktop.ini
 
 # Design canvas working files that are not the committed source
 design/*.local.dc.html
+
+# Seeded canvas pages: build artifacts, regenerated from the .dc.html sources
+# and published as Artifacts — the URL is recorded in design/README.md
+design/**/multiplication-tricks.html
