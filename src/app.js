@@ -87,9 +87,28 @@ function renderHome() {
   $("home-streak").hidden = !alive;
   if (alive) $("home-streak").textContent = `★ ${streak.count}`;
   const due = enabledDeckKeys().reduce((n, k) => n + dueCount(k), 0);
+  // The DUE chip carries the count, so the note only speaks when there is
+  // nothing due (or storage is broken) — never both at once.
   $("home-note").textContent = storageOk
-    ? (due ? `${due} ${due === 1 ? "card is" : "cards are"} ready for you.` : "All caught up — nothing due right now.")
+    ? (due ? "" : "All caught up — nothing due right now.")
     : "Heads up: progress won't be saved on this browser.";
+  $("prax-info").hidden = due === 0;
+  if (due) {
+    $("due-chip").textContent = `${due} DUE`;
+    // Minutes from her own recent pace; 10s a card until there is enough
+    // history to know better. Emeralds from the real round formula.
+    const sessions = store.get("sessions");
+    const cardsDone = sessions.reduce((a, x) => a + (x.cards || 0), 0);
+    const secsSpent = sessions.reduce((a, x) => a + (x.seconds || 0), 0);
+    const perCard = cardsDone >= 10 && secsSpent > 0 ? secsSpent / cardsDone : 10;
+    const minutes = Math.max(1, Math.round((due * perCard) / 60));
+    const sizes = splitIntoRounds(Array.from({ length: due }, () => 0), store.get("settings").roundSize)
+      .map((r) => r.length);
+    const lo = sizes.reduce((a, len) => a + Math.ceil(len / 4), 0);
+    const hi = lo + sizes.reduce((a, len) => a + Math.ceil(len / 10), 0);
+    $("prax-est").innerHTML =
+      `About ${minutes} minute${minutes === 1 ? "" : "s"} · worth <b>${lo === hi ? lo : `${lo}–${hi}`} emeralds</b>`;
+  }
   renderMaterialsCard();
   show("home");
 }

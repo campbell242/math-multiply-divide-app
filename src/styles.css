@@ -88,7 +88,14 @@ body {
   margin-left: auto;
 }
 .home-middle { color: var(--text-muted); font-size: var(--fs-label); }
+.home-middle:empty { display: none; }
 .home-spacer { flex: 1; }
+
+/* The DUE chip and minutes estimate (v7 §F): a bounded, visible, small
+   number is the difference between a chore and an errand. */
+.prax-info { display: flex; align-items: center; gap: var(--sp-3); }
+.prax-est { font-size: var(--fs-label); color: var(--text-muted); }
+.prax-est b { color: var(--emerald-dark); }
 .btn--home { margin-top: 0; }
 
 /* The pencil badge: My Look hangs off the thing it changes (5a). The badge
@@ -232,6 +239,7 @@ body {
 .chip--correct { background: var(--correct); color: var(--on-dark); }
 .chip--fast    { background: var(--fast);    color: var(--ink); }
 .chip--emerald { background: var(--emerald-soft); color: var(--emerald-dark); border-color: var(--emerald-dark); }
+.chip--due     { font-size: var(--fs-hint); background: var(--emerald-soft); color: var(--emerald-dark); border-color: var(--emerald); box-shadow: none; white-space: nowrap; }
 .chip--streak  { background: var(--tier-gold-soft); color: var(--tier-gold-text); border-color: var(--tier-gold-dark); }
 
 /* The emerald sprite (ruling 7). Sizes come from the display rule in tokens. */
