@@ -13,18 +13,13 @@ import * as audio from "./audio.js";
 import { initParent } from "./parent.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid", "me"];
+const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid", "me", "materials"];
 
-const TAB_OF = { home: "home", select: "practice", me: "me" };
-
+// Navigation decision 5a: there is no bar. Home is the only hub; every other
+// child screen is a push that returns with ‹.
 function show(name) {
   // Instant, per the motion rules: a child taps fast and transitions are a tax.
   for (const s of screens) $(`screen-${s}`).hidden = s !== name;
-  const tab = TAB_OF[name];
-  $("tabbar").hidden = !tab; // never on a card mid-round, never in the parent zone
-  if (tab)
-    for (const el of document.querySelectorAll(".tab"))
-      el.classList.toggle("is-active", el.dataset.tab === tab);
 }
 
 /* --- Decks --------------------------------------------------------------------
@@ -95,7 +90,63 @@ function renderHome() {
   $("home-note").textContent = storageOk
     ? (due ? `${due} ${due === 1 ? "card is" : "cards are"} ready for you.` : "All caught up — nothing due right now.")
     : "Heads up: progress won't be saved on this browser.";
+  renderMaterialsCard();
   show("home");
+}
+
+/* --- YOUR MATERIALS (5a): mastery lives on Home, where it can pull her into
+   a round. Three bars, three diamond counts, one hint; the whole card taps
+   through to the full Your materials screen.                               */
+const TIER_KEYS = ["wood", "stone", "iron", "gold", "diamond"];
+const DECK_SYMBOLS = { mult: "×", div: "÷", factors: "□×□" };
+
+function tierCounts(deckKey) {
+  const counts = [0, 0, 0, 0, 0];
+  for (const c of DECKS[deckKey].cards) counts[store.getCard(c.id).t] += 1;
+  return counts;
+}
+
+function tierBarHtml(counts) {
+  return `<span class="mbar">${counts
+    .map((n, i) => (n ? `<i class="mbar--${TIER_KEYS[i]}" style="flex-grow:${n}"></i>` : ""))
+    .join("")}</span>`;
+}
+
+// The footer names whatever is closest to promoting: facts sitting one tier
+// below, due today first. Positive-only — there is always a next material.
+function closestPromotion(today = store.dayNumber()) {
+  const cards = enabledDeckKeys().flatMap((k) => DECKS[k].cards);
+  for (const dueOnly of [true, false]) {
+    for (let t = 4; t >= 1; t--) {
+      const n = cards.filter((c) => {
+        const rec = store.getCard(c.id);
+        return rec.t === t - 1 && (!dueOnly || rec.due <= today);
+      }).length;
+      if (n) {
+        return {
+          tier: t,
+          text: `${n} fact${n === 1 ? " is" : "s are"} one round away from <b>${TIER_LABELS[t]}</b>`,
+        };
+      }
+    }
+  }
+  return { tier: 4, text: "Every fact is <b>Diamond</b>." };
+}
+
+function renderMaterialsCard() {
+  $("mcard-rows").innerHTML = Object.keys(DECKS).map((k) => {
+    const counts = tierCounts(k);
+    return `<div class="mrow">
+      <span class="mrow__sym${k === "factors" ? " mrow__sym--sm" : ""}">${DECK_SYMBOLS[k]}</span>
+      ${tierBarHtml(counts)}
+      <b class="mrow__dia">${counts[4]}◆</b>
+    </div>`;
+  }).join("");
+  const closest = closestPromotion();
+  $("mcard-foot").innerHTML =
+    `<span class="mbadge mbadge--${TIER_KEYS[closest.tier]}"></span>` +
+    `<span class="mcard__hint">${closest.text}</span>` +
+    `<span class="mcard__go">›</span>`;
 }
 
 /* --- Deck select ----------------------------------------------------------------- */
@@ -191,7 +242,31 @@ function startSession() {
   nextCardScreen();
 }
 $("start-session").addEventListener("click", startSession);
-$("card-back").addEventListener("click", () => { session = null; stopRunTimer(); renderHome(); });
+
+/* Mid-round, ‹ asks once in stone before abandoning (5a §7): no back-chevron
+   behaviour silently discards progress. Rounds already banked stay hers —
+   leaving after a cleared round releases them the normal way. */
+let leaveArmTimer = null;
+function disarmLeave() {
+  clearTimeout(leaveArmTimer);
+  leaveArmTimer = null;
+  $("card-back").classList.remove("back--armed");
+  $("card-back").textContent = "‹";
+}
+$("card-back").addEventListener("click", () => {
+  if (!session) return renderHome();
+  if (!leaveArmTimer) {
+    $("card-back").classList.add("back--armed");
+    $("card-back").textContent = "LEAVE?";
+    leaveArmTimer = setTimeout(disarmLeave, 3000);
+    return;
+  }
+  disarmLeave();
+  stopRunTimer();
+  if (session.banked > 0) return finishSession();
+  session = null;
+  renderHome();
+});
 
 /* --- The card ------------------------------------------------------------------------- */
 let entry = "";
@@ -220,6 +295,7 @@ function nextCardScreen() {
   const card = currentCard(session.round);
   entry = "";
   phase = "answer";
+  disarmLeave();
   clearTimeout(advanceTimer);
   clearTimeout(fastChipTimer);
   $("slab").classList.remove("is-correct", "is-wrong");
@@ -481,6 +557,7 @@ function typeDigit(d) {
 }
 
 $("keypad").addEventListener("click", (e) => {
+  if (leaveArmTimer) disarmLeave(); // typing again means she chose to stay
   const key = e.target.closest(".key");
   if (!key || phase !== "answer") return;
   if (key.dataset.act === "clear") {
@@ -651,11 +728,73 @@ function playAward(banked, oldBalance) {
 }
 $("go-home").addEventListener("click", renderHome);
 
-/* --- ME: avatar + theme (routine app board 1n) ----------------------------------
+/* --- Your materials (2n): pushed from Home's YOUR MATERIALS card ---------------
 
-   Her screen, no PIN. The avatar on Home is the way in. A variant repaints
-   the trim strip and label accents only — the three semantic greens are
-   meaning, not decoration, and never move.                                  */
+   Her side of the fact grid: the same five materials, aggregated. Counts,
+   never percentages, and no accuracy figure anywhere — a fact she has not
+   learnt yet is a wood block, not a miss.                                   */
+const NUMBER_WORDS = {
+  2: "twos", 3: "threes", 4: "fours", 5: "fives", 6: "sixes", 7: "sevens",
+  8: "eights", 9: "nines", 10: "tens", 11: "elevens", 12: "twelves",
+};
+
+// The hint points at the table with the most wood facts — the seam worth
+// mining next. Quiet when there is no clear signal.
+function nextUpHint() {
+  const wood = DECKS.mult.cards.filter((c) => store.getCard(c.id).t === 0);
+  if (!wood.length) return null;
+  const byFactor = {};
+  for (const c of wood) {
+    const [a, b] = c.id.slice(2).split("x").map(Number);
+    for (const f of new Set([a, b])) byFactor[f] = (byFactor[f] || 0) + 1;
+  }
+  const [factor, n] = Object.entries(byFactor)
+    .map(([f, count]) => [Number(f), count])
+    .sort((x, y) => y[1] - x[1])[0];
+  if (n < 3) return null;
+  return {
+    title: `Next up: the ${NUMBER_WORDS[factor]}`,
+    sub: `${n} of your ${wood.length} wood fact${wood.length === 1 ? "" : "s"} ${n === 1 ? "is" : "are"} × ${factor}`,
+  };
+}
+
+function renderMaterials() {
+  const p = store.get("profile");
+  const streak = store.get("streak");
+  $("materials-clock").textContent = fmtClock();
+  $("materials-avatar").src = `assets/${p.avatar}.png`;
+  $("materials-name").textContent = p.name || "friend";
+  const mastered = Object.keys(DECKS).reduce((n, k) => n + tierCounts(k)[4], 0);
+  $("materials-sub").textContent =
+    `${store.streakAlive() ? `${streak.count} day streak · ` : ""}${mastered} fact${mastered === 1 ? "" : "s"} mastered`;
+  $("materials-emeralds").textContent = p.emeralds;
+  $("materials-decks").innerHTML = Object.keys(DECKS).map((k) => {
+    const counts = tierCounts(k);
+    return `<div class="tiercard">
+      <div class="tiercard__head"><span>${DECKS[k].name}</span><b>${counts[4]} diamond</b></div>
+      ${tierBarHtml(counts)}
+      <div class="tiercard__counts">${counts
+        .map((n, i) => `<span>${n} ${i === 4 ? "◆" : TIER_LABELS[i].toUpperCase()}</span>`)
+        .join("")}</div>
+    </div>`;
+  }).join("");
+  const hint = nextUpHint();
+  $("materials-next").hidden = !hint;
+  if (hint) {
+    $("nextup-title").textContent = hint.title;
+    $("nextup-sub").textContent = hint.sub;
+  }
+  show("materials");
+}
+
+$("home-materials").addEventListener("click", renderMaterials);
+$("materials-back").addEventListener("click", renderHome);
+
+/* --- My Look (board 5d): reached from the avatar's pencil badge ----------------
+
+   Her screen, no PIN. A world repaints the trim strip and label accents
+   only — the three semantic greens are meaning, not decoration, and never
+   move.                                                                     */
 const AVATARS = [
   ["av-stormy", "Stormy"], ["av-axolotl", "Axolotl"], ["av-bear", "Bear"],
   ["av-shadow", "Shadow"], ["av-cat", "Cat"], ["av-fox", "Fox"],
@@ -667,30 +806,24 @@ const THEMES = [
   ["ocean", "Ocean"], ["cherry", "Cherry Grove"],
 ];
 
-function renderMe(note = "") {
+function renderMe() {
   const p = store.get("profile");
   $("me-clock").textContent = fmtClock();
   $("avatar-grid").innerHTML = AVATARS.map(([key, label]) =>
     `<button class="slot${key === p.avatar ? " is-picked" : ""}" data-av="${key}" aria-label="${label}">
        <img src="assets/${key}.png" alt=""></button>`).join("");
-  $("theme-list").innerHTML = THEMES.map(([key, label]) =>
-    `<button class="trow${key === (p.theme || "overworld") ? " is-picked" : ""}" data-th="${key}">
-       <span class="trow__thumb trow__thumb--${key}"></span>
+  $("theme-list").innerHTML = THEMES.map(([key, label]) => {
+    const picked = key === (p.theme || "overworld");
+    return `<button class="trow${picked ? " is-picked" : ""}" data-th="${key}">
+       <span class="trow__tri"><i class="sw--${key}-1"></i><i class="sw--${key}-2"></i><i class="sw--${key}-3"></i></span>
        <span class="trow__name">${label}</span>
-       <span class="trow__sw"><i class="sw--${key}-1"></i><i class="sw--${key}-2"></i><i class="sw--${key}-3"></i></span>
-     </button>`).join("");
-  $("me-note").innerHTML = note || "&nbsp;";
+       ${picked ? '<span class="trow__wearing">WEARING</span>' : ""}
+     </button>`;
+  }).join("");
   show("me");
 }
 
 $("go-me").addEventListener("click", () => renderMe());
-$("tabbar").addEventListener("click", (e) => {
-  const tab = e.target.closest(".tab");
-  if (!tab) return;
-  if (tab.dataset.tab === "home") renderHome();
-  else if (tab.dataset.tab === "practice") renderSelect();
-  else renderMe();
-});
 $("me-back").addEventListener("click", renderHome);
 
 $("avatar-grid").addEventListener("click", (e) => {
@@ -700,8 +833,7 @@ $("avatar-grid").addEventListener("click", (e) => {
   p.avatar = slot.dataset.av;
   store.touch("profile");
   audio.cuePick(store.get("settings").sound.all);
-  const label = AVATARS.find(([k]) => k === p.avatar)[1];
-  renderMe(`${label} — good choice!`);
+  renderMe();
 });
 
 $("theme-list").addEventListener("click", (e) => {

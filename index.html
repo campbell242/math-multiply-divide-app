@@ -18,10 +18,13 @@
 
   <!-- Screen changes are instant: sections toggle, nothing slides. -->
 
-  <main class="screen screen--tabbed" id="screen-home" hidden>
+  <main class="screen" id="screen-home" hidden>
     <div class="home-top">
+      <!-- The whole slot is the tap target for My Look; the pencil badge is
+           the affordance, not the target (5a). -->
       <button class="avatar-btn" id="go-me" aria-label="Change my look">
         <img class="avatar" id="home-avatar" src="assets/av-stormy.png" alt="">
+        <span class="avatar-badge"><img src="assets/icons/pencil.png" alt=""></span>
       </button>
       <div class="clock" id="clock">7:42</div>
     </div>
@@ -30,11 +33,17 @@
       <span class="chip chip--streak" id="home-streak" hidden>★ 0</span>
     </div>
     <div class="home-middle" id="home-note"></div>
-    <button class="btn btn--big" id="go-practice">PRACTICE ›</button>
-    <button class="parents-chip" id="go-parent"><i></i>PARENTS</button>
+    <button class="btn btn--big btn--home" id="go-practice">PRACTICE ›</button>
+    <div class="label label--materials">YOUR MATERIALS</div>
+    <button class="mcard" id="home-materials">
+      <div id="mcard-rows"></div>
+      <div class="mcard__foot" id="mcard-foot"></div>
+    </button>
+    <div class="home-spacer"></div>
+    <button class="parents-chip" id="go-parent"><img src="assets/icons/key.png" alt="">PARENTS</button>
   </main>
 
-  <main class="screen screen--tabbed" id="screen-select" hidden>
+  <main class="screen" id="screen-select" hidden>
     <div class="bar">
       <button class="back" id="select-back">‹</button>
       <h1 class="bar__title">Practice</h1>
@@ -128,17 +137,52 @@
     <button class="btn btn--big" id="go-home">Back to home ›</button>
   </main>
 
-  <main class="screen screen--tabbed" id="screen-me" hidden>
+  <main class="screen" id="screen-materials" hidden>
+    <div class="bar">
+      <button class="back" id="materials-back">‹</button>
+      <h1 class="bar__title">Your materials</h1>
+      <span class="bar__meta" id="materials-clock"></span>
+    </div>
+    <!-- Identity, not a control: no pencil badge here (5a). -->
+    <div class="id-row">
+      <img class="avatar" id="materials-avatar" src="assets/av-stormy.png" alt="">
+      <div>
+        <div class="id-row__name" id="materials-name">friend</div>
+        <div class="id-row__sub" id="materials-sub"></div>
+      </div>
+    </div>
+    <div class="cur-frame">
+      <span class="gem gem--md"></span>
+      <div>
+        <b id="materials-emeralds">0</b>
+        <span>EMERALDS · MATH</span>
+      </div>
+    </div>
+    <p class="hint">Emeralds are the math collection. Coins live in the routine app.</p>
+    <div class="stack" id="materials-decks"></div>
+    <div class="nextup" id="materials-next" hidden>
+      <img src="assets/icons/pickaxe.png" alt="">
+      <div>
+        <b id="nextup-title"></b>
+        <span id="nextup-sub"></span>
+      </div>
+    </div>
+  </main>
+
+  <main class="screen" id="screen-me" hidden>
     <div class="bar">
       <button class="back" id="me-back">‹</button>
       <h1 class="bar__title">My look</h1>
       <span class="bar__meta" id="me-clock"></span>
     </div>
-    <div class="label label--theme">PICK YOUR AVATAR</div>
+    <div class="label label--theme">YOUR FACE</div>
     <div class="slot-grid" id="avatar-grid"></div>
-    <p class="me-note" id="me-note">&nbsp;</p>
-    <div class="label label--theme">PICK YOUR WORLD</div>
+    <div class="label label--theme">YOUR WORLD</div>
     <div class="stack" id="theme-list"></div>
+    <div class="me-foot">
+      <span class="me-foot__strip"></span>
+      <span>A world changes the strip at the top and the little green words. Nothing else moves.</span>
+    </div>
   </main>
 
   <main class="screen screen--parent" id="screen-pin" hidden>
@@ -260,12 +304,6 @@
     <p class="pvoice">Each square is one fact, coloured by its tier. Hover or long-press a
       square to see which fact it is.</p>
   </main>
-
-  <nav class="tabbar" id="tabbar" hidden>
-    <button class="tab" data-tab="home">HOME</button>
-    <button class="tab" data-tab="practice">PRACTICE</button>
-    <button class="tab" data-tab="me">ME</button>
-  </nav>
 
   <div class="toast" id="toast">
     <b id="toast-title"></b>

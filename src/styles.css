@@ -59,7 +59,7 @@ body {
 .bar__meta {
   font-family: var(--font-display);
   font-size: var(--fs-label);
-  color: var(--text-muted);
+  color: var(--text-tertiary);
 }
 .back {
   font-family: var(--font-display);
@@ -87,7 +87,135 @@ body {
   line-height: 1;
   margin-left: auto;
 }
-.home-middle { flex: 1; color: var(--text-muted); font-size: var(--fs-label); }
+.home-middle { color: var(--text-muted); font-size: var(--fs-label); }
+.home-spacer { flex: 1; }
+.btn--home { margin-top: 0; }
+
+/* The pencil badge: My Look hangs off the thing it changes (5a). The badge
+   is the affordance; the whole avatar slot stays the tap target. */
+.avatar-badge {
+  position: absolute;
+  right: -3px; bottom: -3px;
+  width: 20px; height: 20px;
+  background: var(--correct-text);
+  border: var(--border-w-thin) solid var(--border-btn);
+  display: flex; align-items: center; justify-content: center;
+}
+.avatar-badge img { width: 12px; height: 12px; image-rendering: pixelated; }
+
+/* --- YOUR MATERIALS card (5a): mastery lives on Home, where it can pull her
+   into a round. The whole card is one tap target and pushes Your materials. */
+.label--materials { font-size: var(--fs-label); margin: var(--sp-4) 0 var(--sp-2); }
+.mcard {
+  font-family: inherit;
+  text-align: left;
+  width: 100%;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-ink);
+  box-shadow: var(--key-drop-sm);
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+}
+.mrow {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-1) 0;
+}
+.mrow__sym { font-family: var(--font-display); font-size: var(--fs-body); width: 34px; flex: none; }
+.mrow__sym--sm { font-size: var(--fs-label); }
+.mrow__dia {
+  font-family: var(--font-display);
+  font-size: var(--fs-label);
+  font-weight: var(--fw-sentence);
+  color: var(--tier-diamond-deep);
+  width: 34px; flex: none;
+  text-align: right;
+}
+
+/* The five-segment tier bar: counts as widths, never percentages as text. */
+.mbar { flex: 1; display: flex; gap: 2px; height: 12px; }
+.mbar i { flex-basis: 0; display: block; }
+.mbar--wood    { background: var(--tier-wood); }
+.mbar--stone   { background: var(--slot-fill); }
+.mbar--iron    { background: var(--tier-iron); }
+.mbar--gold    { background: var(--tier-gold); }
+.mbar--diamond { background: var(--tier-diamond); }
+
+.mcard__foot {
+  display: flex; align-items: center; gap: var(--sp-2);
+  margin-top: var(--sp-3);
+  padding-top: var(--sp-3);
+  border-top: var(--border-w-thin) solid var(--bg-toast);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  color: var(--text-parent);
+}
+.mcard__hint { flex: 1; line-height: 1.4; }
+.mcard__go { font-family: var(--font-display); font-size: var(--fs-body); color: var(--text-tertiary); }
+
+/* The tier badge, 24px: an inventory slot in that material. */
+.mbadge { width: 24px; height: 24px; flex: none; border: var(--border-w) solid; }
+.mbadge--wood    { background: var(--tier-wood);    border-color: var(--tier-wood-dark) var(--tier-wood-light) var(--tier-wood-light) var(--tier-wood-dark); }
+.mbadge--stone   { background: var(--slot-fill);    border-color: var(--tier-stone-dark) var(--tier-stone-light) var(--tier-stone-light) var(--tier-stone-dark); }
+.mbadge--iron    { background: var(--tier-iron);    border-color: var(--tier-stone) var(--slot-edge-light) var(--slot-edge-light) var(--tier-stone); }
+.mbadge--gold    { background: var(--tier-gold);    border-color: var(--tier-gold-dark) var(--tier-gold-light) var(--tier-gold-light) var(--tier-gold-dark); }
+.mbadge--diamond { background: var(--tier-diamond); border-color: var(--tier-diamond-dark) var(--tier-diamond-light) var(--tier-diamond-light) var(--tier-diamond-dark); }
+
+/* --- Your materials (2n): pushed from Home, identity not control ------------- */
+.id-row { display: flex; align-items: center; gap: var(--sp-3); }
+.id-row .avatar { width: 52px; height: 52px; }
+.id-row__name { font-family: var(--font-display); font-size: var(--fs-heading); }
+.id-row__sub { font-size: var(--fs-micro); font-weight: var(--fw-bold); color: var(--text-muted); }
+
+.cur-frame {
+  display: flex; align-items: center; gap: var(--sp-2);
+  padding: var(--sp-3);
+  background: var(--emerald-soft);
+  border: var(--border-w) solid var(--emerald);
+}
+.cur-frame b {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  font-weight: var(--fw-sentence);
+  line-height: 1;
+  color: var(--emerald-dark);
+  display: block;
+}
+.cur-frame span:last-child { font-size: var(--fs-micro); font-weight: var(--fw-heavy); color: var(--emerald-dark); }
+.gem--md { width: var(--gem-md); height: var(--gem-md); background-image: url("../assets/emerald-32.png"); }
+
+.tiercard {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-ink);
+  box-shadow: var(--key-drop-sm);
+  padding: var(--sp-3) var(--sp-4);
+}
+.tiercard__head { display: flex; align-items: baseline; gap: var(--sp-2); }
+.tiercard__head span { font-family: var(--font-display); font-size: var(--fs-button); }
+.tiercard__head b {
+  margin-left: auto;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  font-weight: var(--fw-sentence);
+  color: var(--tier-diamond-deep);
+}
+.tiercard .mbar { margin-top: var(--sp-2); }
+.tiercard__counts {
+  display: flex; justify-content: space-between;
+  margin-top: var(--sp-2);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-heavy);
+  color: var(--text-tertiary);
+}
+
+.nextup {
+  display: flex; align-items: center; gap: var(--sp-3);
+  padding: var(--sp-3);
+  background: var(--bg-toast);
+  border: var(--border-w) solid var(--divider);
+}
+.nextup img { width: 28px; height: 28px; image-rendering: pixelated; flex: none; }
+.nextup b { font-family: var(--font-display); font-size: var(--fs-body); font-weight: var(--fw-sentence); display: block; }
+.nextup span { font-size: var(--fs-micro); font-weight: var(--fw-bold); color: var(--text-muted); }
 
 /* --- Chips ------------------------------------------------------------------ */
 .chips { display: flex; flex-wrap: wrap; gap: var(--sp-2); }
@@ -413,25 +541,24 @@ body {
    Iron and neutral, per the routine app's doctrine: nothing a parent taps to
    DO something is green; editable values take slate, the one accent the
    child's side never uses; cancel is never a filled button. */
+/* Alone on the bottom edge now the bar is gone (5a): full iron key chip.
+   Iron on parchment, never green, and it appears on Home only. */
 .parents-chip {
   align-self: flex-end;
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
   font-family: var(--font-display);
-  font-size: var(--fs-hint);
+  font-size: var(--fs-label);
   color: var(--on-dark);
   background: var(--iron);
-  border: var(--border-w-thin) solid var(--iron-dark);
-  padding: var(--sp-1) var(--sp-3);
+  border: var(--border-w) solid var(--iron-dark);
+  box-shadow: var(--bevel-iron-chip);
+  padding: 11px 14px;
   min-height: var(--tap-min);
   cursor: pointer;
 }
-.parents-chip i {
-  width: 12px; height: 12px;
-  background: var(--iron-dark);
-  display: inline-block;
-}
+.parents-chip img { width: 16px; height: 16px; image-rendering: pixelated; }
 
 .screen--parent { background: var(--bg-parent); max-width: none; }
 .screen--parent > * { max-width: 420px; margin-inline: auto; width: 100%; }
@@ -687,17 +814,29 @@ body {
 .gcell:not(.is-label) { cursor: pointer; }
 .gcell.is-picked { outline: var(--border-w-thin) solid var(--parent-edit); outline-offset: -1px; }
 
-/* --- ME: avatar + theme picker (routine app board 1n) ----------------------- */
-.avatar-btn { background: none; border: none; padding: 0; cursor: pointer; min-width: var(--tap-comfy); min-height: var(--tap-comfy); }
+/* --- My Look: avatar + theme picker (board 5d; reached from the pencil badge) --- */
+.avatar-btn { position: relative; background: none; border: none; padding: 0; cursor: pointer; min-width: var(--tap-comfy); min-height: var(--tap-comfy); }
 
-/* The theme's decorative surfaces: the trim strip and section labels. */
-.trim {
+/* The theme's decorative surfaces: the trim strip and section labels.
+   A url() carried through a custom property resolves against the DEFINING
+   sheet in some engines and the USING sheet in others — --theme-strip-img
+   broke either the app or the artboards depending on the browser. Colors
+   ride the tokens; the strip image is set here, relative to this sheet. */
+.trim, .me-foot__strip {
   background-color: var(--theme-strip-color);
-  background-image: var(--theme-strip-img);
+  background-image: url("../assets/tx-grass.png");
+}
+[data-theme="nether"] .trim, [data-theme="nether"] .me-foot__strip {
+  background-image: url("../assets/tx-nether.png");
+}
+[data-theme="end"] .trim, [data-theme="end"] .me-foot__strip,
+[data-theme="ocean"] .trim, [data-theme="ocean"] .me-foot__strip,
+[data-theme="cherry"] .trim, [data-theme="cherry"] .me-foot__strip {
+  background-image: none;
 }
 .label--theme, .label { color: var(--theme-deep); }
 
-.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-3); }
+.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--slot-gap); }
 .slot {
   aspect-ratio: 1;
   background: var(--slot-fill);
@@ -708,42 +847,35 @@ body {
   cursor: pointer;
   min-height: var(--tap-comfy);
 }
-.slot img { width: 72%; image-rendering: pixelated; }
+.slot img { width: 52px; image-rendering: pixelated; }
 /* Selected slot: 4px gold border + ink outline, the routine app's own rule. */
 .slot.is-picked, .trow.is-picked {
   border: 4px solid var(--tier-gold);
   outline: var(--border-w) solid var(--border-btn);
 }
-.me-note { font-size: var(--fs-label); color: var(--theme-deep); margin: 0; min-height: 1.4em; }
 
+/* Themes are rows, not a second grid (5d): the swatch triplet gets room to
+   read as three materials instead of three dots. */
 .trow {
   display: flex; align-items: center; gap: var(--sp-3);
   width: 100%;
   background: var(--bg-card);
   border: var(--border-w) solid var(--border-ink);
+  box-shadow: var(--key-drop-sm);
   padding: var(--sp-2) var(--sp-3);
   min-height: var(--tap-comfy);
   cursor: pointer;
   font-family: inherit;
+  text-align: left;
 }
-.trow__thumb {
-  width: 40px; height: 26px;
-  border: var(--border-w-thin) solid var(--border-btn);
-  background-size: var(--tx-size-sm);
-  image-rendering: pixelated;
-  flex: none;
-}
-.trow__thumb--overworld { background-image: url("../assets/tx-grass.png"); }
-.trow__thumb--nether    { background-image: url("../assets/tx-nether.png"); }
-.trow__thumb--end       { background: var(--th-end-2); }
-.trow__thumb--ocean     { background: var(--th-ocean-2); }
-.trow__thumb--cherry    { background: var(--th-cherry-1); }
-.trow__name { font-family: var(--font-display); font-size: var(--fs-body); }
-.trow__sw { margin-left: auto; display: flex; gap: 4px; }
-.trow__sw i { width: 13px; height: 13px; display: inline-block; }
+.trow.is-picked { box-shadow: none; }
+.trow__tri { display: flex; flex: none; border: var(--border-w-thin) solid var(--border-btn); }
+.trow__tri i { width: 26px; height: 26px; display: block; }
+.trow__name { font-family: var(--font-display); font-size: var(--fs-button); flex: 1; }
+.trow__wearing { font-family: var(--font-display); font-size: var(--fs-hint); color: var(--tier-gold-text); }
 .sw--overworld-1 { background: var(--correct); }
 .sw--overworld-2 { background: var(--th-dirt); }
-.sw--overworld-3 { background: var(--fast); }
+.sw--overworld-3 { background: var(--correct-text); }
 .sw--nether-1 { background: var(--th-nether-1); }
 .sw--nether-2 { background: var(--th-nether-2); }
 .sw--nether-3 { background: var(--th-nether-3); }
@@ -757,27 +889,36 @@ body {
 .sw--cherry-2 { background: var(--th-cherry-2); }
 .sw--cherry-3 { background: var(--th-cherry-3); }
 
-/* --- Tab bar (v4 canvas: Home, Deck select, ME only) -------------------------
-   Dark ground, three equal cells, gold active, stone inactive, >=56px tall.
-   Never on a card mid-round, never in the parent zone. */
-.tabbar {
-  position: fixed;
-  left: 0; right: 0; bottom: 0;
-  display: flex;
-  background: var(--bg-dark);
-  border-top: var(--border-w) solid var(--border-ink);
-  z-index: 8;
+/* What a world may claim, said in her language, with the strip as evidence. */
+.me-foot {
+  display: flex; align-items: center; gap: var(--sp-3);
+  margin-top: var(--sp-1);
+  padding: var(--sp-3);
+  background: var(--bg-toast);
+  border: var(--border-w) solid var(--divider);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-bold);
+  color: var(--text-parent);
+  line-height: 1.45;
 }
-.tab {
-  flex: 1;
+.me-foot__strip {
+  width: 8px; height: 34px; flex: none;
+  background-size: var(--tx-size);
+  image-rendering: pixelated;
+  border: var(--border-w-thin) solid var(--border-btn);
+}
+
+/* --- Navigation (decision 5a): there is no bar. Home is the only hub; every
+   other child screen is a push that returns with ‹. The bottom edge belongs
+   to the keypad and her thumbs. ---------------------------------------------- */
+
+/* Mid-round, ‹ asks once in stone before abandoning (5a §7). */
+.back--armed {
   font-family: var(--font-display);
-  font-size: var(--fs-body);
-  color: var(--stone);
-  background: none;
-  border: none;
-  padding: var(--sp-4) 0;
-  min-height: var(--tap-comfy);
-  cursor: pointer;
+  font-size: var(--fs-label);
+  color: var(--ink);
+  background: var(--divider);
+  border: var(--border-w) solid var(--iron-dark);
+  box-shadow: var(--bevel-small);
+  padding-inline: var(--sp-3);
 }
-.tab.is-active { color: var(--tier-gold); }
-.screen--tabbed { padding-bottom: calc(var(--tap-comfy) + var(--sp-5)); }

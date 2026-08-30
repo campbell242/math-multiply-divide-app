@@ -172,6 +172,9 @@
                  inset 0 -4px 0 rgba(0, 0, 0, .16);
   /* Pressed / recessed — parent toggles that are OFF, locked slots */
   --bevel-pressed: inset 0 5px 0 rgba(0, 0, 0, .16);
+  /* The iron key chip on Home (5a): a strong bevel tuned for the iron fill */
+  --bevel-iron-chip: inset 0 3px 0 rgba(255, 255, 255, .2),
+                     inset 0 -4px 0 rgba(0, 0, 0, .28);
 
   /* The drop under a key, so it reads as a physical thing to push */
   --key-drop:     0 5px 0 rgba(43, 43, 36, .14);
@@ -194,6 +197,9 @@
   --tap-min:    44px;
   --tap-comfy:  56px;
   --tap-key:    74px;   /* keypad digits, measured from the canvas */
+
+  /* My Look grids (board 5d): the one gap off the 4px base scale */
+  --slot-gap:   10px;
 
   /* --- Motion --------------------------------------------------------------
      Transform and opacity only. steps() for anything pixel-art, easing for
@@ -218,10 +224,24 @@
   --gem-lg: 48px;
   --gem-xl: 64px;
 
-  /* --- Theme variants (routine app board 1n) -----------------------------
+  /* --- Theme variants (routine app board 1n; scope ruled in 5a/19b) ------
      Each theme is three swatches and a strip. The default (Overworld) is
      the app as designed; the others repaint --theme-accent, --theme-deep,
-     and the trim strip. --theme-deep must stay readable on parchment.   */
+     and the trim strip. --theme-deep must stay readable on parchment.
+
+     Section labels take --theme-deep, NEVER --theme-accent: Cherry #e58bb4
+     and Nether #f2a23e sit near 2:1 on parchment — unreadable as text —
+     while all five --theme-deep values clear 4.5:1. --theme-accent is for
+     non-text surfaces only.
+
+     A theme may repaint exactly five surfaces: the trim strip, section-label
+     text, the avatar slot's frame on Home and My Look, the empty-state
+     card's inner tint, and a 2px rule under a screen title. The governing
+     test: a theme may only touch a surface that would still be fully
+     understood if it were deleted. Everything that carries state — button
+     fills, the slab, the keypad, the bars, the tier materials, the emerald,
+     the FAST chip, slate, the parent zone, non-label text — is denied,
+     permanently: a theme that can recolour state is a theme that can lie. */
   --th-nether-1:  #d96e2e;
   --th-nether-2:  #8a4545;
   --th-nether-3:  #f2a23e;
@@ -238,6 +258,10 @@
 
   --theme-accent:      var(--correct);
   --theme-deep:        var(--correct-text);
+  /* Strip-image tokens are REFERENCE ONLY: a url() carried through a custom
+     property resolves against the defining sheet in some engines and the
+     using sheet in others, so the app sets the strip image per theme in
+     src/styles.css. Only the color tokens are consumed at runtime. */
   --theme-strip-img:   url("assets/tx-grass.png");
   --theme-strip-color: transparent;
 
