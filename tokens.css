@@ -210,6 +210,37 @@
   --steps-press: steps(3);
   --steps-fade:  steps(2);
 
+  /* --- Emerald sprite sizes (assets/emerald.png 16px, emerald-32.png 32px).
+     Display ONLY at these four sizes: 16/48 from the small sprite, 32/64
+     from the large — anything else blurs the pixel art.               */
+  --gem-sm: 16px;
+  --gem-md: 32px;
+  --gem-lg: 48px;
+  --gem-xl: 64px;
+
+  /* --- Theme variants (routine app board 1n) -----------------------------
+     Each theme is three swatches and a strip. The default (Overworld) is
+     the app as designed; the others repaint --theme-accent, --theme-deep,
+     and the trim strip. --theme-deep must stay readable on parchment.   */
+  --th-nether-1:  #d96e2e;
+  --th-nether-2:  #8a4545;
+  --th-nether-3:  #f2a23e;
+  --th-end-1:     #a06fd6;
+  --th-end-2:     #3a2e4a;
+  --th-end-3:     #d8c7ee;
+  --th-ocean-1:   #3aa6b9;
+  --th-ocean-2:   #2e6e8f;
+  --th-ocean-3:   #8fd8c9;
+  --th-cherry-1:  #e58bb4;
+  --th-cherry-2:  #8f5a44;
+  --th-cherry-3:  #f5cede;
+  --th-dirt:      #7a5233;  /* overworld's middle swatch */
+
+  --theme-accent:      var(--correct);
+  --theme-deep:        var(--correct-text);
+  --theme-strip-img:   url("assets/tx-grass.png");
+  --theme-strip-color: transparent;
+
   /* --- Texture tiles -------------------------------------------------------
      Thin strips only, never behind text. 16px, or 12px on small chips.   */
   --tx-size: 16px;
@@ -227,4 +258,30 @@
     --dur-star: 0ms;
     --dur-pop: 0ms;
   }
+}
+
+/* Theme variants repaint the decorative tokens only. Overworld is :root. */
+[data-theme="nether"] {
+  --theme-accent: var(--th-nether-1);
+  --theme-deep: var(--th-nether-2);
+  --theme-strip-img: url("assets/tx-nether.png");
+  --theme-strip-color: transparent;
+}
+[data-theme="end"] {
+  --theme-accent: var(--th-end-1);
+  --theme-deep: var(--th-end-2);
+  --theme-strip-img: none;
+  --theme-strip-color: var(--th-end-2);
+}
+[data-theme="ocean"] {
+  --theme-accent: var(--th-ocean-1);
+  --theme-deep: var(--th-ocean-2);
+  --theme-strip-img: none;
+  --theme-strip-color: var(--th-ocean-2);
+}
+[data-theme="cherry"] {
+  --theme-accent: var(--th-cherry-1);
+  --theme-deep: var(--th-cherry-2);
+  --theme-strip-img: none;
+  --theme-strip-color: var(--th-cherry-1);
 }

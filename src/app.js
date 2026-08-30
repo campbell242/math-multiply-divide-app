@@ -13,11 +13,18 @@ import * as audio from "./audio.js";
 import { initParent } from "./parent.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid"];
+const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid", "me"];
+
+const TAB_OF = { home: "home", select: "practice", me: "me" };
 
 function show(name) {
   // Instant, per the motion rules: a child taps fast and transitions are a tax.
   for (const s of screens) $(`screen-${s}`).hidden = s !== name;
+  const tab = TAB_OF[name];
+  $("tabbar").hidden = !tab; // never on a card mid-round, never in the parent zone
+  if (tab)
+    for (const el of document.querySelectorAll(".tab"))
+      el.classList.toggle("is-active", el.dataset.tab === tab);
 }
 
 /* --- Decks --------------------------------------------------------------------
@@ -38,9 +45,9 @@ let toastTimer = null;
 function showToast(title, sub) {
   $("toast-title").textContent = title;
   $("toast-sub").textContent = sub;
-  $("toast").hidden = false;
+  $("toast").classList.add("is-show");
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { $("toast").hidden = true; }, 3000);
+  toastTimer = setTimeout(() => { $("toast").classList.remove("is-show"); }, 3000);
 }
 
 // Only reaching Gold or Diamond earns the toast and the rising third --
@@ -54,6 +61,7 @@ function maybeCelebratePromotion(card, oldTier, newTier, sound) {
 
 /* --- Boot ------------------------------------------------------------------- */
 const { storageOk } = store.initStore();
+document.documentElement.dataset.theme = store.get("profile").theme || "overworld";
 document.addEventListener("pointerdown", audio.unlock, { once: true });
 
 /* --- Home --------------------------------------------------------------------- */
@@ -114,13 +122,12 @@ function renderSelect() {
   for (const key of Object.keys(DECKS)) {
     const btn = $(`deck-${key}`);
     const notInSpeed = mode === "speed" && DECKS[key].kind === "factors";
-    const on = enabled.includes(key) && !notInSpeed;
-    btn.disabled = !on;
-    btn.classList.toggle("is-on", on && key === deckKey);
+    btn.hidden = !enabled.includes(key); // off = hidden, not greyed (ruling 6)
+    btn.disabled = notInSpeed;
+    btn.classList.toggle("is-on", !notInSpeed && key === deckKey);
     btn.querySelector(".pick__sub").textContent =
-      notInSpeed ? "not in speed run"
-      : on ? `${dueCount(key)} of ${DECKS[key].cards.length} due`
-      : "turned off";
+      notInSpeed ? "NOT IN SPEED RUN"
+      : `${dueCount(key)} of ${DECKS[key].cards.length} due`;
   }
 
   const auto = store.get("settings").autoSubmit;
@@ -233,11 +240,13 @@ function nextCardScreen() {
       active: 0,
       wrongs: 0,
       wrongShown: false,
+      dupIndex: -1,
       cardStart: performance.now(),
       pairStart: performance.now(),
     };
     $("entry").hidden = true;
     $("factors-rows").hidden = false;
+    $("check").textContent = "ADD PAIR ›";
     renderFactorRows();
   } else {
     fs = null;
@@ -318,9 +327,10 @@ function submit() {
     phase = "wrong-hold";
     session.runIndex = 0;
     $("slab").classList.add("is-wrong");
-    $("reveal").textContent = `${card.text} = ${card.answer} — we'll come back to it.`;
+    $("problem").textContent = `${card.text} = ${card.answer}`;
+    $("reveal").textContent = `You put ${entry} — we'll come back to it.`;
     $("reveal").hidden = false;
-    $("check").textContent = "NEXT ›";
+    $("check").textContent = "Next card ›";
     $("check").classList.add("is-next");
     answerCard(session.round, false);
   }
@@ -335,14 +345,15 @@ function renderFactorRows() {
   const rows = fs.card.pairs.map(([a, b], i) => {
     if (fs.solved.has(i)) {
       const fast = fs.solved.get(i).fast;
-      return `<li class="frow is-solved">${a} × ${b} ✔${fast ? " ⚡" : ""}</li>`;
+      const dup = i === fs.dupIndex ? " is-dup" : "";
+      return `<li class="frow is-solved${dup}">${a} × ${b} ✔${fast ? ' <i class="orb"></i>' : ""}</li>`;
     }
     return null;
   });
   const entryAt = fs.card.pairs.findIndex((_, i) => !fs.solved.has(i));
   if (entryAt >= 0) {
     const box = (i) =>
-      `<b class="fbox${fs.active === i ? " is-focus" : ""}">${fs.boxes[i] || "&nbsp;"}</b>`;
+      `<b class="fbox${fs.active === i ? " is-focus" : ""}" data-box="${i}">${fs.boxes[i] || "&nbsp;"}</b>`;
     rows[entryAt] =
       `<li class="frow is-entry${fs.wrongShown ? " is-wrong" : ""}">${box(0)} × ${box(1)}</li>`;
     for (let i = entryAt + 1; i < rows.length; i++)
@@ -360,20 +371,20 @@ function submitPair() {
   if (idx >= 0 && !fs.solved.has(idx)) {
     const pairMs = performance.now() - fs.pairStart;
     fs.pairStart = performance.now();
+    // Per-pair lightning is the orb on the row, never a chip — a chip would
+    // flicker eight times on one card (ruling 10).
     const fast = pairMs <= session.settings.lightningMs;
     fs.solved.set(idx, { fast });
     fs.wrongShown = false;
+    fs.dupIndex = -1;
     audio.cueCorrect(session.runIndex++, session.settings.sound.all && session.settings.sound.blips);
-    if (fast) {
-      $("fast-chip").hidden = false;
-      clearTimeout(fastChipTimer);
-      fastChipTimer = setTimeout(() => { $("fast-chip").hidden = true; }, 800);
-    }
     renderFactorRows();
     if (fs.solved.size === fs.card.pairs.length) completeFactorCard();
   } else if (idx >= 0) {
-    // Already found: not a miss, just cleared — she can see it in the list.
+    // Already found: mark the row she solved (ruling 10) — an
+    // acknowledgement, not a miss. Clears on her next input.
     fs.wrongShown = false;
+    fs.dupIndex = idx;
     renderFactorRows();
   } else {
     // Wrong pair: slate on the entry row, silent, and it stays until she
@@ -381,6 +392,7 @@ function submitPair() {
     fs.wrongs++;
     session.runIndex = 0;
     fs.wrongShown = true;
+    fs.dupIndex = -1;
     renderFactorRows();
   }
 }
@@ -415,15 +427,25 @@ function completeFactorCard() {
   }
   clearTimeout(fastChipTimer);
   $("fast-chip").hidden = !(correct && avgMs <= s.lightningMs);
-  advanceTimer = setTimeout(advance, 900);
+  advanceTimer = setTimeout(advance, 700);
 }
 
 function factorType(d) {
   if (fs.boxes[fs.active].length >= 3) return;
   fs.boxes[fs.active] += d;
   fs.wrongShown = false;
+  fs.dupIndex = -1;
   renderFactorRows();
 }
+
+// Tapping either box of the live row focuses it — a typo in the first
+// number must not cost the pair (ruling 10).
+$("factors-rows").addEventListener("click", (e) => {
+  const box = e.target.closest(".fbox");
+  if (!box || phase !== "answer" || !fs) return;
+  fs.active = Number(box.dataset.box);
+  renderFactorRows();
+});
 
 function factorCheck() {
   if (fs.boxes[0] !== "" && fs.boxes[1] !== "") submitPair();
@@ -509,8 +531,8 @@ function finishRound() {
 
   $("cleared-title").textContent = `Round ${session.roundIndex + 1} cleared`;
   $("cleared-stats").innerHTML = [
-    [`right first try`, `${stats.firstTry} / ${stats.total}`],
-    [`emeralds earned`, `${stats.emeralds}${stats.clean ? " · clean round!" : ""}`],
+    ...(stats.clean ? [["clean round", "✔"]] : []),
+    [`emeralds earned`, `${stats.emeralds}`],
     [`lightning-fast answers`, `${stats.fast}`],
   ].map(([k, v]) => `<li><span>${k}</span><b>${v}</b></li>`).join("");
   const done = (session.roundIndex + 1) / session.rounds.length;
@@ -628,6 +650,70 @@ function playAward(banked, oldBalance) {
   }
 }
 $("go-home").addEventListener("click", renderHome);
+
+/* --- ME: avatar + theme (routine app board 1n) ----------------------------------
+
+   Her screen, no PIN. The avatar on Home is the way in. A variant repaints
+   the trim strip and label accents only — the three semantic greens are
+   meaning, not decoration, and never move.                                  */
+const AVATARS = [
+  ["av-stormy", "Stormy"], ["av-axolotl", "Axolotl"], ["av-bear", "Bear"],
+  ["av-shadow", "Shadow"], ["av-cat", "Cat"], ["av-fox", "Fox"],
+  ["av-panda", "Panda"], ["av-bee", "Bee"], ["av-steve", "Steve"],
+  ["av-alex", "Alex"], ["av-creeper", "Creeper"],
+];
+const THEMES = [
+  ["overworld", "Overworld"], ["nether", "Nether"], ["end", "End"],
+  ["ocean", "Ocean"], ["cherry", "Cherry Grove"],
+];
+
+function renderMe(note = "") {
+  const p = store.get("profile");
+  $("me-clock").textContent = fmtClock();
+  $("avatar-grid").innerHTML = AVATARS.map(([key, label]) =>
+    `<button class="slot${key === p.avatar ? " is-picked" : ""}" data-av="${key}" aria-label="${label}">
+       <img src="assets/${key}.png" alt=""></button>`).join("");
+  $("theme-list").innerHTML = THEMES.map(([key, label]) =>
+    `<button class="trow${key === (p.theme || "overworld") ? " is-picked" : ""}" data-th="${key}">
+       <span class="trow__thumb trow__thumb--${key}"></span>
+       <span class="trow__name">${label}</span>
+       <span class="trow__sw"><i class="sw--${key}-1"></i><i class="sw--${key}-2"></i><i class="sw--${key}-3"></i></span>
+     </button>`).join("");
+  $("me-note").innerHTML = note || "&nbsp;";
+  show("me");
+}
+
+$("go-me").addEventListener("click", () => renderMe());
+$("tabbar").addEventListener("click", (e) => {
+  const tab = e.target.closest(".tab");
+  if (!tab) return;
+  if (tab.dataset.tab === "home") renderHome();
+  else if (tab.dataset.tab === "practice") renderSelect();
+  else renderMe();
+});
+$("me-back").addEventListener("click", renderHome);
+
+$("avatar-grid").addEventListener("click", (e) => {
+  const slot = e.target.closest(".slot");
+  if (!slot) return;
+  const p = store.get("profile");
+  p.avatar = slot.dataset.av;
+  store.touch("profile");
+  audio.cuePick(store.get("settings").sound.all);
+  const label = AVATARS.find(([k]) => k === p.avatar)[1];
+  renderMe(`${label} — good choice!`);
+});
+
+$("theme-list").addEventListener("click", (e) => {
+  const row = e.target.closest(".trow");
+  if (!row) return;
+  const p = store.get("profile");
+  p.theme = row.dataset.th;
+  store.touch("profile");
+  document.documentElement.dataset.theme = p.theme;
+  audio.cuePick(store.get("settings").sound.all);
+  renderMe();
+});
 
 initParent({ show, renderHome });
 renderHome();

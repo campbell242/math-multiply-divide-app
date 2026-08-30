@@ -18,9 +18,11 @@
 
   <!-- Screen changes are instant: sections toggle, nothing slides. -->
 
-  <main class="screen" id="screen-home" hidden>
+  <main class="screen screen--tabbed" id="screen-home" hidden>
     <div class="home-top">
-      <img class="avatar" id="home-avatar" src="assets/av-stormy.png" alt="">
+      <button class="avatar-btn" id="go-me" aria-label="Change my look">
+        <img class="avatar" id="home-avatar" src="assets/av-stormy.png" alt="">
+      </button>
       <div class="clock" id="clock">7:42</div>
     </div>
     <div class="chips">
@@ -32,7 +34,7 @@
     <button class="parents-chip" id="go-parent"><i></i>PARENTS</button>
   </main>
 
-  <main class="screen" id="screen-select" hidden>
+  <main class="screen screen--tabbed" id="screen-select" hidden>
     <div class="bar">
       <button class="back" id="select-back">‹</button>
       <h1 class="bar__title">Practice</h1>
@@ -124,6 +126,19 @@
     <p class="subtitle" id="complete-note">Great job!</p>
     <ul class="stats" id="complete-stats"></ul>
     <button class="btn btn--big" id="go-home">Back to home ›</button>
+  </main>
+
+  <main class="screen screen--tabbed" id="screen-me" hidden>
+    <div class="bar">
+      <button class="back" id="me-back">‹</button>
+      <h1 class="bar__title">My look</h1>
+      <span class="bar__meta" id="me-clock"></span>
+    </div>
+    <div class="label label--theme">PICK YOUR AVATAR</div>
+    <div class="slot-grid" id="avatar-grid"></div>
+    <p class="me-note" id="me-note">&nbsp;</p>
+    <div class="label label--theme">PICK YOUR WORLD</div>
+    <div class="stack" id="theme-list"></div>
   </main>
 
   <main class="screen screen--parent" id="screen-pin" hidden>
@@ -240,12 +255,19 @@
       <button class="gtab" id="g-factors">FACTORS</button>
     </div>
     <div id="grid-box"></div>
+    <div class="gdetail" id="gdetail"></div>
     <ul class="gsummary" id="grid-summary"></ul>
     <p class="pvoice">Each square is one fact, coloured by its tier. Hover or long-press a
       square to see which fact it is.</p>
   </main>
 
-  <div class="toast" id="toast" hidden>
+  <nav class="tabbar" id="tabbar" hidden>
+    <button class="tab" data-tab="home">HOME</button>
+    <button class="tab" data-tab="practice">PRACTICE</button>
+    <button class="tab" data-tab="me">ME</button>
+  </nav>
+
+  <div class="toast" id="toast">
     <b id="toast-title"></b>
     <span id="toast-sub"></span>
   </div>

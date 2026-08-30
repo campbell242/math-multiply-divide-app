@@ -2,7 +2,7 @@
 // plain factual voice, and silent end to end — no cue in here ever makes a
 // sound. Settings apply as they are edited; LOCK just closes the area.
 
-import { factorsDeck, TIERS } from "./engine.js";
+import { factorsDeck, TIERS, TIER_INTERVALS } from "./engine.js";
 import * as store from "./store.js";
 
 const $ = (id) => document.getElementById(id);
@@ -70,7 +70,51 @@ function openParent() {
   renderResets();
   $("p-import-status").textContent = "";
   pendingImport = null;
+  syncPencils();
   hooks.show("parent");
+}
+
+/* Ruling 13: editable values rest as a slate pencil; tapping opens the
+   native field with the OS keyboard. The two patterns are not in conflict —
+   one is the affordance, the other is the editor.                        */
+const PENCIL_IDS = ["p-name", "p-round", "p-fround", "p-promote", "p-lightning", "p-balance", "p-pin"];
+
+function pencilLabel(id) {
+  const v = $(id).value;
+  if (id === "p-promote" || id === "p-lightning") return `${v} s`;
+  if (id === "p-name") return v || "(not set)";
+  return v;
+}
+
+function syncPencils() {
+  for (const id of PENCIL_IDS) {
+    const btn = $(id).previousElementSibling;
+    if (btn?.classList.contains("pedit")) btn.textContent = pencilLabel(id);
+  }
+}
+
+function wirePencils() {
+  for (const id of PENCIL_IDS) {
+    const input = $(id);
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "pedit";
+    input.before(btn);
+    input.hidden = true;
+    btn.addEventListener("click", () => {
+      btn.hidden = true;
+      input.hidden = false;
+      input.classList.add("is-open");
+      input.focus();
+      try { input.select(); } catch { /* number inputs on some browsers */ }
+    });
+    input.addEventListener("blur", () => {
+      input.hidden = true;
+      input.classList.remove("is-open");
+      btn.hidden = false;
+      syncPencils(); // change handlers may have clamped or rewritten values
+    });
+  }
 }
 
 function renderSwitch(id, on) {
@@ -294,8 +338,9 @@ function renderGrid() {
     const rec = cards[id];
     const cls = rec ? `is-t${rec.t}` : "is-unseen";
     const full = rec ? `${title} · ${TIER_LABELS[rec.t]}` : `${title} · not seen yet`;
-    return `<div class="gcell ${cls}" title="${full}">${label}</div>`;
+    return `<div class="gcell ${cls}" title="${full}" data-id="${id}" data-fact="${title}">${label}</div>`;
   };
+  $("gdetail").classList.remove("is-open");
 
   let html = "";
   if (gridDeck === "factors") {
@@ -346,6 +391,13 @@ export function initParent(h) {
   });
   $("p-grid").addEventListener("click", () => { renderGrid(); hooks.show("grid"); });
   $("grid-back").addEventListener("click", openParent);
+  $("grid-box").addEventListener("click", (e) => {
+    const cellEl = e.target.closest(".gcell[data-id]");
+    if (!cellEl) return;
+    for (const c of document.querySelectorAll(".gcell.is-picked")) c.classList.remove("is-picked");
+    cellEl.classList.add("is-picked");
+    renderGridDetail(cellEl.dataset.id, cellEl.dataset.fact);
+  });
   for (const key of ["mult", "div", "factors"])
     $(`g-${key}`).addEventListener("click", () => { gridDeck = key; renderGrid(); });
 
@@ -354,4 +406,38 @@ export function initParent(h) {
   wireSettings();
   wireResets();
   wireBackup();
+  wirePencils();
+}
+
+function median(arr) {
+  const a = [...arr].sort((x, y) => x - y);
+  const mid = a.length >> 1;
+  return a.length % 2 ? a[mid] : (a[mid - 1] + a[mid]) / 2;
+}
+
+function renderGridDetail(id, fact) {
+  const rec = store.get("cards")[id];
+  const el = $("gdetail");
+  el.classList.add("is-open");
+  if (!rec) {
+    el.innerHTML = `<div class="gdetail__fact">${fact}<span class="gdetail__tier">not seen yet</span></div>`;
+    return;
+  }
+  const today = store.dayNumber();
+  const duePhrase = rec.due <= today ? "due today" : `due in ${rec.due - today}d`;
+  // The day of the last scheduled answer falls out of the model: due was set
+  // to that day plus the tier's interval, so no extra field is stored.
+  const lastDay = rec.due - TIER_INTERVALS[rec.t];
+  const ago = Math.max(0, today - lastDay);
+  const rows = [
+    [`${(median(rec.ms) / 1000).toFixed(1)}s`, "MEDIAN"],
+    [`${rec.n}`, "SEEN"],
+    [`${rec.n - rec.ok}`, "MISSED"],
+    [ago === 0 ? "today" : `${ago}d ago`, "LAST"],
+  ];
+  el.innerHTML =
+    `<div class="gdetail__fact">${fact}<span class="gdetail__tier">${TIER_LABELS[rec.t]} · ${duePhrase}</span></div>` +
+    `<div class="gdetail__row">` +
+    rows.map(([v, k]) => `<span><b>${v}</b>${k}</span>`).join("") +
+    `</div>`;
 }

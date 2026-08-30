@@ -4,6 +4,11 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 
+/* The hidden attribute must beat any display a class sets. Without this,
+   `.screen { display: flex }` overrides the UA's [hidden] rule and every
+   screen renders stacked on one long page. */
+[hidden] { display: none !important; }
+
 html, body { margin: 0; padding: 0; height: 100%; }
 
 body {
@@ -101,18 +106,20 @@ body {
 .chip--emerald { background: var(--emerald-soft); color: var(--emerald-dark); border-color: var(--emerald-dark); }
 .chip--streak  { background: var(--tier-gold-soft); color: var(--tier-gold-text); border-color: var(--tier-gold-dark); }
 
-/* A pixel gem, until Design supplies an emerald sprite (docs/DESIGN_FEEDBACK.md). */
+/* The emerald sprite (ruling 7). Sizes come from the display rule in tokens. */
 .gem {
-  width: 14px; height: 14px;
-  background: var(--emerald);
-  border: var(--border-w-thin) solid var(--emerald-deep);
-  box-shadow: inset 2px 2px 0 var(--emerald-light), inset -2px -2px 0 var(--emerald-dark);
+  width: var(--gem-sm); height: var(--gem-sm);
+  background-image: url("../assets/emerald.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
   display: inline-block;
 }
-.chip--emerald::before { content: ""; }
-.chip--emerald .gem, .chip--emerald::before { margin-right: 0; }
-.gem--big { width: 56px; height: 56px; border-width: var(--border-w); margin: var(--sp-6) auto 0;
-  box-shadow: inset 6px 6px 0 var(--emerald-light), inset -6px -6px 0 var(--emerald-dark); }
+.gem--big {
+  width: var(--gem-xl); height: var(--gem-xl);
+  background-image: url("../assets/emerald-32.png");
+  margin: var(--sp-6) auto 0;
+}
 
 /* --- Buttons ------------------------------------------------------------------ */
 .btn {
@@ -136,8 +143,9 @@ body {
 .btn:disabled { background: var(--stone-disabled); color: var(--text-disabled); box-shadow: var(--bevel-pressed); cursor: default; }
 .btn:disabled:active { transform: none; }
 
-/* The wrong-state continue is quiet: card ground, ink text, no celebration. */
-.btn--check.is-next { background: var(--bg-card); color: var(--ink); text-shadow: none; box-shadow: var(--bevel-light), var(--key-drop-sm); }
+/* The wrong-state continue is filled slate (ruling 3): the app's
+   non-celebration colour, and distinct from a disabled button. */
+.btn--check.is-next { background: var(--wrong); }
 
 .quiet {
   font-family: var(--font-sans);
@@ -385,6 +393,21 @@ body {
 .fbox.is-focus { border-color: var(--border-btn); background: var(--bg-card); }
 /* A wrong pair is slate and still — it stays until she types again. */
 .frow.is-entry.is-wrong .fbox { border-color: var(--wrong); background: var(--wrong-soft); color: var(--wrong-text); }
+/* A duplicate marks the row she already solved (ruling 10): an
+   acknowledgement in the checked-slot green, not the FAST bright. */
+.frow.is-dup { background: var(--correct-light); opacity: 1; }
+/* Per-pair lightning is the orb alone — a chip would flicker eight times
+   on one card (ruling 10). */
+.frow .orb {
+  width: 16px; height: 16px;
+  background-image: url("../assets/icons/orb.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  display: inline-block;
+}
+/* Tap either box of the live row to focus it (ruling 10). */
+.frow.is-entry .fbox { cursor: pointer; }
 
 /* --- Parent area ------------------------------------------------------------------
    Iron and neutral, per the routine app's doctrine: nothing a parent taps to
@@ -594,7 +617,8 @@ body {
   opacity: 1;
   transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
 }
-.toast[hidden] { display: flex; opacity: 0; transform: translate(-50%, -8px); visibility: hidden; }
+/* The toast animates its exit, so it hides by class, not attribute. */
+.toast:not(.is-show) { opacity: 0; transform: translate(-50%, -8px); visibility: hidden; }
 .toast b {
   font-family: var(--font-display);
   font-size: var(--fs-body);
@@ -609,10 +633,11 @@ body {
 .arc-gem {
   position: fixed;
   z-index: 9;
-  width: 16px; height: 16px;
-  background: var(--emerald);
-  border: var(--border-w-thin) solid var(--emerald-deep);
-  box-shadow: inset 2px 2px 0 var(--emerald-light), inset -2px -2px 0 var(--emerald-dark);
+  width: var(--gem-sm); height: var(--gem-sm);
+  background-image: url("../assets/emerald.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
   pointer-events: none;
   transition: transform 550ms cubic-bezier(0.4, 0, 0.8, 1), opacity 550ms linear;
 }
@@ -622,3 +647,137 @@ body {
 /* Closing lines hold back until the last emerald lands, then fade up 8px. */
 .fade-wait { opacity: 0; transform: translateY(8px); }
 #complete-note, #complete-stats { transition: opacity 260ms var(--ease-out), transform 260ms var(--ease-out); }
+
+/* --- Parent editable values (ruling 13): the pencil is the resting
+   affordance; tapping it opens the native field, framed in slate. -------- */
+.pedit {
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  color: var(--parent-edit);
+  background: none;
+  border: none;
+  border-bottom: var(--border-w-thin) solid var(--divider);
+  min-height: var(--tap-min);
+  padding: var(--sp-1) var(--sp-2);
+  cursor: pointer;
+}
+.pedit::after { content: " \270E"; font-size: var(--fs-label); }
+.pinput.is-open { border-color: var(--parent-edit); }
+
+/* --- Fact grid detail panel (ruling 15) ---------------------------------- */
+.gdetail {
+  background: var(--bg-card);
+  border: var(--border-w-thin) solid var(--divider);
+  padding: var(--sp-3) var(--sp-4);
+  display: none;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+.gdetail.is-open { display: flex; }
+.gdetail__fact {
+  font-family: var(--font-display);
+  font-size: var(--fs-heading);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+.gdetail__tier { font-size: var(--fs-hint); color: var(--text-parent); }
+.gdetail__row { display: flex; gap: var(--sp-4); font-size: var(--fs-micro); color: var(--text-muted); flex-wrap: wrap; }
+.gdetail__row b { font-family: var(--font-display); font-size: var(--fs-label); color: var(--ink); display: block; }
+.gcell:not(.is-label) { cursor: pointer; }
+.gcell.is-picked { outline: var(--border-w-thin) solid var(--parent-edit); outline-offset: -1px; }
+
+/* --- ME: avatar + theme picker (routine app board 1n) ----------------------- */
+.avatar-btn { background: none; border: none; padding: 0; cursor: pointer; min-width: var(--tap-comfy); min-height: var(--tap-comfy); }
+
+/* The theme's decorative surfaces: the trim strip and section labels. */
+.trim {
+  background-color: var(--theme-strip-color);
+  background-image: var(--theme-strip-img);
+}
+.label--theme, .label { color: var(--theme-deep); }
+
+.slot-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-3); }
+.slot {
+  aspect-ratio: 1;
+  background: var(--slot-fill);
+  border: var(--border-w) solid;
+  border-color: var(--slot-edge-dark) var(--slot-edge-light) var(--slot-edge-light) var(--slot-edge-dark);
+  display: flex; align-items: center; justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  min-height: var(--tap-comfy);
+}
+.slot img { width: 72%; image-rendering: pixelated; }
+/* Selected slot: 4px gold border + ink outline, the routine app's own rule. */
+.slot.is-picked, .trow.is-picked {
+  border: 4px solid var(--tier-gold);
+  outline: var(--border-w) solid var(--border-btn);
+}
+.me-note { font-size: var(--fs-label); color: var(--theme-deep); margin: 0; min-height: 1.4em; }
+
+.trow {
+  display: flex; align-items: center; gap: var(--sp-3);
+  width: 100%;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-ink);
+  padding: var(--sp-2) var(--sp-3);
+  min-height: var(--tap-comfy);
+  cursor: pointer;
+  font-family: inherit;
+}
+.trow__thumb {
+  width: 40px; height: 26px;
+  border: var(--border-w-thin) solid var(--border-btn);
+  background-size: var(--tx-size-sm);
+  image-rendering: pixelated;
+  flex: none;
+}
+.trow__thumb--overworld { background-image: url("../assets/tx-grass.png"); }
+.trow__thumb--nether    { background-image: url("../assets/tx-nether.png"); }
+.trow__thumb--end       { background: var(--th-end-2); }
+.trow__thumb--ocean     { background: var(--th-ocean-2); }
+.trow__thumb--cherry    { background: var(--th-cherry-1); }
+.trow__name { font-family: var(--font-display); font-size: var(--fs-body); }
+.trow__sw { margin-left: auto; display: flex; gap: 4px; }
+.trow__sw i { width: 13px; height: 13px; display: inline-block; }
+.sw--overworld-1 { background: var(--correct); }
+.sw--overworld-2 { background: var(--th-dirt); }
+.sw--overworld-3 { background: var(--fast); }
+.sw--nether-1 { background: var(--th-nether-1); }
+.sw--nether-2 { background: var(--th-nether-2); }
+.sw--nether-3 { background: var(--th-nether-3); }
+.sw--end-1 { background: var(--th-end-1); }
+.sw--end-2 { background: var(--th-end-2); }
+.sw--end-3 { background: var(--th-end-3); }
+.sw--ocean-1 { background: var(--th-ocean-1); }
+.sw--ocean-2 { background: var(--th-ocean-2); }
+.sw--ocean-3 { background: var(--th-ocean-3); }
+.sw--cherry-1 { background: var(--th-cherry-1); }
+.sw--cherry-2 { background: var(--th-cherry-2); }
+.sw--cherry-3 { background: var(--th-cherry-3); }
+
+/* --- Tab bar (v4 canvas: Home, Deck select, ME only) -------------------------
+   Dark ground, three equal cells, gold active, stone inactive, >=56px tall.
+   Never on a card mid-round, never in the parent zone. */
+.tabbar {
+  position: fixed;
+  left: 0; right: 0; bottom: 0;
+  display: flex;
+  background: var(--bg-dark);
+  border-top: var(--border-w) solid var(--border-ink);
+  z-index: 8;
+}
+.tab {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: var(--fs-body);
+  color: var(--stone);
+  background: none;
+  border: none;
+  padding: var(--sp-4) 0;
+  min-height: var(--tap-comfy);
+  cursor: pointer;
+}
+.tab.is-active { color: var(--tier-gold); }
+.screen--tabbed { padding-bottom: calc(var(--tap-comfy) + var(--sp-5)); }
