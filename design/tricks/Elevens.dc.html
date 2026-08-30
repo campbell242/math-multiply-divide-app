@@ -21,17 +21,20 @@
 
   <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 2px">
     <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;margin-left:-12px">‹</span>
-    <div style="font-family:'Jersey 25',monospace;font-size:23px">Slide in a zero</div>
-    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 10</div>
+    <div style="font-family:'Jersey 25',monospace;font-size:23px">Ten rows and one more</div>
+    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 11</div>
   </div>
-  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Ten of something keeps your number. A zero slides onto the end.</div>
+  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Eleven of something is ten of it, plus one more row.</div>
 
-  <div style="display:flex;justify-content:center;align-items:center;padding:0 18px;min-height:250px">
-    <div style="display:flex;gap:6px">
-      <sc-for list="{{digits}}" as="d" hint-placeholder-count="1">
-        <div style="{{d.style}}">{{d.ch}}</div>
+  <div style="display:flex;justify-content:center;padding:0 18px;min-height:272px">
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{rows}}" as="row" hint-placeholder-count="11">
+        <div style="{{row.style}}">
+          <sc-for list="{{row.cells}}" as="cell" hint-placeholder-count="7">
+            <div style="{{cell.style}}"></div>
+          </sc-for>
+        </div>
       </sc-for>
-      <div style="{{zero}}">0</div>
     </div>
   </div>
 
@@ -50,6 +53,10 @@
     </div>
   </div>
 
+  <sc-if value="{{showCaption}}" hint-placeholder-val="{{ true }}">
+    <div style="{{caption}}">Both digits are {{n}}. That happens all the way up to nine.</div>
+  </sc-if>
+
   <div style="flex:1;min-height:10px"></div>
   <div style="font-family:'Jersey 25',monospace;font-size:14px;color:#6b675c;padding:0 12px 7px">TRY IT WITH</div>
   <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;padding:0 12px 12px">
@@ -63,11 +70,12 @@
 </div>
 </x-dc>
 <script data-dc-script data-props='{"$preview":{"width":390,"height":840}}'>
-/* The DIGITS stage: ×10 is a digit operation, not an array transform —
-   seventy blocks would bury the thing it teaches. Same page frame, same
-   play-once timeline; the stage is digit tiles in the paper language, and
-   the zero slides in from the right. ×10 is this stage's only inhabitant:
-   ELEVENS_RULING.md moved ×11 to the array as ×9's add-a-row mirror. */
+/* ELEVENS_RULING.md: ×9's add-a-row mirror. Ten rows build, an eleventh
+   drops in, and the digit pattern is named as a CAPTION payoff (Nunito,
+   muted — prose about the trick, not part of the working) for n 2–9 only.
+   Its absence at 10–12 says nothing: the page has already drawn the
+   boundary in the caption's own words. Eleven rows is the tallest array in
+   the set — the stage reserves 272px so the ledger never moves. */
 class Component extends DCLogic {
   constructor(props) {
     super(props);
@@ -92,38 +100,40 @@ class Component extends DCLogic {
   renderVals() {
     const n = this.state.n, ph = this.state.ph;
     const ease = 'cubic-bezier(.2,.8,.3,1)';
-    const tile = 'width:44px;height:56px;box-sizing:border-box;flex:none;display:flex;align-items:center;justify-content:center;'
-      + 'background:#fffdf6;border:3px solid #20241a;'
-      + 'box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14);'
-      + "font-family:'Jersey 25',monospace;font-size:34px;line-height:1;";
-    const digits = String(n).split('').map((ch, i) => ({
-      ch: ch,
-      style: tile
-        + 'opacity:' + (ph >= 0 ? '1' : '0') + ';'
-        + 'transform:translateY(' + (ph >= 0 ? '0' : '-5px') + ');'
-        + 'transition:opacity 280ms ' + ease + ' ' + (ph === 0 ? i * 90 : 0) + 'ms,'
-        + 'transform 280ms ' + ease + ' ' + (ph === 0 ? i * 90 : 0) + 'ms;'
-    }));
+    const cellSolid = 'width:22px;height:22px;box-sizing:border-box;flex:none;background:#fffdf6;border:3px solid #20241a;'
+      + 'box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14);';
+    const rows = Array.from({ length: 11 }, (u, i) => {
+      const added = i === 10;
+      const visible = added ? ph >= 1 : ph >= 0;
+      const delay = !added && ph === 0 ? i * 90 : 0;
+      return {
+        cells: Array.from({ length: n }, () => ({ style: cellSolid })),
+        style: 'display:flex;gap:3px;'
+          + 'opacity:' + (visible ? '1' : '0') + ';'
+          + 'transform:translateY(' + (visible ? '0' : (added ? '5px' : '-5px')) + ');'
+          + 'transition:opacity 280ms ' + ease + ' ' + delay + 'ms,transform 280ms ' + ease + ' ' + delay + 'ms;'
+      };
+    });
     const lineStyle = (lit) =>
       "font-family:'Jersey 25',monospace;font-size:22px;line-height:1.5;color:#2b2b24;"
       + 'opacity:' + (lit ? '1' : '.26') + ';transition:opacity 260ms ease;';
     const chipBase = "font-family:'Jersey 25',monospace;font-size:24px;text-align:center;line-height:1;padding:17px 0;"
       + 'background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;cursor:pointer;';
     return {
-      digits: digits,
-      zero: tile
-        + 'opacity:' + (ph >= 1 ? '1' : '0') + ';'
-        + 'transform:translateX(' + (ph >= 1 ? '0' : '16px') + ');'
-        + 'transition:opacity 300ms ' + ease + ',transform 300ms ' + ease + ';',
+      n: n,
+      rows: rows,
       ledger: [
-        { text: 'start with ' + n, style: lineStyle(ph >= 0) },
-        { text: 'slide a zero on the end', style: lineStyle(ph >= 1) },
-        { text: '= ' + (10 * n), style: lineStyle(ph >= 2) },
+        { text: '10 × ' + n + ' = ' + (10 * n), style: lineStyle(ph >= 0) },
+        { text: 'and one more ' + n, style: lineStyle(ph >= 1) },
+        { text: '= ' + (11 * n), style: lineStyle(ph >= 2) },
       ],
       slab: 'background:#fffdf6;border:3px solid #2b2b24;box-shadow:0 5px 0 rgba(43,43,36,.14);'
         + 'opacity:' + (ph >= 2 ? '1' : '0') + ';transform:translateY(' + (ph >= 2 ? '0' : '6px') + ');'
         + 'transition:opacity 300ms ' + ease + ',transform 300ms ' + ease + ';',
-      result: '10 × ' + n + ' = ' + (10 * n),
+      result: '11 × ' + n + ' = ' + (11 * n),
+      showCaption: n <= 9,
+      caption: 'padding:8px 18px 0;text-align:center;font-size:12.5px;font-weight:600;color:#6b675c;line-height:1.5;'
+        + 'opacity:' + (ph >= 2 ? '1' : '0') + ';transition:opacity 260ms ease;',
       replay: () => this.play(),
       chips: Array.from({ length: 11 }, (u, k) => {
         const v = k + 2, sel = v === n;
