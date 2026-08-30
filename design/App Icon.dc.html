@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Jersey+25&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e9e4d6;font-family:'Nunito Sans',system-ui,sans-serif}
+a{color:#0a7a44;text-decoration:none}a:hover{color:#12c46b;text-decoration:underline}
+img{image-rendering:pixelated}
+.dv-turn{padding:40px 44px 32px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 14px/1.2 'Nunito Sans',sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.1);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:600 12px/1.3 'Nunito Sans',sans-serif;color:rgba(0,0,0,.6)}
+.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.1);box-shadow:0 2px 6px rgba(0,0,0,.08)}
+.k{font-family:'Jersey 25',monospace}
+.cap{font:600 10px ui-monospace,Menlo,monospace;color:#8a8578;text-align:center}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">App icon — the emerald on ink</span></div>
+<div style="max-width:860px;background:#fffdf4;border:3px solid #2b2b24;padding:16px 20px;margin:0 0 18px;font-size:13px;line-height:1.65;color:#4a463a">
+The emerald is the mark — it is the app's own material, already drawn at the right discipline, and it holds the two-apps rule: gold coin is the routine app, emerald is math. <b>The one real decision was the ground</b>, and it is ink <span class="k">#20241a</span> rather than parchment. Parchment is the app's ground <i>inside</i>, where it is the paper everything sits on; as a 48px tile among full-colour icons it becomes a pale square that recedes, and a green gem on cream is a notes app. Ink is already in the system — <span class="k">--bg-dark</span>, the round-bar track and the timer strip — and it makes the emerald the brightest thing in its own tile. See the comparison in <a href="#1b">1b</a>.
+</div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>The set</div>
+<div class="dv-card" style="width:560px;background:#f3eee1;padding:20px;display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap">
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center"><img src="assets/icon-512.png" alt="" style="width:180px;height:180px"><span class="cap">icon-512 · any</span></div>
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center"><img src="assets/icon-maskable-512.png" alt="" style="width:120px;height:120px"><span class="cap">maskable-512</span></div>
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center"><img src="assets/apple-touch-icon.png" alt="" style="width:90px;height:90px"><span class="cap">apple-touch 180</span></div>
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center"><img src="assets/favicon-32.png" alt="" style="width:32px;height:32px"><span class="cap">favicon 32</span></div>
+  </div>
+  <div style="font-size:12px;color:#4a463a;font-weight:600;line-height:1.65;border-top:2px solid #cfc8b2;padding-top:12px">
+    <b>One 32×32 master, upscaled nearest-neighbour only.</b> 512 is ×16, 192 is ×6, favicon is ×1 — so every delivered size is the same pixels, larger. The 32 downscales cleanly, so no 16 variant is needed.<br>
+    <b>180 is not a multiple of 32, so it is composed rather than scaled:</b> the master at ×5 is 160px, centred on a 180px ink ground with 10px of bleed. Nothing is smeared to fit.<br>
+    <b>Maskable is the same gem at 20/32 rather than 26/32.</b> Its widest span is 1.05 × its width — 21px on the 32 grid — which sits inside the 25.6px safe circle with room. The ground bleeds to all four edges in every variant, so iOS never fills transparency with black and Android's mask never bites into the mark.
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1b"><div class="dv-olabel"><a class="dv-oid" href="#1b">1b</a>48px on a busy home screen · and the ground that lost</div>
+<div class="dv-card" style="width:430px;background:#f3eee1;padding:20px;display:flex;flex-direction:column;gap:16px">
+  <div style="background:linear-gradient(160deg,#4a6b8a,#2f4257);padding:18px;display:flex;flex-direction:column;gap:16px">
+    <div style="display:flex;gap:16px;justify-content:center">
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:linear-gradient(150deg,#ff8a3d,#e0452b);border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Photos</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:linear-gradient(150deg,#41c6f5,#1a72d6);border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Weather</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><img src="assets/icon-192.png" alt="" style="width:48px;height:48px;border-radius:11px"><span style="font:600 9px 'Nunito Sans';color:#fff">Times Table</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:linear-gradient(150deg,#ffd84a,#f0a01e);border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Notes</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:#f2f2f4;border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Files</span></div>
+    </div>
+    <div style="display:flex;gap:16px;justify-content:center">
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:linear-gradient(150deg,#8f6bff,#5a2fd6);border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Music</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:#1f1f22;border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Camera</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:#f3eee1;border-radius:11px;display:flex;align-items:center;justify-content:center"><img src="assets/emerald-32.png" alt="" style="width:30px;height:30px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">parchment</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:linear-gradient(150deg,#3ddc84,#0f9d58);border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Health</span></div>
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:center"><div style="width:48px;height:48px;background:linear-gradient(150deg,#ff6b9d,#c2185b);border-radius:11px"></div><span style="font:600 9px 'Nunito Sans';color:#fff">Cards</span></div>
+    </div>
+  </div>
+  <div style="font-size:12px;color:#4a463a;font-weight:600;line-height:1.65">
+    Row one, third tile, is the icon at its real home-screen size. Row two, third tile, is <b>the parchment version that lost</b> — at 48px it dissolves into the pale neighbours and the gem loses its outline against cream. Note also the Health tile: a saturated green is a common neighbour, which is why the gem needs a dark surround rather than a green-on-light one to stay distinct.
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1c"><div class="dv-olabel"><a class="dv-oid" href="#1c">1c</a>Under the OS masks</div>
+<div class="dv-card" style="width:430px;background:#f3eee1;padding:20px;display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;gap:22px;flex-wrap:wrap;justify-content:center">
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:110px;height:110px;overflow:hidden;border-radius:50%"><img src="assets/icon-maskable-512.png" alt="" style="width:110px;height:110px;display:block"></div>
+      <span class="cap">circle · 100%</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="width:110px;height:110px;overflow:hidden;border-radius:26px"><img src="assets/icon-maskable-512.png" alt="" style="width:110px;height:110px;display:block"></div>
+      <span class="cap">squircle</span>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:7px;align-items:center">
+      <div style="position:relative;width:110px;height:110px">
+        <img src="assets/icon-maskable-512.png" alt="" style="width:110px;height:110px;display:block">
+        <div style="position:absolute;inset:0;border-radius:50%;box-shadow:0 0 0 999px rgba(233,228,214,.72)"></div>
+        <div style="position:absolute;left:11px;top:11px;width:88px;height:88px;border:2px dashed #2b2b24;border-radius:50%"></div>
+      </div>
+      <span class="cap">80% safe zone</span>
+    </div>
+  </div>
+  <div style="font-size:12px;color:#4a463a;font-weight:600;line-height:1.65;border-top:2px solid #cfc8b2;padding-top:12px">
+    The dashed ring is the 80% circle. The gem clears it on every side, and because the ground bleeds to the edges there is no mask shape that can expose a corner. <b>No radius is drawn into the artwork</b> — the OS owns the corner, and a baked-in one would show as a double edge under a circle mask.
+  </div>
+</div>
+</div>
+
+<div class="dv-opt" id="1d"><div class="dv-olabel"><a class="dv-oid" href="#1d">1d</a>The two manifest rulings</div>
+<div class="dv-card" style="width:430px;background:#f3eee1;padding:20px;display:flex;flex-direction:column;gap:14px">
+  <div style="background:#fffdf6;border:3px solid #2b2b24;padding:15px">
+    <div class="k" style="font-size:18px;margin-bottom:6px">background_color → <span style="color:#0a7a44">#f3eee1</span></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="width:58px;height:58px;background:#f3eee1;border:3px solid #2b2b24;flex:none"></div>
+      <div style="width:58px;height:58px;background:#fbfaff;border:3px solid #cfc8b2;flex:none;opacity:.5"></div>
+      <span style="font-size:11.5px;font-weight:700;color:#6b675c;line-height:1.5">parchment, replacing the stale <span class="k">#fbfaff</span></span>
+    </div>
+    <div style="font-size:12px;color:#4a463a;font-weight:600;line-height:1.65">This is the splash ground while the installed app boots, and the first painted screen is parchment. Any other value is a flash of the wrong colour on every cold start. <b>The dark icon sits on the light splash deliberately</b> — that contrast is the same one the home screen has, so launching feels like the tile growing rather than a scene change.</div>
+  </div>
+  <div style="background:#fffdf6;border:3px solid #2b2b24;padding:15px">
+    <div class="k" style="font-size:18px;margin-bottom:6px">theme_color → <span style="color:#0a7a44">#f3eee1</span></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+      <div style="width:58px;height:58px;background:#f3eee1;border:3px solid #2b2b24;flex:none"></div>
+      <div style="width:58px;height:58px;background:#6b4de6;border:3px solid #cfc8b2;flex:none;opacity:.5"></div>
+      <span style="font-size:11.5px;font-weight:700;color:#6b675c;line-height:1.5">one value, matching <span class="k">index.html</span></span>
+    </div>
+    <div style="font-size:12px;color:#4a463a;font-weight:600;line-height:1.65">The manifest's <span class="k">#6b4de6</span> predates the design system and contradicts the meta tag already in the head. Parchment wins because it is what the screen under the chrome actually is — the status bar should disappear into Home, not sit on it as a band. It also keeps the promise the whole system makes: <b>the app has no purple in it anywhere.</b><br><br>One consequence for the build: a light theme colour means the status bar needs dark content. Android infers it; iOS wants <span class="k">apple-mobile-web-app-status-bar-style: default</span>.</div>
+  </div>
+  <div style="background:#e8eef4;border:3px solid #6d89a3;padding:13px;font-size:12px;color:#42607c;font-weight:700;line-height:1.6">
+    <b>The icon never themes.</b> My Look repaints five decorative surfaces inside the app; the icon is not one of them. It is the app's face on a home screen shared with other apps, and a face that changes when she picks Nether is a different app twice a month.
+  </div>
+</div>
+</div>
+
+</div>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1120,&quot;height&quot;:900}}"></script>
+</body>
+</html>
