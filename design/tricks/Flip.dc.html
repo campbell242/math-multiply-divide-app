@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Jersey+25&display=swap" rel="stylesheet">
+  <style>
+    body { margin: 0; background: #f3eee1; color: #2b2b24; font-family: 'Nunito Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+    a { color: #3d7a22; } a:hover { color: #57a636; }
+    img { image-rendering: pixelated; }
+  </style>
+</helmet>
+<div style="width:390px;min-height:840px;margin:0 auto;background:#f3eee1;display:flex;flex-direction:column">
+  <div style="height:12px;background:url('tx-grass.png');background-size:16px;flex:none"></div>
+  <div style="height:8px;background:url('tx-dirt.png');background-size:16px;flex:none"></div>
+
+  <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 2px">
+    <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;margin-left:-12px">‹</span>
+    <div style="font-family:'Jersey 25',monospace;font-size:23px">The Flip</div>
+    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">↻</div>
+  </div>
+  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Turn the block around. The answer doesn't change.</div>
+
+  <div style="display:flex;justify-content:center;align-items:center;padding:0 18px;min-height:250px">
+    <div style="width:210px;height:210px;display:flex;align-items:center;justify-content:center;flex:none">
+      <div style="{{stage}}">
+        <sc-for list="{{rows}}" as="row" hint-placeholder-count="7">
+          <div style="{{row.style}}">
+            <sc-for list="{{row.cells}}" as="cell" hint-placeholder-count="8">
+              <div style="{{cell.style}}"></div>
+            </sc-for>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:14px 18px 0">
+    <div style="background:#fffdf6;border:3px solid #2b2b24;padding:11px 14px">
+      <sc-for list="{{ledger}}" as="line" hint-placeholder-count="2">
+        <div style="{{line.style}}">{{line.text}}</div>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding:11px 18px 0">
+    <div style="{{slab}}">
+      <div style="height:8px;background:url('tx-stone.png');background-size:16px"></div>
+      <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:38px;line-height:1;padding:11px 0 13px">{{result}}</div>
+    </div>
+  </div>
+
+  <div style="flex:1;min-height:10px"></div>
+  <div style="padding:0 18px 18px">
+    <div style="font-family:'Jersey 25',monospace;font-size:20px;color:#2b2b24;text-align:center;padding:14px;background:#cfc8b2;border:3px solid #4a4a44;box-shadow:inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(0,0,0,.16);cursor:pointer" onClick="{{replay}}">Again ›</div>
+  </div>
+</div>
+</x-dc>
+<script data-dc-script data-props='{"$preview":{"width":390,"height":840}}'>
+/* The Flip (work order D): an array transform — rotating in place obeys the
+   rules — plus the one ledger variant this page needs: TWO equal statements
+   landing TOGETHER on one frame. A sequential reveal would imply the second
+   derives from the first, which is the misconception the trick removes.
+   No chip strip: The Flip is not a table, and 7 × 8 is its canonical case. */
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { ph: 99 };
+    this.timers = [];
+    this.marks = [30, 1550, 2750];
+  }
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { this.timers.forEach(clearTimeout); }
+  reduced() {
+    try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+    catch (e) { return false; }
+  }
+  play() {
+    this.timers.forEach(clearTimeout);
+    if (this.reduced()) { this.setState({ ph: 2 }); return; }
+    this.setState({ ph: -1 });
+    this.timers = this.marks.map((ms, i) =>
+      setTimeout(() => this.setState({ ph: i }), ms));
+  }
+  renderVals() {
+    const ph = this.state.ph;
+    const ease = 'cubic-bezier(.2,.8,.3,1)';
+    const cellSolid = 'width:22px;height:22px;box-sizing:border-box;flex:none;background:#fffdf6;border:3px solid #20241a;'
+      + 'box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14);';
+    const rows = Array.from({ length: 7 }, (u, i) => ({
+      cells: Array.from({ length: 8 }, () => ({ style: cellSolid })),
+      style: 'display:flex;gap:3px;'
+        + 'opacity:' + (ph >= 0 ? '1' : '0') + ';'
+        + 'transform:translateY(' + (ph >= 0 ? '0' : '-5px') + ');'
+        + 'transition:opacity 280ms ' + ease + ' ' + (ph === 0 ? i * 90 : 0) + 'ms,'
+        + 'transform 280ms ' + ease + ' ' + (ph === 0 ? i * 90 : 0) + 'ms;'
+    }));
+    const lineStyle = (lit) =>
+      "font-family:'Jersey 25',monospace;font-size:22px;line-height:1.5;color:#2b2b24;"
+      + 'opacity:' + (lit ? '1' : '.26') + ';transition:opacity 260ms ease;';
+    return {
+      stage: 'display:flex;flex-direction:column;gap:3px;'
+        + 'transform:rotate(' + (ph >= 1 ? '90deg' : '0deg') + ');'
+        + 'transition:transform 400ms ' + ease + ';',
+      rows: rows,
+      ledger: [
+        { text: '7 × 8 = 56', style: lineStyle(ph >= 2) },
+        { text: '8 × 7 = 56', style: lineStyle(ph >= 2) },
+      ],
+      slab: 'background:#fffdf6;border:3px solid #2b2b24;box-shadow:0 5px 0 rgba(43,43,36,.14);'
+        + 'opacity:' + (ph >= 2 ? '1' : '0') + ';transform:translateY(' + (ph >= 2 ? '0' : '6px') + ');'
+        + 'transition:opacity 300ms ' + ease + ',transform 300ms ' + ease + ';',
+      result: '7 × 8 = 8 × 7',
+      replay: () => this.play()
+    };
+  }
+}
+</script>
+</body>
+</html>

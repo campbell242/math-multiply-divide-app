@@ -21,20 +21,17 @@
 
   <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 2px">
     <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;margin-left:-12px">‹</span>
-    <div style="font-family:'Jersey 25',monospace;font-size:23px">Double the double</div>
-    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 4</div>
+    <div style="font-family:'Jersey 25',monospace;font-size:23px">Slide in a zero</div>
+    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 10</div>
   </div>
-  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Double it once, then double that.</div>
+  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Ten of something keeps your number. A zero slides onto the end.</div>
 
-  <div style="display:flex;justify-content:center;align-items:flex-start;padding:0 18px;min-height:250px">
-    <div style="display:flex;flex-direction:column;gap:3px">
-      <sc-for list="{{rows}}" as="row" hint-placeholder-count="4">
-        <div style="{{row.style}}">
-          <sc-for list="{{row.cells}}" as="cell" hint-placeholder-count="7">
-            <div style="{{cell.style}}"></div>
-          </sc-for>
-        </div>
+  <div style="display:flex;justify-content:center;align-items:center;padding:0 18px;min-height:250px">
+    <div style="display:flex;gap:6px">
+      <sc-for list="{{digits}}" as="d" hint-placeholder-count="1">
+        <div style="{{d.style}}">{{d.ch}}</div>
       </sc-for>
+      <div style="{{zero}}">0</div>
     </div>
   </div>
 
@@ -66,16 +63,17 @@
 </div>
 </x-dc>
 <script data-dc-script data-props='{"$preview":{"width":390,"height":840}}'>
-/* Play once and hold (A4); Fours takes the four-mark timeline. Side tags are
-   gone (B2) — the ledger carries the running totals — and the stage reserves
-   all four rows from the first frame, so the array grows into space that was
-   already there. Constant 22px blocks at every n (B1). */
+/* The DIGITS stage (work order D): ×10 is a digit operation, not an array
+   transform — seventy blocks would bury the thing it teaches. Same page
+   frame, same play-once timeline; the stage is digit tiles in the paper
+   language, and the zero slides in from the right. ×11's "say the digit
+   twice" takes this same stage when that page is drawn. */
 class Component extends DCLogic {
   constructor(props) {
     super(props);
     this.state = { n: 7, ph: 99 };
     this.timers = [];
-    this.marks = [30, 1550, 2750, 3650];
+    this.marks = [30, 1550, 2750];
   }
   componentDidMount() { this.play(); }
   componentWillUnmount() { this.timers.forEach(clearTimeout); }
@@ -86,7 +84,7 @@ class Component extends DCLogic {
   play(n) {
     this.timers.forEach(clearTimeout);
     const next = n ?? this.state.n;
-    if (this.reduced()) { this.setState({ n: next, ph: 3 }); return; }
+    if (this.reduced()) { this.setState({ n: next, ph: 2 }); return; }
     this.setState({ n: next, ph: -1 });
     this.timers = this.marks.map((ms, i) =>
       setTimeout(() => this.setState({ n: next, ph: i }), ms));
@@ -94,35 +92,38 @@ class Component extends DCLogic {
   renderVals() {
     const n = this.state.n, ph = this.state.ph;
     const ease = 'cubic-bezier(.2,.8,.3,1)';
-    const cellSolid = 'width:22px;height:22px;box-sizing:border-box;flex:none;background:#fffdf6;border:3px solid #20241a;'
-      + 'box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14);';
-    const rows = Array.from({ length: 4 }, (u, i) => {
-      const showAt = i === 0 ? 0 : (i === 1 ? 1 : 2);
-      const visible = ph >= showAt;
-      return {
-        cells: Array.from({ length: n }, () => ({ style: cellSolid })),
-        style: 'display:flex;gap:3px;'
-          + 'opacity:' + (visible ? '1' : '0') + ';'
-          + 'transform:translateY(' + (visible ? '0' : '-5px') + ');'
-          + 'transition:opacity 280ms ' + ease + ',transform 280ms ' + ease + ';'
-      };
-    });
+    const tile = 'width:44px;height:56px;box-sizing:border-box;flex:none;display:flex;align-items:center;justify-content:center;'
+      + 'background:#fffdf6;border:3px solid #20241a;'
+      + 'box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14);'
+      + "font-family:'Jersey 25',monospace;font-size:34px;line-height:1;";
+    const digits = String(n).split('').map((ch, i) => ({
+      ch: ch,
+      style: tile
+        + 'opacity:' + (ph >= 0 ? '1' : '0') + ';'
+        + 'transform:translateY(' + (ph >= 0 ? '0' : '-5px') + ');'
+        + 'transition:opacity 280ms ' + ease + ' ' + (ph === 0 ? i * 90 : 0) + 'ms,'
+        + 'transform 280ms ' + ease + ' ' + (ph === 0 ? i * 90 : 0) + 'ms;'
+    }));
     const lineStyle = (lit) =>
       "font-family:'Jersey 25',monospace;font-size:22px;line-height:1.5;color:#2b2b24;"
       + 'opacity:' + (lit ? '1' : '.26') + ';transition:opacity 260ms ease;';
     const chipBase = "font-family:'Jersey 25',monospace;font-size:24px;text-align:center;line-height:1;padding:17px 0;"
       + 'background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;cursor:pointer;';
     return {
-      rows: rows,
+      digits: digits,
+      zero: tile
+        + 'opacity:' + (ph >= 1 ? '1' : '0') + ';'
+        + 'transform:translateX(' + (ph >= 1 ? '0' : '16px') + ');'
+        + 'transition:opacity 300ms ' + ease + ',transform 300ms ' + ease + ';',
       ledger: [
         { text: 'start with ' + n, style: lineStyle(ph >= 0) },
-        { text: 'double it — ' + (2 * n), style: lineStyle(ph >= 1) },
-        { text: 'double again — ' + (4 * n), style: lineStyle(ph >= 2) },
+        { text: 'slide a zero on the end', style: lineStyle(ph >= 1) },
+        { text: '= ' + (10 * n), style: lineStyle(ph >= 2) },
       ],
       slab: 'background:#fffdf6;border:3px solid #2b2b24;box-shadow:0 5px 0 rgba(43,43,36,.14);'
-        + 'opacity:' + (ph >= 3 ? '1' : '0') + ';transform:translateY(' + (ph >= 3 ? '0' : '6px') + ');'
+        + 'opacity:' + (ph >= 2 ? '1' : '0') + ';transform:translateY(' + (ph >= 2 ? '0' : '6px') + ');'
         + 'transition:opacity 300ms ' + ease + ',transform 300ms ' + ease + ';',
-      result: '4 × ' + n + ' = ' + (4 * n),
+      result: '10 × ' + n + ' = ' + (10 * n),
       replay: () => this.play(),
       chips: Array.from({ length: 11 }, (u, k) => {
         const v = k + 2, sel = v === n;

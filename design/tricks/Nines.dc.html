@@ -13,117 +13,127 @@
     body { margin: 0; background: #f3eee1; color: #2b2b24; font-family: 'Nunito Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
     a { color: #3d7a22; } a:hover { color: #57a636; }
     img { image-rendering: pixelated; }
-    @media (prefers-reduced-motion: reduce) { * { transition-duration: 0ms !important; transition-delay: 0ms !important; } }
   </style>
 </helmet>
-<div style="width:390px;min-height:820px;margin:0 auto;background:#f3eee1;display:flex;flex-direction:column">
+<div style="width:390px;min-height:840px;margin:0 auto;background:#f3eee1;display:flex;flex-direction:column">
   <div style="height:12px;background:url('tx-grass.png');background-size:16px;flex:none"></div>
   <div style="height:8px;background:url('tx-dirt.png');background-size:16px;flex:none"></div>
 
-  <div style="display:flex;align-items:center;gap:10px;padding:14px 16px 4px">
+  <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 2px">
     <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578;min-width:44px;min-height:44px;display:flex;align-items:center;justify-content:center;margin-left:-12px">‹</span>
-    <div style="font-family:'Jersey 25',monospace;font-size:24px">Nines</div>
-    <span style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:15px;color:#8a8578">TRICKS</span>
+    <div style="font-family:'Jersey 25',monospace;font-size:23px">Take a row away</div>
+    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 9</div>
   </div>
+  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Nine of something is ten of it, minus one row.</div>
 
-  <div style="padding:2px 18px 0">
-    <div style="font-family:'Jersey 25',monospace;font-size:27px;line-height:1.1">TAKE A ROW AWAY</div>
-    <div style="font-size:13px;color:#6b675c;font-weight:600;margin-top:3px">9 of anything is 10 of it, minus one of it.</div>
-  </div>
-
-  <div style="margin:12px 18px 0;background:#fffdf6;border:3px solid #2b2b24;box-shadow:inset 0 4px 0 rgba(255,255,255,.85),inset 0 -6px 0 rgba(0,0,0,.14);padding:14px 16px 16px;display:flex;flex-direction:column;align-items:center;gap:12px">
-    <div style="font-family:'Jersey 25',monospace;font-size:44px;line-height:1;display:flex;align-items:baseline;gap:10px">
-      <span>{{fact}}</span>
-      <span style="{{ansStyle}}">{{answer}}</span>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:3px;align-items:center">
+  <div style="display:flex;justify-content:center;padding:0 18px;min-height:250px">
+    <div style="display:flex;flex-direction:column;gap:3px">
       <sc-for list="{{rows}}" as="row" hint-placeholder-count="10">
-        <div style="{{row.wrap}}">
-          <sc-for list="{{row.cells}}" as="c" hint-placeholder-count="7">
-            <div style="{{row.cell}}"></div>
+        <div style="{{row.style}}">
+          <sc-for list="{{row.cells}}" as="cell" hint-placeholder-count="7">
+            <div style="{{cell.style}}"></div>
           </sc-for>
         </div>
       </sc-for>
     </div>
-    <div style="display:flex;flex-direction:column;gap:2px;align-items:center">
-      <div style="{{s1}}">{{l1}}</div>
-      <div style="{{s2}}">{{l2}}</div>
-      <div style="{{s3}}">{{l3}}</div>
-    </div>
   </div>
 
-  <div style="margin-top:auto;padding:16px 16px 18px">
-    <div style="font-family:'Jersey 25',monospace;font-size:13px;color:#3d7a22;margin-bottom:8px">TRY A NUMBER</div>
-    <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px">
-      <sc-for list="{{chips}}" as="chip" hint-placeholder-count="11">
-        <div style="{{chip.style}}" onClick="{{chip.pick}}">{{chip.v}}</div>
+  <div style="padding:14px 18px 0">
+    <div style="background:#fffdf6;border:3px solid #2b2b24;padding:11px 14px">
+      <sc-for list="{{ledger}}" as="line" hint-placeholder-count="3">
+        <div style="{{line.style}}">{{line.text}}</div>
       </sc-for>
     </div>
   </div>
+
+  <div style="padding:11px 18px 0">
+    <div style="{{slab}}">
+      <div style="height:8px;background:url('tx-stone.png');background-size:16px"></div>
+      <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:38px;line-height:1;padding:11px 0 13px">{{result}}</div>
+    </div>
+  </div>
+
+  <div style="flex:1;min-height:10px"></div>
+  <div style="font-family:'Jersey 25',monospace;font-size:14px;color:#6b675c;padding:0 12px 7px">TRY IT WITH</div>
+  <div style="display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px;padding:0 12px 12px">
+    <sc-for list="{{chips}}" as="chip" hint-placeholder-count="11">
+      <div style="{{chip.style}}" onClick="{{chip.pick}}">{{chip.v}}</div>
+    </sc-for>
+  </div>
+  <div style="padding:0 18px 18px">
+    <div style="font-family:'Jersey 25',monospace;font-size:20px;color:#2b2b24;text-align:center;padding:14px;background:#cfc8b2;border:3px solid #4a4a44;box-shadow:inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(0,0,0,.16);cursor:pointer" onClick="{{replay}}">Again ›</div>
+  </div>
 </div>
 </x-dc>
-<script data-dc-script data-props='{"$preview":{"width":390,"height":820}}'>
+<script data-dc-script data-props='{"$preview":{"width":390,"height":840}}'>
+/* Play once and hold (TRICKS_WORK_ORDER A4): build 900ms staggered, hold 600,
+   transform 300, hold 900, result 300, then hold indefinitely. No loop. */
 class Component extends DCLogic {
   constructor(props) {
     super(props);
-    this.state = { n: 7, phase: 0 };
-    this.waits = [700, 2400, 2000, 2800];
+    this.state = { n: 7, ph: 99 };
+    this.timers = [];
+    this.marks = [30, 1550, 2750];
   }
-  componentDidMount() { this.arm(this.state.phase); }
-  componentWillUnmount() { clearTimeout(this.t); }
-  arm(phase) {
-    clearTimeout(this.t);
-    this.t = setTimeout(() => {
-      const next = (phase + 1) % 4;
-      this.setState({ phase: next });
-      this.arm(next);
-    }, this.waits[phase]);
+  componentDidMount() { this.play(); }
+  componentWillUnmount() { this.timers.forEach(clearTimeout); }
+  reduced() {
+    try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+    catch (e) { return false; }
   }
-  pick(v) {
-    clearTimeout(this.t);
-    this.setState({ n: v, phase: 0 });
-    this.arm(0);
+  play(n) {
+    this.timers.forEach(clearTimeout);
+    const next = n ?? this.state.n;
+    if (this.reduced()) { this.setState({ n: next, ph: 2 }); return; }
+    this.setState({ n: next, ph: -1 });
+    this.timers = this.marks.map((ms, i) =>
+      setTimeout(() => this.setState({ n: next, ph: i }), ms));
   }
   renderVals() {
-    const n = this.state.n, ph = this.state.phase;
+    const n = this.state.n, ph = this.state.ph;
     const ease = 'cubic-bezier(.2,.8,.3,1)';
-    const cellBase = 'width:22px;height:22px;flex:none;border:2px solid #20241a;transition:background 240ms,border-color 240ms,box-shadow 240ms;';
-    const dirt = 'background:#7a5233;box-shadow:inset 0 3px 0 rgba(255,255,255,.35),inset 0 -4px 0 rgba(0,0,0,.28);';
-    const slate = 'background:#dfe6ee;border-color:#8ba4bb;';
+    const cellSolid = 'width:22px;height:22px;box-sizing:border-box;flex:none;background:#fffdf6;border:3px solid #20241a;'
+      + 'box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14);'
+      + 'transition:background 300ms ease,border-color 300ms ease,box-shadow 300ms ease;';
+    const cellGone = 'width:22px;height:22px;box-sizing:border-box;flex:none;background:transparent;border:3px solid #cfc8b2;box-shadow:none;'
+      + 'transition:background 300ms ease,border-color 300ms ease,box-shadow 300ms ease;';
     const rows = Array.from({ length: 10 }, (u, i) => {
-      const last = i === 9;
-      let op = 1, ty = '0px';
-      if (ph === 0) { op = 0; ty = '-6px'; }
-      if (last && ph === 3) { op = 0; ty = '10px'; }
-      const delay = ph === 1 ? i * 70 : 0;
+      const gone = i === 9 && ph >= 1;
+      const visible = ph >= 0;
+      const delay = ph === 0 ? i * 90 : 0;
       return {
-        cells: Array.from({ length: n }, () => ({})),
-        cell: cellBase + (last && ph >= 2 ? slate : dirt),
-        wrap: 'display:flex;gap:3px;opacity:' + op + ';transform:translateY(' + ty + ');'
-            + 'transition:opacity 240ms ' + ease + ' ' + delay + 'ms,transform 240ms ' + ease + ' ' + delay + 'ms;'
+        cells: Array.from({ length: n }, () => ({ style: gone ? cellGone : cellSolid })),
+        style: 'display:flex;gap:3px;'
+          + 'opacity:' + (visible ? (gone ? '.35' : '1') : '0') + ';'
+          + 'transform:translateY(' + (visible ? '0' : '-5px') + ');'
+          + 'transition:opacity 280ms ' + ease + ' ' + delay + 'ms,transform 280ms ' + ease + ' ' + delay + 'ms;'
       };
     });
-    const lineBase = "font-family:'Jersey 25',monospace;font-size:20px;line-height:1.25;padding:1px 10px;transition:color 240ms,background 240ms;";
-    const pale = 'color:#d5d2c9;', ink = 'color:#2b2b24;';
-    const chipBase = "min-height:56px;display:flex;align-items:center;justify-content:center;font-family:'Jersey 25',monospace;font-size:22px;border:3px solid #20241a;box-shadow:inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(0,0,0,.16);cursor:pointer;";
+    const lineStyle = (lit) =>
+      "font-family:'Jersey 25',monospace;font-size:22px;line-height:1.5;color:#2b2b24;"
+      + 'opacity:' + (lit ? '1' : '.26') + ';transition:opacity 260ms ease;';
+    const chipBase = "font-family:'Jersey 25',monospace;font-size:24px;text-align:center;line-height:1;padding:17px 0;"
+      + 'background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;cursor:pointer;';
     return {
-      fact: '9 × ' + n,
-      answer: '= ' + (9 * n),
-      ansStyle: 'font-size:32px;color:#3d7a22;display:inline-block;transition:opacity 240ms ' + ease + ',transform 240ms cubic-bezier(.34,1.56,.64,1);'
-              + (ph >= 3 ? 'opacity:1;transform:scale(1);' : 'opacity:0;transform:scale(.4);'),
-      l1: '10 × ' + n + ' = ' + (10 * n),
-      l2: 'take away ' + n,
-      l3: '= ' + (9 * n),
-      s1: lineBase + (ph >= 1 ? ink : pale),
-      s2: lineBase + (ph >= 2 ? ink : pale),
-      s3: lineBase + (ph >= 3 ? 'color:#3d7a22;background:#eaf5df;' : pale),
       rows: rows,
+      ledger: [
+        { text: '10 × ' + n + ' = ' + (10 * n), style: lineStyle(ph >= 0) },
+        { text: 'take away ' + n, style: lineStyle(ph >= 1) },
+        { text: '= ' + (9 * n), style: lineStyle(ph >= 2) },
+      ],
+      slab: 'background:#fffdf6;border:3px solid #2b2b24;box-shadow:0 5px 0 rgba(43,43,36,.14);'
+        + 'opacity:' + (ph >= 2 ? '1' : '0') + ';transform:translateY(' + (ph >= 2 ? '0' : '6px') + ');'
+        + 'transition:opacity 300ms ' + ease + ',transform 300ms ' + ease + ';',
+      result: '9 × ' + n + ' = ' + (9 * n),
+      replay: () => this.play(),
       chips: Array.from({ length: 11 }, (u, k) => {
         const v = k + 2, sel = v === n;
         return {
           v: v,
-          pick: () => this.pick(v),
-          style: chipBase + (sel ? 'background:#eaf5df;border-color:#2c5c1a;color:#3d7a22;' : 'background:#fffdf6;color:#2b2b24;')
+          pick: () => this.play(v),
+          style: chipBase + (sel
+            ? 'outline:3px solid #57a636;color:#3d7a22;'
+            : 'box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -5px 0 rgba(0,0,0,.14);color:#2b2b24;')
         };
       })
     };
