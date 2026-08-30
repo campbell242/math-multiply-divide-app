@@ -545,6 +545,236 @@ body {
 /* Tap either box of the live row to focus it (ruling 10). */
 .frow.is-entry .fbox { cursor: pointer; }
 
+/* --- Tricks: the notebook, not the inventory (TRICKS_WORK_ORDER.md) ----------
+   Zero stakes: no timer, no emeralds, no tracking, no sound. Counting blocks
+   are paper; removal is absence, never slate; celebration colour and motion
+   never appear where she has not acted. */
+
+/* The door on deck select: a place, not a deck. */
+.pick--tricks .pick__name { display: inline-flex; align-items: center; gap: var(--sp-2); }
+.pick--tricks img { width: 20px; height: 20px; image-rendering: pixelated; }
+
+/* The picker */
+.bar__icon { width: 24px; height: 24px; image-rendering: pixelated; }
+.tpromise { font-size: var(--fs-hint); color: var(--text-muted); margin: 0; }
+.tricks-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--sp-2); }
+.ttile {
+  font-family: inherit;
+  text-align: left;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--key-drop-sm);
+  padding: var(--sp-2);
+  min-height: 86px;
+  cursor: pointer;
+}
+.ttile__num { display: block; font-family: var(--font-display); font-size: var(--fs-title); line-height: 1; }
+.ttile__name { display: block; font-size: var(--fs-micro); font-weight: var(--fw-heavy); color: var(--text-muted); line-height: 1.35; margin-top: var(--sp-1); }
+
+/* The Flip: full width, out of the table grid — it is not a table. */
+.tflip-row {
+  display: flex; align-items: center; gap: var(--sp-3);
+  width: 100%;
+  font-family: inherit;
+  text-align: left;
+  background: var(--bg-toast);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--key-drop-sm);
+  padding: var(--sp-3) var(--sp-4);
+  cursor: pointer;
+}
+.tflip-row__mark { display: flex; flex-direction: column; gap: 3px; flex: none; }
+.tflip-row__mark i { display: flex; gap: 3px; }
+.tflip-row__mark b { width: 9px; height: 9px; background: var(--bg-card); border: var(--border-w-thin) solid var(--border-btn); }
+.tflip-row__spin { font-family: var(--font-display); font-size: var(--fs-button); color: var(--text-tertiary); }
+.tflip-row__name { display: block; font-family: var(--font-display); font-size: var(--fs-button); }
+.tflip-row__sub { display: block; font-size: var(--fs-micro); font-weight: var(--fw-bold); color: var(--text-muted); line-height: 1.4; }
+
+/* The contract line owns the picker's bottom edge — no bar, no chip, no key. */
+.tcontract {
+  display: flex; align-items: flex-start; gap: var(--sp-3);
+  margin-top: auto;
+  padding: var(--sp-3);
+  border: var(--border-w) solid var(--divider);
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-sentence);
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+.tcontract img { width: 20px; height: 20px; image-rendering: pixelated; flex: none; }
+
+/* The trick page frame */
+.bar__meta--big { font-size: var(--fs-heading); }
+.texplain { font-size: var(--fs-hint); color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+/* The trick page runs denser than the default screen rhythm, per the
+   corrected artboards — ten elements have to share a portrait screen. */
+#screen-trick { gap: var(--sp-2); }
+#screen-trick .label { margin-top: 0; }
+
+/* The stage slot. Rows are reserved from the first frame, so a page's stage
+   never changes height mid-play and the ledger never moves; taller arrays
+   (11 rows = 272px, 12 rows = 297px) stretch the slot, never the block. */
+.tstage { display: flex; justify-content: center; align-items: flex-start; min-height: 250px; }
+.tstage--center { align-items: center; }
+.tstage-col { display: flex; flex-direction: column; gap: 3px; }
+
+/* The counting block: paper — drawn, not mined (ruling A1). */
+.tblock {
+  display: block;
+  width: 22px; height: 22px; flex: none;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-small);
+  transition: background var(--dur-med) ease, border-color var(--dur-med) ease, box-shadow var(--dur-med) ease;
+}
+.trow-a {
+  display: flex; gap: 3px;
+  transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+}
+.trow-a.is-hidden { opacity: 0; transform: translateY(-5px); }
+.trow-a.is-hidden.from-below { transform: translateY(5px); }
+/* Removal is absence, not slate (ruling A2): fill drops out, border to
+   divider, the row dims — border width unchanged so nothing reflows. */
+.trow-a.is-gone { opacity: .35; }
+.trow-a.is-gone .tblock { background: transparent; border-color: var(--divider); box-shadow: none; }
+
+/* Fives: ten-frames. The arrangement may reflow; the block never resizes. */
+.tstage-pairs { display: flex; flex-direction: column; gap: var(--sp-2); }
+.tstage-pairs.is-twocol { display: grid; grid-template-columns: auto auto; gap: var(--slot-gap) var(--sp-3); align-content: start; }
+.tframe {
+  position: relative;
+  display: flex; flex-direction: column; gap: 3px;
+  padding: 3px;
+  border: var(--border-w) solid transparent;
+  transition: border-color var(--dur-med) ease;
+}
+.tframe.is-framed { border-color: var(--border-btn); }
+.tframe__tag {
+  position: absolute; right: -9px; top: -11px;
+  font-family: var(--font-display);
+  font-size: var(--fs-hint); /* the Jersey floor — used nowhere else on the page */
+  font-weight: var(--fw-sentence);
+  line-height: 1.25;
+  background: var(--bg-card);
+  border: var(--border-w-thin) solid var(--border-btn);
+  padding: 0 5px;
+  opacity: 0;
+  transition: opacity var(--dur-med) ease;
+}
+.tframe.is-framed .tframe__tag { opacity: 1; }
+
+/* The digits stage: ×10 is a digit operation — blocks would bury it. */
+.tdigits { display: flex; gap: var(--sp-2); }
+.tdigit {
+  width: 44px; height: 56px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-small);
+  font-family: var(--font-display);
+  font-size: var(--fs-display);
+  line-height: 1;
+  transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+}
+.tdigit.is-hidden { opacity: 0; transform: translateY(-5px); }
+.tdigit--zero.is-hidden { transform: translateX(16px); }
+
+/* The Flip: rotation in place, inside a fixed square so nothing else moves. */
+.tflip-wrap { width: 210px; height: 210px; display: flex; align-items: center; justify-content: center; }
+.tflip-arr { transition: transform var(--dur-pop) var(--ease-out); }
+.tflip-arr.is-rotated { transform: rotate(90deg); }
+
+/* The ledger: the working, in Jersey; unlit lines are ink at .26 (B4). */
+.tledger {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-ink);
+  padding: var(--sp-2) var(--sp-4);
+}
+.tledger div {
+  font-family: var(--font-display);
+  font-size: var(--fs-ledger);
+  line-height: 1.4;
+  color: var(--ink);
+  opacity: .26;
+  transition: opacity var(--dur-med) ease;
+}
+.tledger div.is-lit { opacity: 1; }
+
+/* The result: the neutral problem slab — here is the fact, nothing earned.
+   It rises on ease-out; the pop curve belongs to answers she got right. */
+.tslab {
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-ink);
+  box-shadow: var(--key-drop);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity var(--dur-med) var(--ease-out), transform var(--dur-med) var(--ease-out);
+}
+.tslab.is-shown { opacity: 1; transform: none; }
+.tslab__strip {
+  height: 8px;
+  background-image: url("../assets/tx-stone.png");
+  background-size: var(--tx-size);
+  image-rendering: pixelated;
+}
+.tslab__result {
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: var(--fs-result);
+  line-height: 1;
+  padding: var(--sp-2) 0 var(--sp-3);
+}
+
+/* The elevens caption: prose about the trick, so Nunito, never Jersey. */
+.tcaption {
+  text-align: center;
+  font-size: var(--fs-micro);
+  font-weight: var(--fw-sentence);
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin: 0;
+  opacity: 0;
+  transition: opacity var(--dur-med) ease;
+}
+.tcaption.is-shown { opacity: 1; }
+
+.trick-spacer { flex: 1; min-height: 0; }
+
+/* The chip strip: the one element allowed outside the 18px gutter — the
+   touch minimum outranks the gutter (B3). 12px gutter, 4px gaps. */
+.tchips {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: var(--sp-1);
+  margin-inline: calc(var(--sp-3) - var(--sp-5));
+}
+.tchip {
+  font-family: var(--font-display);
+  font-size: var(--fs-key);
+  color: var(--ink);
+  background: var(--bg-card);
+  border: var(--border-w) solid var(--border-btn);
+  box-shadow: var(--bevel-small);
+  min-height: var(--tap-comfy);
+  padding: 0;
+  cursor: pointer;
+}
+/* Outline means she chose; fill means she was right (ruling A3). */
+.tchip.is-on { outline: var(--border-w) solid var(--correct); color: var(--correct-text); box-shadow: none; }
+
+.tagain {
+  width: 100%;
+  font-family: var(--font-display);
+  font-size: var(--fs-button);
+  color: var(--ink);
+  background: var(--divider);
+  border: var(--border-w) solid var(--iron-dark);
+  box-shadow: var(--bevel-chip);
+  min-height: var(--tap-comfy);
+  cursor: pointer;
+}
+
 /* --- Parent area ------------------------------------------------------------------
    Iron and neutral, per the routine app's doctrine: nothing a parent taps to
    DO something is green; editable values take slate, the one accent the

@@ -86,6 +86,10 @@
         <span class="pick__name">Factors</span>
         <span class="pick__sub"></span>
       </button>
+      <!-- A place, not a deck: no DUE chip, no tier bar (TRICKS_WORK_ORDER C1). -->
+      <button class="pick pick--tricks" id="go-tricks">
+        <span class="pick__name"><img src="assets/icons/book.png" alt="">Tricks</span>
+      </button>
       <button class="toggle" id="auto-toggle">AUTO CHECK · OFF</button>
       <p class="hint">Auto check hands in your answer the moment it's long enough.
         Turn it off to check answers yourself.</p>
@@ -136,6 +140,9 @@
     <p class="round-label" id="round-label">ROUND 1 OF 3</p>
     <button class="btn btn--big" id="next-round">Next round ›</button>
     <button class="quiet" id="stop-here">Stop here — keep my emeralds</button>
+    <!-- The second door to Tricks, targeted: only when one table accounts for
+         two or more misses in the round (TRICKS_WORK_ORDER C1). -->
+    <button class="quiet" id="cleared-trick" hidden></button>
   </main>
 
   <main class="screen" id="screen-complete" hidden>
@@ -193,6 +200,50 @@
       <span class="me-foot__strip"></span>
       <span>A world changes the strip at the top and the little green words. Nothing else moves.</span>
     </div>
+  </main>
+
+  <!-- Tricks: the notebook, not the inventory. Zero stakes — no timer, no
+       emeralds, no tracking, no sound (TRICKS_WORK_ORDER.md). -->
+  <main class="screen" id="screen-tricks" hidden>
+    <div class="bar">
+      <button class="back" id="tricks-back">‹</button>
+      <h1 class="bar__title">Tricks</h1>
+      <img class="bar__icon" src="assets/icons/book.png" alt="">
+    </div>
+    <p class="tpromise">No timer, no score — just shortcuts.</p>
+    <div class="tricks-grid" id="tricks-grid"></div>
+    <button class="tflip-row" id="go-flip">
+      <span class="tflip-row__mark"><i><b></b><b></b><b></b></i><i><b></b><b></b><b></b></i></span>
+      <span class="tflip-row__spin">↻</span>
+      <span>
+        <span class="tflip-row__name">The Flip</span>
+        <span class="tflip-row__sub">7 × 8 is the same as 8 × 7</span>
+      </span>
+    </button>
+    <div class="tcontract">
+      <img src="assets/icons/book.png" alt="">
+      <span>Come here any time. Nothing here is counted, and nothing you look at changes your practice.</span>
+    </div>
+  </main>
+
+  <main class="screen" id="screen-trick" hidden>
+    <div class="bar">
+      <button class="back" id="trick-back">‹</button>
+      <h1 class="bar__title" id="trick-title">Trick</h1>
+      <span class="bar__meta bar__meta--big" id="trick-meta"></span>
+    </div>
+    <p class="texplain" id="trick-explain"></p>
+    <div class="tstage" id="trick-stage"></div>
+    <div class="tledger" id="trick-ledger"></div>
+    <div class="tslab" id="trick-slab">
+      <div class="tslab__strip"></div>
+      <div class="tslab__result" id="trick-result"></div>
+    </div>
+    <p class="tcaption" id="trick-caption" hidden></p>
+    <div class="trick-spacer"></div>
+    <div class="label" id="trick-chips-label">TRY IT WITH</div>
+    <div class="tchips" id="trick-chips"></div>
+    <button class="tagain" id="trick-again">Again ›</button>
   </main>
 
   <main class="screen screen--parent" id="screen-pin" hidden>

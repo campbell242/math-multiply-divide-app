@@ -44,6 +44,10 @@
   --fs-key:      26px;  /* keypad digits                   */
   --fs-button:   20px;
   --fs-body:     17px;
+  /* Tricks (TRICKS_WORK_ORDER B4 / the corrected artboards): the ledger was
+     ruled up from 20 to 22, and the held result is the page's landing size. */
+  --fs-ledger:   22px;
+  --fs-result:   38px;
   --fs-label:    15px;
   --fs-hint:     13px;  /* Jersey floor — never go below   */
   --fs-micro:    12px;  /* Nunito only                     */

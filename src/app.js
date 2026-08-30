@@ -11,9 +11,10 @@ import {
 import * as store from "./store.js";
 import * as audio from "./audio.js";
 import { initParent } from "./parent.js";
+import { initTricks } from "./tricks.js";
 
 const $ = (id) => document.getElementById(id);
-const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid", "me", "materials"];
+const screens = ["home", "select", "card", "cleared", "complete", "pin", "parent", "grid", "me", "materials", "tricks", "trick"];
 
 // Navigation decision 5a: there is no bar. Home is the only hub; every other
 // child screen is a push that returns with ‹.
@@ -611,6 +612,35 @@ document.addEventListener("keydown", (e) => {
 });
 
 /* --- Round cleared --------------------------------------------------------------------- */
+
+// The table she missed most this round, for the targeted Tricks link
+// (TRICKS_WORK_ORDER C1): only when one table accounts for two or more
+// misses. Ops decks only — a factors card has no single table. Round state
+// only; nothing is stored.
+function missedTable(round, kind) {
+  if (kind === "factors") return null;
+  const counts = {};
+  for (const [id, r] of Object.entries(round.results)) {
+    if (r.correct) continue;
+    let a, b;
+    if (id.startsWith("m:")) {
+      [a, b] = id.slice(2).split("x").map(Number);
+    } else {
+      const [p, d] = id.slice(2).split("/").map(Number);
+      b = d;
+      a = p / d;
+    }
+    for (const f of new Set([a, b])) counts[f] = (counts[f] || 0) + 1;
+  }
+  let best = null;
+  for (const [f, c] of Object.entries(counts)) {
+    const table = Number(f);
+    if (c >= 2 && (!best || c > best.count || (c === best.count && table > best.table)))
+      best = { table, count: c };
+  }
+  return best;
+}
+
 function finishRound() {
   phase = "between"; // a stray tap must not re-bank the round
   stopRunTimer();
@@ -634,6 +664,13 @@ function finishRound() {
   const done = (session.roundIndex + 1) / session.rounds.length;
   $("round-fill").style.width = `${done * 100}%`;
   $("round-label").textContent = `ROUND ${session.roundIndex + 1} OF ${session.rounds.length}`;
+  const miss = missedTable(session.round, session.kind);
+  $("cleared-trick").hidden = !miss;
+  if (miss) {
+    $("cleared-trick").textContent =
+      `×${miss.table} came up ${miss.count === 2 ? "twice" : `${miss.count} times`}. Want the trick? ›`;
+    $("cleared-trick").dataset.table = miss.table;
+  }
   audio.cueRoundCleared(s.sound.all);
   show("cleared");
 }
@@ -864,6 +901,20 @@ $("theme-list").addEventListener("click", (e) => {
   document.documentElement.dataset.theme = p.theme;
   audio.cuePick(store.get("settings").sound.all);
   renderMe();
+});
+
+/* --- Tricks (src/tricks.js): two doors, both ruled ------------------------------
+   Deck select is the primary door; Round cleared offers the targeted link.
+   Home is refused, and so is the wrong-answer state — nothing appears on a
+   failure-adjacent state. */
+const tricks = initTricks({
+  show,
+  backToSelect: renderSelect,
+  backToCleared: () => show("cleared"),
+});
+$("go-tricks").addEventListener("click", tricks.openPicker);
+$("cleared-trick").addEventListener("click", () => {
+  tricks.openTrickFor(Number($("cleared-trick").dataset.table), "cleared");
 });
 
 initParent({ show, renderHome });
