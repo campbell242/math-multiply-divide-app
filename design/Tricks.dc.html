@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Jersey+25&display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#e9e4d6;font-family:'Nunito Sans',system-ui,sans-serif}
+a{color:#0a7a44;text-decoration:none}a:hover{color:#12c46b;text-decoration:underline}
+img{image-rendering:pixelated}
+.dv-turn{padding:40px 44px 32px;scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:10px;margin:0 0 8px}
+.dv-tid{font:600 10px ui-monospace,Menlo,monospace;padding:3px 7px;background:#1a1a1a;color:#fff;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 14px/1.2 'Nunito Sans',sans-serif;color:#1a1a1a}
+.dv-opts{display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:9px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px ui-monospace,Menlo,monospace;padding:3px 7px;background:rgba(0,0,0,.1);color:#1a1a1a;border-radius:5px;text-decoration:none}
+.dv-olabel{display:flex;align-items:baseline;gap:8px;font:600 12px/1.3 'Nunito Sans',sans-serif;color:rgba(0,0,0,.6)}
+.dv-card{max-width:100%;background:#fff;border:1px solid rgba(0,0,0,.1);box-shadow:0 2px 6px rgba(0,0,0,.08);overflow:hidden}
+.dv-opt:target .dv-oid{background:#2a78d6;color:#fff}
+.dv-next{margin:26px 0 0;font:12px/1.5 'Nunito Sans',sans-serif;color:rgba(0,0,0,.5)}
+.vd{display:flex;align-items:baseline;gap:10px;margin-bottom:7px;flex-wrap:wrap}
+.vt{font-family:'Jersey 25',monospace;font-size:19px}
+.vb{font-family:'Jersey 25',monospace;font-size:13px;padding:3px 8px}
+.vs{margin-left:auto;font-family:'Jersey 25',monospace;font-size:13px}
+.vx{background:#fffdf6;border:3px solid #2b2b24;padding:15px}
+.vp{font-size:12.5px;color:#4a463a;font-weight:600;line-height:1.7}
+.k{font-family:'Jersey 25',monospace}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t1">
+<div class="dv-thd"><a class="dv-tid" href="#t1">1</a><span class="dv-tname">Tricks — review · 3 confirmed, 5 challenged, 1 mixed</span></div>
+<div style="max-width:900px;background:#fffdf4;border:3px solid #2b2b24;padding:16px 20px;margin:0 0 18px;font-size:13px;line-height:1.65;color:#4a463a">
+The draft is sound where it matters most: the three animation families are the right three, the ledger is the right idea, the picker copy is nearly all keepable, and the zero-stakes contract is stated in the interface rather than only in the notes. The challenges below are concentrated in one place — <b>Tricks borrows four colours that already mean something else</b>, and each borrowing costs its meaning on a screen that needs it more. Corrected artboards are in <a href="#t2">section 2</a>, live. Part 1's build report is answered in <a href="#t3">section 3</a>.
+</div>
+<div class="dv-opts">
+<div class="dv-opt" id="1a"><div class="dv-olabel"><a class="dv-oid" href="#1a">1a</a>Verdicts</div>
+<div class="dv-card" style="width:880px;background:#f3eee1;color:#2b2b24;padding:20px;display:flex;flex-direction:column;gap:12px">
+
+<div class="vx">
+  <div class="vd"><span class="vt">1 · New vocabulary</span><span class="vb" style="background:#e8eef4;border:2px solid #6d89a3;color:#42607c">2 CHALLENGED · 1 CONFIRMED</span><span class="vs" style="color:#42607c">SEVERITY: HIGH</span></div>
+  <div class="vp">
+    <b>Dirt for the counting block — challenged, replaced.</b> Dirt <span class="k">#7a5233</span> and Wood <span class="k">#a9713c</span> are the same brown at arm's length, and <span class="k">Nines.dc.html</span> renders the block as a bevelled square at 22px — the tier badge's shape at nearly the tier badge's size. A hundred and twenty brown bevelled squares says <i>Wood tier</i> to a child taught to read materials as mastery, and says it on the one screen where mastery is explicitly not measured. <b>RULED: the counting block is paper</b> — card ground <span class="k">#fffdf6</span>, 3px ink border, the keypad's bevel at 22px. The framing that settles it: <i>Tricks is the notebook, not the inventory.</i> Its blocks are drawn, not mined. The texture trim at the top of each page keeps the world without spending a material on it.<br>
+    <b>The ten-frame — confirmed.</b> Ink border plus a Jersey tag is the inventory-slot idea applied to a group instead of a thing, and it costs no colour. Two conditions: the border stays ink, never an accent, so grouping reads as structure; and the tag sits at 13px, the Jersey floor, used nowhere else on the page.<br>
+    <b>Slate for the taken-away row — challenged, replaced.</b> This is the most consequential item in the review. The draft uses <span class="k">#dfe6ee</span> on <span class="k">#8ba4bb</span> — <span class="k">--wrong-pale</span> on <span class="k">--wrong-edge</span>, the send-back palette exactly. Slate is load-bearing precisely because it means one thing everywhere: <i>not yet, we'll come back to it</i>. In ×9 the removed row is the method working. Teaching that removal and error look alike costs nothing here and costs a great deal on the card screens, where slate is doing the hardest job in the app. <b>RULED: removal is depicted as absence, not as a colour.</b> Fill drops out, border goes to <span class="k">#cfc8b2</span>, opacity to .35, border width unchanged so nothing reflows. No palette entry spent, slate untouched.
+  </div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">2 · Green discipline</span><span class="vb" style="background:#e8eef4;border:2px solid #6d89a3;color:#42607c">CHALLENGED</span><span class="vs" style="color:#42607c">SEVERITY: HIGH</span></div>
+  <div class="vp">
+    Three uses in the draft, and they are not one question. <b>The result wash is out.</b> <span class="k">s3</span> resolves to <span class="k">color:#3d7a22; background:#eaf5df</span> — the correct-answer object, the thing that appears when she answered and was right. Here the app is demonstrating and she has done nothing. <b>RULED: the result reuses the neutral problem slab</b> — card ground, 3px ink, stone trim, big Jersey. That object already means <i>here is the fact</i>, and it costs no new vocabulary.<br>
+    <b>The answer pop is out too, and it is the subtler of the two.</b> <span class="k">ansStyle</span> springs <span class="k">scale(.4) → 1</span> on <span class="k">cubic-bezier(.34,1.56,.64,1)</span> — that is <span class="k">--ease-pop</span>, the correct-answer burst's own curve. Reward motion on an unearned event is the same error as reward colour. The result fades and rises 6px on <span class="k">--ease-out</span> instead.<br>
+    <b>The selected chip keeps green, as an outline.</b> Choosing an n <i>is</i> her acting, so green is right — but the draft fills it <span class="k">#eaf5df</span>, which is the correct-answer fill. <b>RULED: 3px <span class="k">#57a636</span> outline on card ground</b>, borrowed verbatim from deck select's chosen-mode treatment. Outline means she chose; fill means she was right. Two states, two treatments, no overlap anywhere in the app.
+  </div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">3 · Motion</span><span class="vb" style="background:#e8eef4;border:2px solid #6d89a3;color:#42607c">CHALLENGED</span><span class="vs" style="color:#42607c">SEVERITY: MEDIUM</span></div>
+  <div class="vp">
+    <b>The ambient loop is out; the instinct behind it survives.</b> A loop erases its own conclusion on a schedule she does not control: she reads <span class="k">= 63</span> and the array wipes out from under her. The frame a loop guarantees she will lose is the only frame that matters. Worse in the draft as written — <span class="k">Nines</span> phase 0 sets every row to <span class="k">opacity:0</span> for 700ms, so the stage goes <b>blank</b> once per cycle; a child glancing at the page at the wrong moment sees an empty card.<br>
+    <b>RULED: plays once on arrival, then holds the finished state, with <span class="k">Again ›</span>.</b> No tap needed to see it the first time, so wandering in mid-frustration still costs nothing — that was the right instinct and it does not need a loop. A held result also makes the page a genuine reference: she can glance at ×9 and read the answer with the structure still under it, without waiting for a phase to come round. Tapping a new chip replays.<br>
+    <b>Timings — the transitions are right and the pacing is not.</b> 240–300ms per transition stands, transform and opacity only. But <span class="k">Nines</span> waits <span class="k">[700, 2400, 2000, 2800]</span> spends 7.9s per cycle mostly on <i>holds around</i> an animation that is over in a moment, while the build itself staggers ten rows at 70ms — 630ms for the whole array, too fast to count along with. <b>RULED: build 900ms staggered · hold 600 · transform 300 · hold 900 · result 300 · hold indefinitely.</b> About 3s to a held result, and the row stagger slow enough to follow. Under <span class="k">prefers-reduced-motion</span> the page renders the held result immediately with the ledger fully lit; <span class="k">Again ›</span> stays and does nothing visible, which is correct rather than broken. The draft's blanket <span class="k">transition-duration:0</span> override achieves this by accident — make it deliberate.
+  </div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">4 · The ledger</span><span class="vb" style="background:#eaf5df;border:2px solid #57a636;color:#2c5c1a">CONFIRMED</span><span class="vs" style="color:#8a8578">SEVERITY: LOW</span></div>
+  <div class="vp">
+    Jersey 25 for the whole ledger, word phrases included. <span class="k">take away 7</span> is not a sentence — it is an operation that happens to be spelled, stacked between two lines that are unambiguously equations. Splitting the stack across two fonts would be worse than either font alone.<br>
+    <b>The test this sets for the remaining eight pages:</b> if it would appear on a blackboard as part of the working, it is Jersey; prose <i>about</i> the trick stays Nunito; the two never share a block. The draft already honours this — the explainer under each header is Nunito and the ledger is Jersey. One change: ledger lines go <b>20px → 22px</b> and unlit lines go from <span class="k">#d5d2c9</span> to ink at <span class="k">opacity .26</span>. Pale grey on parchment is close to invisible in daylight, and the ledger is the second-most-looked-at object on the page.
+  </div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">5 · Layout worst cases</span><span class="vb" style="background:#e8eef4;border:2px solid #6d89a3;color:#42607c">CHALLENGED</span><span class="vs" style="color:#42607c">SEVERITY: HIGH</span></div>
+  <div class="vp">
+    <b>Adaptive block size is out.</b> <span class="k">Fours</span> drops 22px → 18px above n=10. If a block is one size on one card and another size on the next, the block stops being a unit and the array stops being comparable — which is the only thing an array is for. She must see 4 × 11 as <i>bigger</i> than 4 × 6, not as the same size built from smaller bricks.<br>
+    <b>RULED: 22px blocks, 3px gaps, constant across every trick and every n.</b> Twelve columns is 12×22 + 11×3 = <b>297px</b> against 354px available at an 18px gutter — 57px spare, so no trick ever needs to shrink. <b>Reflowing an arrangement is not the same as resizing a unit and stays allowed:</b> Fives at n=12 is six ten-frames, which is 379px tall in one column and does not fit, so above three frames it goes to two columns at 278px wide and 187px tall. The block never changes; the arrangement may.<br>
+    <b>Fours' side tags are the actual defect and they move.</b> The <span class="k">width:30px</span> tags beside each group are what forced the shrink in the first place. Side tags are out — running totals belong in the ledger, which already carries them line by line. Any caption a trick needs goes <i>under</i> the array, full width, so the array always owns the whole column.<br>
+    <b>Chips — confirmed, and tighter than it looks.</b> Six columns at a 16px gutter with 4px gaps gives 56.3px per chip. That clears <span class="k">--tap-comfy</span> by a third of a pixel, which is correct but has no margin at all; the corrected artboards keep the 4px gaps and drop the gutter to 12px, for 57.7px. <b>The gutter is what buys the margin, not the gap</b> — widening the gap spends the same pixels the chips needed. Rows of six then five, left-aligned. It is the only element allowed outside the 18px gutter, and the reason is the touch minimum, which outranks the gutter.
+  </div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">6 · Entry and placement</span><span class="vb" style="background:#efe9d8;border:2px solid #cfc8b2;color:#6b675c">MIXED · RULED</span><span class="vs" style="color:#42607c">SEVERITY: HIGH</span></div>
+  <div class="vp">
+    <b>Copy — confirmed, with one rule added.</b> <span class="k">No timer, no score — just shortcuts</span> states the contract in eight words and never says <i>help</i>, which would make arriving an admission. Keep it verbatim, but move it <b>under the header, not the grid</b>: it is the page's promise and it should be read before the tiles, not after. Tile copy names the <b>action</b> — <i>take a row away</i>, <i>fives make tens</i>, <i>slide in a zero</i> — and the standing rule is that no tile may ever say hard, tricky, tough, or <i>the difficult one</i>. The tables she avoids are exactly the tiles she must be able to tap without flinching. Two small corrections: sentence case rather than the draft's shouted all-caps, which reads as instruction rather than invitation; and <b>The Flip leaves the grid</b> — it is not a table and should not sit in the table grid.<br>
+    <b>Placement — RULED: deck select, and Round cleared. Not Home, and not the wrong-answer state.</b><br>
+    <i>Deck select</i> is the primary door: a fourth row under the three decks, book icon, no DUE chip and no tier bar, because it is a place rather than a deck. She is already choosing how to work when she is there.<br>
+    <i>Home is refused.</i> Home has one job. A Tricks row competes with the green button and dilutes <b>YOUR MATERIALS</b>, whose whole argument is that mastery is the reason to practise — that was the case for deleting the tab bar six weeks of decisions ago, and a second door on Home reopens it.<br>
+    <i>The wrong-answer state is refused, and this is the one to argue about.</i> The candidate is genuinely tempting — she is exactly then in need of a trick. But the wrong state is <b>slate, silent and still</b>, and that is the load-bearing rule of the entire app: <i>nothing appears on a failure-adjacent state</i>. A pickaxe affordance on a missed card turns a miss into an event, and hands her an exit at the precise moment four sections of design have spent making the miss unremarkable. <b>The compensation is better than the thing refused:</b> Round cleared already knows what she missed, so it offers the trick for the table she missed most — <i>×9 came up twice. Want the trick?</i> — as a quiet stone link. Same need, roughly sixty seconds later, at the breather, aimed at the right table instead of a generic door.<br>
+    <b>The picker's bottom edge — RULED: nothing.</b> The draft's tab bar goes, per 5a. The picker is a push from deck select and returns with <span class="k">‹</span>; trick pages push from the picker and return to it. No bar, no chip, no parent key — the parent door lives on Home alone. The bottom edge is the closing line of the contract instead: <i>Come here any time. Nothing here is counted.</i>
+  </div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">7 · Extension to ×10 and The Flip</span><span class="vb" style="background:#e8eef4;border:2px solid #6d89a3;color:#42607c">CHALLENGED</span><span class="vs" style="color:#42607c">SEVERITY: MEDIUM</span></div>
+  <div class="vp">
+    The canvas notes say those two <i>keep this exact page anatomy</i>. Half right, and the half that is wrong needs building in now rather than discovered at ×10.<br>
+    <b>The frame holds.</b> Header, explainer, stage, ledger, result slab, chip strip and <span class="k">Again ›</span> are trick-agnostic and carry all eleven pages plus The Flip.<br>
+    <b>The array does not.</b> ×10 has no array transform — sliding a zero onto <span class="k">7</span> to make <span class="k">70</span> is a digit operation, and seventy blocks would bury the one thing it teaches. <b>RULED: the stage is a slot, not a component.</b> The page accepts any stage that plays in phases and reports which ledger line is lit. Two stages are needed at the outset: <b>array</b>, which carries nine of the twelve, and <b>digits</b>, which carries ×10 and ×11's <i>say the digit twice</i> — the same shape, and the reason the draft's <i>one more row</i> framing for ×11 should be reconsidered when that page is drawn.<br>
+    <b>The Flip needs one thing beyond a stage.</b> Rotating an array in place is a transform and obeys the rules, but its ledger is not three sequential lines — it is two equal statements, <span class="k">7 × 8 = 56</span> and <span class="k">8 × 7 = 56</span>, and they must land <b>together</b>. <b>RULED: a two-line simultaneous ledger variant</b>, both lines lighting on one frame. A sequential reveal would imply the second derives from the first, which is exactly the misconception the trick exists to remove.
+  </div>
+</div>
+
+<div style="background:#e8eef4;border:3px solid #6d89a3;padding:15px;font-size:12.5px;color:#42607c;font-weight:700;line-height:1.7">
+  <b>Restated because a new area is where doctrine leaks:</b> no red anywhere · nothing punitive · celebration colour and celebration motion never appear where she has not acted · no border-radius · Jersey 25 never below 13px · transform and opacity only · the three greens do not drift, <span class="k">#57a636</span> correct, <span class="k">#7fe237</span> FAST, <span class="k">#12c46b</span> emerald. <b>Tricks adds no sound at all</b> — the app has four cues, every one of them for something she did, and watching is not one of them.
+</div>
+
+</div>
+</div>
+</div>
+<p class="dv-next">Section 2 is the corrected artboards, live. Section 3 answers the build report.</p>
+</section>
+
+<section class="dv-turn" id="t2">
+<div class="dv-thd"><a class="dv-tid" href="#t2">2</a><span class="dv-tname">Corrected artboards</span></div>
+<div class="dv-opts">
+
+<div class="dv-opt" id="2a"><div class="dv-olabel"><a class="dv-oid" href="#2a">2a</a>The picker</div>
+<div class="dv-card" data-screen-label="Tricks picker" style="width:390px;background:#f3eee1;color:#2b2b24;display:flex;flex-direction:column;min-height:820px">
+  <div style="height:12px;background:url('assets/tx-grass.png');background-size:16px"></div>
+  <div style="height:8px;background:url('assets/tx-dirt.png');background-size:16px"></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:14px 18px 2px">
+    <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578">‹</span>
+    <div style="font-family:'Jersey 25',monospace;font-size:26px">Tricks</div>
+    <img src="assets/icons/book.png" alt="" style="width:24px;height:24px;margin-left:auto">
+  </div>
+  <div style="font-size:13px;font-weight:600;color:#6b675c;padding:0 18px 13px;line-height:1.5">No timer, no score — just shortcuts.</div>
+  <div style="flex:1;padding:0 18px 18px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:9px">
+      <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="11">
+        <div style="background:#fffdf6;border:3px solid #2b2b24;box-shadow:0 4px 0 rgba(43,43,36,.14);padding:10px 8px 9px;cursor:pointer;min-height:86px;box-sizing:border-box">
+          <div style="font-family:'Jersey 25',monospace;font-size:29px;line-height:1">{{ t.label }}</div>
+          <div style="font-size:11px;font-weight:800;color:#6b675c;line-height:1.35;margin-top:5px">{{ t.name }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="display:flex;align-items:center;gap:13px;margin-top:9px;padding:12px 14px;background:#efe9d8;border:3px solid #2b2b24;box-shadow:0 4px 0 rgba(43,43,36,.14);cursor:pointer">
+      <div style="display:flex;flex-direction:column;gap:3px;flex:none">
+        <div style="display:flex;gap:3px"><div style="width:9px;height:9px;background:#fffdf6;border:2px solid #20241a;box-sizing:border-box"></div><div style="width:9px;height:9px;background:#fffdf6;border:2px solid #20241a;box-sizing:border-box"></div><div style="width:9px;height:9px;background:#fffdf6;border:2px solid #20241a;box-sizing:border-box"></div></div>
+        <div style="display:flex;gap:3px"><div style="width:9px;height:9px;background:#fffdf6;border:2px solid #20241a;box-sizing:border-box"></div><div style="width:9px;height:9px;background:#fffdf6;border:2px solid #20241a;box-sizing:border-box"></div><div style="width:9px;height:9px;background:#fffdf6;border:2px solid #20241a;box-sizing:border-box"></div></div>
+      </div>
+      <span style="font-family:'Jersey 25',monospace;font-size:20px;color:#8a8578">↻</span>
+      <div style="flex:1">
+        <div style="font-family:'Jersey 25',monospace;font-size:21px">The Flip</div>
+        <div style="font-size:11.5px;font-weight:700;color:#6b675c;line-height:1.4">7 × 8 is the same as 8 × 7</div>
+      </div>
+    </div>
+    <div style="display:flex;align-items:flex-start;gap:10px;margin-top:13px;padding:12px 13px;background:#f3eee1;border:3px solid #cfc8b2">
+      <img src="assets/icons/book.png" alt="" style="width:20px;height:20px;flex:none">
+      <span style="font-size:12px;font-weight:600;color:#6b675c;line-height:1.5">Come here any time. Nothing here is counted, and nothing you look at changes your practice.</span>
+    </div>
+  </div>
+</div>
+<div style="width:390px;font-size:11.5px;color:#6b675c;font-weight:700;line-height:1.5">Eleven tiles at three across; The Flip full width below, out of the table grid, with the two arrays as its mark. Promise line moved above the grid. No tab bar, no parent key — a push from deck select, returning with <span style="font-family:'Jersey 25',monospace;font-size:14px">‹</span>.</div>
+</div>
+
+<div class="dv-opt" id="2b"><div class="dv-olabel"><a class="dv-oid" href="#2b">2b</a>× 9 — take a row away &nbsp;<span style="color:#0a7a44">live · tap a chip</span></div>
+<div class="dv-card" data-screen-label="Trick nines" style="width:390px;background:#f3eee1;color:#2b2b24;display:flex;flex-direction:column;min-height:820px">
+  <div style="height:12px;background:url('assets/tx-grass.png');background-size:16px"></div>
+  <div style="height:8px;background:url('assets/tx-dirt.png');background-size:16px"></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 2px">
+    <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578">‹</span>
+    <div style="font-family:'Jersey 25',monospace;font-size:23px">Take a row away</div>
+    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 9</div>
+  </div>
+  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Nine of something is ten of it, minus one row.</div>
+  <div style="display:flex;justify-content:center;padding:0 18px;min-height:250px">
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{ ninesRows }}" as="row" hint-placeholder-count="10">
+        <div style="{{ row.style }}">
+          <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="7">
+            <div style="{{ cell }}"></div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:14px 18px 0">
+    <div style="background:#fffdf6;border:3px solid #2b2b24;padding:11px 14px">
+      <sc-for list="{{ ninesLedger }}" as="line" hint-placeholder-count="3">
+        <div style="{{ line.style }}">{{ line.text }}</div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:11px 18px 0">
+    <div style="{{ ninesSlab }}">
+      <div style="height:8px;background:url('assets/tx-stone.png');background-size:16px"></div>
+      <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:38px;line-height:1;padding:11px 0 13px">{{ ninesResult }}</div>
+    </div>
+  </div>
+  <div style="flex:1;min-height:10px"></div>
+  <div style="font-family:'Jersey 25',monospace;font-size:14px;color:#6b675c;padding:0 12px 7px">TRY IT WITH</div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:0 12px 12px">
+    <sc-for list="{{ ninesChips }}" as="c" hint-placeholder-count="11">
+      <div style="{{ c.style }}" onClick="{{ c.onClick }}">{{ c.label }}</div>
+    </sc-for>
+  </div>
+  <div style="padding:0 18px 18px">
+    <div style="font-family:'Jersey 25',monospace;font-size:20px;color:#2b2b24;text-align:center;padding:14px;background:#cfc8b2;border:3px solid #4a4a44;box-shadow:inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(0,0,0,.16);cursor:pointer" onClick="{{ replayNines }}">Again ›</div>
+  </div>
+</div>
+<div style="width:390px;font-size:11.5px;color:#6b675c;font-weight:700;line-height:1.5">Take-away family — 9, later 11 and 12. The tenth row does not turn a colour: it loses its fill and drops to a pale outline at .35, so removal reads as absence and slate stays reserved for "not yet".</div>
+</div>
+
+<div class="dv-opt" id="2c"><div class="dv-olabel"><a class="dv-oid" href="#2c">2c</a>× 5 — fives make tens &nbsp;<span style="color:#0a7a44">live · try an odd number</span></div>
+<div class="dv-card" data-screen-label="Trick fives" style="width:390px;background:#f3eee1;color:#2b2b24;display:flex;flex-direction:column;min-height:820px">
+  <div style="height:12px;background:url('assets/tx-grass.png');background-size:16px"></div>
+  <div style="height:8px;background:url('assets/tx-dirt.png');background-size:16px"></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 2px">
+    <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578">‹</span>
+    <div style="font-family:'Jersey 25',monospace;font-size:23px">Fives make tens</div>
+    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 5</div>
+  </div>
+  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Two rows of five make a ten. Count the tens, then the spare.</div>
+  <div style="display:flex;justify-content:center;padding:0 18px;min-height:250px">
+    <div style="{{ fivesGrid }}">
+      <sc-for list="{{ fivesGroups }}" as="g" hint-placeholder-count="4">
+        <div style="{{ g.frame }}">
+          <sc-for list="{{ g.rows }}" as="row" hint-placeholder-count="2">
+            <div style="{{ row.style }}">
+              <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="5">
+                <div style="{{ cell }}"></div>
+              </sc-for>
+            </div>
+          </sc-for>
+          <div style="{{ g.tagStyle }}">{{ g.tag }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:14px 18px 0">
+    <div style="background:#fffdf6;border:3px solid #2b2b24;padding:11px 14px">
+      <sc-for list="{{ fivesLedger }}" as="line" hint-placeholder-count="3">
+        <div style="{{ line.style }}">{{ line.text }}</div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:11px 18px 0">
+    <div style="{{ fivesSlab }}">
+      <div style="height:8px;background:url('assets/tx-stone.png');background-size:16px"></div>
+      <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:38px;line-height:1;padding:11px 0 13px">{{ fivesResult }}</div>
+    </div>
+  </div>
+  <div style="flex:1;min-height:10px"></div>
+  <div style="font-family:'Jersey 25',monospace;font-size:14px;color:#6b675c;padding:0 12px 7px">TRY IT WITH</div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:0 12px 12px">
+    <sc-for list="{{ fivesChips }}" as="c" hint-placeholder-count="11">
+      <div style="{{ c.style }}" onClick="{{ c.onClick }}">{{ c.label }}</div>
+    </sc-for>
+  </div>
+  <div style="padding:0 18px 18px">
+    <div style="font-family:'Jersey 25',monospace;font-size:20px;color:#2b2b24;text-align:center;padding:14px;background:#cfc8b2;border:3px solid #4a4a44;box-shadow:inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(0,0,0,.16);cursor:pointer" onClick="{{ replayFives }}">Again ›</div>
+  </div>
+</div>
+<div style="width:390px;font-size:11.5px;color:#6b675c;font-weight:700;line-height:1.5">Pairing family — 5, later 6 and 7. Above three frames the stage goes to two columns: the arrangement reflows, the 22px block never does. On an odd n the spare five keeps its own frame tagged 5, so it reads as a quantity rather than a leftover.</div>
+</div>
+
+<div class="dv-opt" id="2d"><div class="dv-olabel"><a class="dv-oid" href="#2d">2d</a>× 4 — double the double &nbsp;<span style="color:#0a7a44">live · try 11 or 12</span></div>
+<div class="dv-card" data-screen-label="Trick fours" style="width:390px;background:#f3eee1;color:#2b2b24;display:flex;flex-direction:column;min-height:820px">
+  <div style="height:12px;background:url('assets/tx-grass.png');background-size:16px"></div>
+  <div style="height:8px;background:url('assets/tx-dirt.png');background-size:16px"></div>
+  <div style="display:flex;align-items:center;gap:10px;padding:13px 18px 2px">
+    <span style="font-family:'Jersey 25',monospace;font-size:24px;color:#8a8578">‹</span>
+    <div style="font-family:'Jersey 25',monospace;font-size:23px">Double the double</div>
+    <div style="margin-left:auto;font-family:'Jersey 25',monospace;font-size:22px;color:#8a8578">× 4</div>
+  </div>
+  <div style="font-size:12.5px;font-weight:600;color:#6b675c;padding:0 18px 12px;line-height:1.5">Double it once, then double that.</div>
+  <div style="display:flex;justify-content:center;align-items:flex-start;padding:0 18px;min-height:250px">
+    <div style="display:flex;flex-direction:column;gap:3px">
+      <sc-for list="{{ foursRows }}" as="row" hint-placeholder-count="4">
+        <div style="{{ row.style }}">
+          <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="7">
+            <div style="{{ cell }}"></div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:14px 18px 0">
+    <div style="background:#fffdf6;border:3px solid #2b2b24;padding:11px 14px">
+      <sc-for list="{{ foursLedger }}" as="line" hint-placeholder-count="3">
+        <div style="{{ line.style }}">{{ line.text }}</div>
+      </sc-for>
+    </div>
+  </div>
+  <div style="padding:11px 18px 0">
+    <div style="{{ foursSlab }}">
+      <div style="height:8px;background:url('assets/tx-stone.png');background-size:16px"></div>
+      <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:38px;line-height:1;padding:11px 0 13px">{{ foursResult }}</div>
+    </div>
+  </div>
+  <div style="flex:1;min-height:10px"></div>
+  <div style="font-family:'Jersey 25',monospace;font-size:14px;color:#6b675c;padding:0 12px 7px">TRY IT WITH</div>
+  <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:0 12px 12px">
+    <sc-for list="{{ foursChips }}" as="c" hint-placeholder-count="11">
+      <div style="{{ c.style }}" onClick="{{ c.onClick }}">{{ c.label }}</div>
+    </sc-for>
+  </div>
+  <div style="padding:0 18px 18px">
+    <div style="font-family:'Jersey 25',monospace;font-size:20px;color:#2b2b24;text-align:center;padding:14px;background:#cfc8b2;border:3px solid #4a4a44;box-shadow:inset 0 3px 0 rgba(255,255,255,.55),inset 0 -4px 0 rgba(0,0,0,.16);cursor:pointer" onClick="{{ replayFours }}">Again ›</div>
+  </div>
+</div>
+<div style="width:390px;font-size:11.5px;color:#6b675c;font-weight:700;line-height:1.5">Doubling family — 4, later 2, 3 and 8. Side tags are gone and the running totals live in the ledger, so the array owns the full column and 22px survives at n=12. The stage reserves all four rows from the first frame, so the array grows into space that was already there.</div>
+</div>
+
+<div class="dv-opt" id="2e"><div class="dv-olabel"><a class="dv-oid" href="#2e">2e</a>The three pieces, and what each is not</div>
+<div class="dv-card" style="width:430px;background:#f3eee1;color:#2b2b24;padding:18px;display:flex;flex-direction:column;gap:13px">
+  <div class="vx">
+    <div style="font-family:'Jersey 25',monospace;font-size:19px;margin-bottom:4px">1 · The counting block</div>
+    <div style="font-size:12px;color:#6b675c;font-weight:600;line-height:1.55;margin-bottom:12px">22px, card ground, 3px ink border, the keypad's bevel at small scale. <b>Not dirt, and not any tier material.</b></div>
+    <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:7px">
+        <div style="display:flex;gap:3px">
+          <div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14)"></div>
+          <div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14)"></div>
+          <div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14)"></div>
+        </div>
+        <span style="font:600 10px ui-monospace,monospace;color:#8a8578">RULED</span>
+      </div>
+      <span style="font-family:'Jersey 25',monospace;font-size:19px;color:#8a8578">vs</span>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:7px;opacity:.6">
+        <div style="display:flex;gap:3px">
+          <div style="width:22px;height:22px;background:#7a5233;border:2px solid #20241a;box-sizing:border-box;box-shadow:inset 0 3px 0 rgba(255,255,255,.35),inset 0 -4px 0 rgba(0,0,0,.28)"></div>
+          <div style="width:22px;height:22px;background:#a9713c;border:3px solid;border-color:#6b4520 #d09a63 #d09a63 #6b4520;box-sizing:border-box"></div>
+        </div>
+        <span style="font:600 10px ui-monospace,monospace;color:#8a8578">DRAFT · WOOD</span>
+      </div>
+      <div style="flex:1;min-width:140px;font-size:11.5px;color:#4a463a;font-weight:600;line-height:1.5">Left of that pair is the draft's dirt block; right is the Wood tier badge. Same brown, same bevelled square, and 120 of them on one screen.</div>
+    </div>
+  </div>
+  <div class="vx">
+    <div style="font-family:'Jersey 25',monospace;font-size:19px;margin-bottom:4px">2 · The ten-frame</div>
+    <div style="font-size:12px;color:#6b675c;font-weight:600;line-height:1.55;margin-bottom:12px">Confirmed from the draft. 3px ink border, Jersey tag riding the top-right edge at 13px — the floor, and the only place it is used.</div>
+    <div style="display:flex;align-items:center;gap:20px">
+      <div style="position:relative;border:3px solid #20241a;padding:3px;background:#f3eee1">
+        <div style="display:flex;gap:3px">
+          <div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div>
+        </div>
+        <div style="display:flex;gap:3px;margin-top:3px">
+          <div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box"></div>
+        </div>
+        <div style="position:absolute;right:-9px;top:-11px;font-family:'Jersey 25',monospace;font-size:13px;background:#fffdf6;border:2px solid #20241a;padding:0 5px">10</div>
+      </div>
+      <div style="flex:1;font-size:11.5px;color:#4a463a;font-weight:600;line-height:1.55">The frame is <b>structure</b>, so it is ink. Nothing about a group's meaning is carried by colour — which is what lets the same frame tag a spare 5 without implying it fell short.</div>
+    </div>
+  </div>
+  <div class="vx">
+    <div style="font-family:'Jersey 25',monospace;font-size:19px;margin-bottom:4px">3 · The taken-away row</div>
+    <div style="font-size:12px;color:#6b675c;font-weight:600;line-height:1.55;margin-bottom:12px"><b>Not slate.</b> Fill drops out, border to <span class="k">#cfc8b2</span>, opacity to .35. Border width unchanged, so nothing reflows.</div>
+    <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <div style="display:flex;gap:3px">
+          <div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14)"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14)"></div><div style="width:22px;height:22px;background:#fffdf6;border:3px solid #20241a;box-sizing:border-box;box-shadow:inset 0 3px 0 rgba(255,255,255,.85),inset 0 -4px 0 rgba(0,0,0,.14)"></div>
+        </div>
+        <div style="display:flex;gap:3px;opacity:.35">
+          <div style="width:22px;height:22px;background:transparent;border:3px solid #cfc8b2;box-sizing:border-box"></div><div style="width:22px;height:22px;background:transparent;border:3px solid #cfc8b2;box-sizing:border-box"></div><div style="width:22px;height:22px;background:transparent;border:3px solid #cfc8b2;box-sizing:border-box"></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px;opacity:.5">
+        <div style="display:flex;gap:3px">
+          <div style="width:22px;height:22px;background:#dfe6ee;border:2px solid #8ba4bb;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#dfe6ee;border:2px solid #8ba4bb;box-sizing:border-box"></div><div style="width:22px;height:22px;background:#dfe6ee;border:2px solid #8ba4bb;box-sizing:border-box"></div>
+        </div>
+        <div style="font:600 10px ui-monospace,monospace;color:#42607c;text-align:center">DRAFT</div>
+      </div>
+      <div style="flex:1;min-width:140px;font-size:11.5px;color:#4a463a;font-weight:600;line-height:1.55">Slate means <i>not yet — we'll come back to it</i> on every other screen. Removal in ×9 is the method working. Spend slate here and it stops meaning anything there.</div>
+    </div>
+  </div>
+</div>
+</div>
+
+</div>
+</section>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">Part 1 — the 5a build report</span></div>
+<div class="dv-opts">
+<div class="dv-opt" id="3a"><div class="dv-olabel"><a class="dv-oid" href="#3a">3a</a>Six deviations · 5 confirmed, 1 mixed</div>
+<div class="dv-card" style="width:880px;background:#f3eee1;color:#2b2b24;padding:20px;display:flex;flex-direction:column;gap:12px">
+
+<div style="background:#eaf5df;border:3px solid #2c5c1a;padding:14px 15px;font-size:12.5px;color:#2b2b24;font-weight:600;line-height:1.7">
+  <b>On §9.1 — the factors argument was wrong and it is worth saying so plainly.</b> I argued the deletion would give the factors card room. The bar never mounted on card screens, so it gains nothing. The other reasons stand on their own and 5a survives, but that one should come out of the record rather than sit in it as a claim that happens to be false.
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">3 · Coins frame omitted from 2n</span><span class="vb" style="background:#eaf5df;border:2px solid #57a636;color:#2c5c1a">CONFIRMED</span></div>
+  <div class="vp">Right call, and my artboard was wrong. The spec says the two apps are independent; showing a coin balance this app cannot read would be a design fiction. The caption carries what the two-frame layout was actually for — that emeralds are a separate collection — in fewer pixels. No frameless alternative needed.</div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">4 · Empty-state footer copy</span><span class="vb" style="background:#eaf5df;border:2px solid #57a636;color:#2c5c1a">CONFIRMED</span></div>
+  <div class="vp">Accept the substitution; do not grow the data model. A promotions-today count would be schema, migration and backup surface bought for one footer line, and the closest-promotion sentence is the better line anyway — it points forward at something reachable rather than back at something finished. <b>Standing rule: no artboard sentence is worth a schema change.</b> If copy needs data the model lacks, the copy changes.</div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">5 · Armed chevron instead of a dialog</span><span class="vb" style="background:#eaf5df;border:2px solid #57a636;color:#2c5c1a">CONFIRMED</span></div>
+  <div class="vp">Better than what I specified. A dialog is a modal interruption on a screen whose entire design is about not making events out of things; an armed chevron asks the same question without seizing the screen, and self-disarming on a keypad tap means carrying on with the round is itself the answer. <b>Releasing banked emeralds through the normal award screen is the right fix and it is not a small one</b> — silently discarding earned emeralds would have been the app's first punitive act.</div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">6 · Quantizations to the token scale</span><span class="vb" style="background:#eaf5df;border:2px solid #57a636;color:#2c5c1a">CONFIRMED</span></div>
+  <div class="vp">All four. 13/14 → 12/16 and 10.5 → 12 are the scale doing its job; a canvas value that exists only because I typed it should lose to a token. WEARING at 13px is the Jersey floor and the floor wins. Where a canvas number and a token disagree by a step, the token is right by default — flag it only when the artboard number was load-bearing, which none of these were.</div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">7 · The Overworld strip bug</span><span class="vb" style="background:#eaf5df;border:2px solid #57a636;color:#2c5c1a">CONFIRMED</span></div>
+  <div class="vp">Good find, and the right fix — a <span class="k">url()</span> in a custom property resolving against the using stylesheet is exactly the kind of thing a canvas cannot surface, because the canvas inlines everything. Reference-only strip tokens with the comment saying so is correct. It also sharpens the rule from last round: <b>theme tokens carry colour; theme <i>images</i> are set per theme in the stylesheet.</b></div>
+</div>
+
+<div class="vx">
+  <div class="vd"><span class="vt">8 · Built Home is simpler than 2a</span><span class="vb" style="background:#efe9d8;border:2px solid #cfc8b2;color:#6b675c">MIXED · RULED</span></div>
+  <div class="vp">
+    Mostly my problem, not yours. Taking them one at a time so no new work order is needed for three of the four:<br>
+    <b>Greeting and date row — withdrawn.</b> Canvas atmosphere. The clock is already there and she knows her own name.<br>
+    <b>Mastered progress bar — withdrawn.</b> YOUR MATERIALS carries mastery now, and two mastery readouts on one screen is one too many.<br>
+    <b>"Pick a deck instead" — withdrawn.</b> PRACTICE › pushing deck select is cleaner than a green button plus an escape link under it, and it is one fewer decision on the screen that should ask for none.<br>
+    <b>The DUE chip and the minutes estimate — worth a small order, and only these two.</b> <span class="k">18 DUE</span> and <span class="k">About 4 minutes</span> do work the rest of that list does not: they answer <i>how long is this going to take</i> before she commits, which is the single question that decides whether a distractible ten-year-old taps the button on a bad day. A bounded, visible, small number is the difference between a chore and an errand. Everything else on 2a can stay canvas-only.
+  </div>
+</div>
+
+</div>
+</div>
+</div>
+<p class="dv-next">Work order for the code changes: <span class="k">TRICKS_WORK_ORDER.md</span> at the project root.</p>
+</section>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:1000}}">
+const BLOCK = 22, GAP = 3;
+const cellSolid = () => ({width:BLOCK+'px',height:BLOCK+'px',boxSizing:'border-box',flex:'none',
+  background:'#fffdf6',border:'3px solid #20241a',
+  boxShadow:'inset 0 3px 0 rgba(255,255,255,.85), inset 0 -4px 0 rgba(0,0,0,.14)',
+  transition:'background 300ms ease, border-color 300ms ease, box-shadow 300ms ease'});
+const cellGone = () => ({width:BLOCK+'px',height:BLOCK+'px',boxSizing:'border-box',flex:'none',
+  background:'transparent',border:'3px solid #cfc8b2',boxShadow:'none',
+  transition:'background 300ms ease, border-color 300ms ease, box-shadow 300ms ease'});
+
+class Component extends DCLogic {
+  state = { nines:{n:7,ph:99}, fives:{n:7,ph:99}, fours:{n:7,ph:99} };
+
+  componentDidMount(){
+    this.timers = {};
+    ['nines','fives','fours'].forEach(t => this.play(t));
+  }
+  componentWillUnmount(){
+    Object.values(this.timers || {}).forEach(a => (a||[]).forEach(clearTimeout));
+  }
+
+  reduced(){
+    try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; }
+    catch(e){ return false; }
+  }
+  lastPhase(t){ return t === 'fours' ? 3 : 2; }
+  /* build 900 staggered · hold 600 · transform 300 · hold 900 · result 300 */
+  marks(t){ return t === 'fours' ? [30,1550,2750,3650] : [30,1550,2750]; }
+
+  play(trick, n){
+    this.timers = this.timers || {};
+    (this.timers[trick] || []).forEach(clearTimeout);
+    const next = n ?? this.state[trick].n;
+    if (this.reduced()){
+      this.setState({[trick]:{n:next, ph:this.lastPhase(trick)}});
+      return;
+    }
+    this.setState({[trick]:{n:next, ph:-1}});
+    this.timers[trick] = this.marks(trick).map((ms,i) =>
+      setTimeout(() => this.setState({[trick]:{n:next, ph:i}}), ms));
+  }
+
+  rowStyle(visible, delay){
+    return {display:'flex',gap:GAP+'px',
+      opacity: visible ? 1 : 0,
+      transform: visible ? 'translateY(0)' : 'translateY(-5px)',
+      transition:'opacity 280ms cubic-bezier(.2,.8,.3,1) '+(delay||0)+'ms, transform 280ms cubic-bezier(.2,.8,.3,1) '+(delay||0)+'ms'};
+  }
+
+  ledger(lines, ph){
+    return lines.map((text,i) => ({
+      text,
+      style:{fontFamily:"'Jersey 25',monospace",fontSize:'22px',lineHeight:'1.5',
+        color:'#2b2b24', opacity: ph >= i ? 1 : .26,
+        transition:'opacity 260ms ease'}
+    }));
+  }
+
+  slab(shown){
+    return {background:'#fffdf6',border:'3px solid #2b2b24',boxShadow:'0 5px 0 rgba(43,43,36,.14)',
+      opacity: shown ? 1 : 0,
+      transform: shown ? 'translateY(0)' : 'translateY(6px)',
+      transition:'opacity 300ms cubic-bezier(.2,.8,.3,1), transform 300ms cubic-bezier(.2,.8,.3,1)'};
+  }
+
+  chips(trick){
+    const cur = this.state[trick].n, out = [];
+    for (let v = 2; v <= 12; v++){
+      const on = v === cur;
+      out.push({
+        label: String(v),
+        onClick: () => this.play(trick, v),
+        style:{fontFamily:"'Jersey 25',monospace",fontSize:'24px',textAlign:'center',lineHeight:'1',
+          padding:'17px 0',background:'#fffdf6',border:'3px solid #20241a',boxSizing:'border-box',
+          outline: on ? '3px solid #57a636' : 'none',
+          boxShadow: on ? 'none' : 'inset 0 3px 0 rgba(255,255,255,.85), inset 0 -5px 0 rgba(0,0,0,.14)',
+          color: on ? '#3d7a22' : '#2b2b24', cursor:'pointer'}
+      });
+    }
+    return out;
+  }
+
+  renderVals(){
+    const S = this.state;
+
+    /* ---------- × 9 : ten rows of n, the tenth removed ---------- */
+    const n9 = S.nines.n, p9 = S.nines.ph;
+    const ninesRows = [];
+    for (let i = 0; i < 10; i++){
+      const isLast = i === 9;
+      const gone = isLast && p9 >= 1;
+      const cells = [];
+      for (let c = 0; c < n9; c++) cells.push(gone ? cellGone() : cellSolid());
+      const st = this.rowStyle(p9 >= 0, p9 === 0 ? i * 90 : 0);
+      if (gone) st.opacity = .35;
+      ninesRows.push({style: st, cells});
+    }
+
+    /* ---------- × 5 : pairs of five become tens ---------- */
+    const n5 = S.fives.n, p5 = S.fives.ph;
+    const pairs = Math.floor(n5 / 2), spare = n5 % 2;
+    const framed = p5 >= 1;
+    const fivesGroups = [];
+    for (let g = 0; g < pairs + spare; g++){
+      const isSpare = spare && g === pairs;
+      const rows = [];
+      const rowCount = isSpare ? 1 : 2;
+      for (let r = 0; r < rowCount; r++){
+        const cells = [];
+        for (let c = 0; c < 5; c++) cells.push(cellSolid());
+        rows.push({style: this.rowStyle(p5 >= 0, p5 === 0 ? (g * 2 + r) * 90 : 0), cells});
+      }
+      fivesGroups.push({
+        rows,
+        frame:{position:'relative',display:'flex',flexDirection:'column',gap:GAP+'px',
+          padding:'3px',boxSizing:'border-box',
+          border:'3px solid '+(framed ? '#20241a' : 'transparent'),
+          transition:'border-color 300ms ease'},
+        tag: isSpare ? '5' : '10',
+        tagStyle:{position:'absolute',right:'-9px',top:'-11px',
+          fontFamily:"'Jersey 25',monospace",fontSize:'13px',lineHeight:'1.25',
+          background:'#fffdf6',border:'2px solid #20241a',padding:'0 5px',
+          opacity: framed ? 1 : 0, transition:'opacity 300ms ease'}
+      });
+    }
+    const twoCol = fivesGroups.length > 3;
+
+    /* ---------- × 4 : double, then double again ---------- */
+    const n4 = S.fours.n, p4 = S.fours.ph;
+    const foursRows = [];
+    for (let i = 0; i < 4; i++){
+      const showAt = i === 0 ? 0 : (i === 1 ? 1 : 2);
+      const cells = [];
+      for (let c = 0; c < n4; c++) cells.push(cellSolid());
+      foursRows.push({
+        style: this.rowStyle(p4 >= showAt, p4 === 0 && i === 0 ? 0 : 0),
+        cells
+      });
+    }
+
+    const tens5 = pairs === 1 ? '1 ten' : pairs + ' tens';
+    const line2 = spare ? tens5 + ' and a five' : tens5;
+
+    return {
+      tiles: [
+        {label:'× 2',  name:'Just double it'},
+        {label:'× 3',  name:'Double, then one more'},
+        {label:'× 4',  name:'Double the double'},
+        {label:'× 5',  name:'Fives make tens'},
+        {label:'× 6',  name:'Five rows and one more'},
+        {label:'× 7',  name:'Five rows and two more'},
+        {label:'× 8',  name:'Double, double, double'},
+        {label:'× 9',  name:'Take a row away'},
+        {label:'× 10', name:'Slide in a zero'},
+        {label:'× 11', name:'Say the digit twice'},
+        {label:'× 12', name:'Ten rows and two more'}
+      ],
+
+      ninesRows,
+      ninesLedger: this.ledger(['10 × '+n9+' = '+(10*n9), 'take away '+n9, '= '+(9*n9)], p9),
+      ninesSlab: this.slab(p9 >= 2),
+      ninesResult: '9 × '+n9+' = '+(9*n9),
+      ninesChips: this.chips('nines'),
+      replayNines: () => this.play('nines'),
+
+      fivesGrid: twoCol
+        ? {display:'grid',gridTemplateColumns:'auto auto',gap:'10px 12px',alignContent:'start'}
+        : {display:'flex',flexDirection:'column',gap:'6px'},
+      fivesGroups,
+      fivesLedger: this.ledger([n5+' fives', line2, '= '+(5*n5)], p5),
+      fivesSlab: this.slab(p5 >= 2),
+      fivesResult: '5 × '+n5+' = '+(5*n5),
+      fivesChips: this.chips('fives'),
+      replayFives: () => this.play('fives'),
+
+      foursRows,
+      foursLedger: this.ledger(['start with '+n4, 'double it — '+(2*n4), 'double again — '+(4*n4)], p4 >= 3 ? 2 : p4),
+      foursSlab: this.slab(p4 >= 3),
+      foursResult: '4 × '+n4+' = '+(4*n4),
+      foursChips: this.chips('fours'),
+      replayFours: () => this.play('fours')
+    };
+  }
+}
+</script>
+</body>
+</html>
