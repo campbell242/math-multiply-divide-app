@@ -95,9 +95,23 @@ Two modes:
 
 1. **Full review** — every card in the chosen deck, in rounds.
 2. **Smart review** — only the cards the algorithm says are due.
+3. **Speed run** (when the parent allows it) — an 18-card dash drawn from the whole deck,
+   with the timer visible and a per-card best time shown. **Tiers and due dates are never
+   touched by a speed run**: a miss against the clock must not cost scheduled progress, or
+   she will avoid the mode. Times still land in the per-card history, emeralds pay by the
+   normal round formula, and the streak counts. Ops decks only — factors timing is per
+   pair, which is not a race.
 
 **The clearing rule, in both modes:** a round does not end until every card in it has been
 answered correctly. Missed cards return to the back of the queue within the same round.
+
+**For factors cards** the rule is already satisfied by completion: every pair must eventually
+be entered correctly before the card ends, so a completed card never requeues. A wrong pair
+along the way makes the card count as a miss for tier and stats -- the miss is recorded, not
+repeated. Duplicate entry of an already-found pair is neither correct nor wrong: it marks the
+row she already solved (an acknowledgement, not a celebration) and clears on her next input.
+Fluency is judged on the average time per pair, per the threshold section; per-pair Lightning
+shows as the orb on the solved row, never a chip.
 
 A missed-then-corrected card still counts as a miss for tier purposes. Clearing the round is
 about finishing, not about erasing the record.
@@ -121,14 +135,30 @@ about finishing, not about erasing the record.
 PIN-gated, in the routine app's iron/neutral language and plain factual voice.
 
 - **Child's name** — a text field, set once. See below.
-- Enable/disable decks; round size; **promotion threshold**; **Lightning threshold**;
-  allow speed-run mode
+- Enable/disable decks (the last enabled deck cannot be turned off); round size;
+  **promotion threshold**; **Lightning threshold**; allow speed-run mode
 - Sound toggles: one global, one separate for alarms, matching the routine app's pattern
 - Excuse a day, to protect a streak
 - Emerald balance adjust
 - Reset a deck's mastery data
 - **A 12x12 fact grid** coloured by mastery tier — the fastest way to see which facts are
-  weak, and the single most useful screen in the parent area
+  weak, and the single most useful screen in the parent area. Tapping a cell opens a detail
+  panel: fact, tier and due date, median time, times seen, times missed, last practised.
+- **Export and import a backup** — one JSON file. Progress lives in browser storage on one
+  device, so a cleared cache or a new phone would otherwise erase months of it. See
+  [DATA_MODEL.md](DATA_MODEL.md).
+
+### My look: avatar and theme
+
+Her screen, no PIN, reached by tapping her avatar on Home. Two choices, straight from the
+routine app's customization board (1n): an avatar from a fixed set of eleven pixel faces,
+and a world theme -- Overworld (default), Nether, End, Ocean, Cherry Grove.
+
+A theme repaints decorative surfaces only: the trim strip and section-label accents. It
+never changes layout, text/background contrast, or the three semantic greens -- correct,
+FAST, and emerald carry meaning, not decoration, and never move. Selected slots take the
+routine app's own treatment: 4px gold border with an ink outline. Both choices persist in
+the profile and travel with backups.
 
 ### The name is runtime config, never source
 
@@ -155,7 +185,8 @@ Design artboards may show a real name as sample data — the brief already tells
 plausible sample data, and a mockup reading "friend" would teach the wrong thing about the
 screen's tone.
 
-## Open
+## Storage
 
-`tokens.css` currently holds placeholder values from the initial scaffold. It is replaced
-wholesale once Design returns the artboards and the real Minecraft-derived tokens are known.
+See [DATA_MODEL.md](DATA_MODEL.md) for how all of this persists: card ids, tier transitions in
+code, the day-number scheme that keeps streaks and scheduling honest across midnight and DST,
+and the failure modes worth handling on a real phone.
