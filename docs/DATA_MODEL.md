@@ -134,7 +134,7 @@ spec, and what makes the clearing rule work without a separate mechanism.
   "promoteMs":    5000,
   "lightningMs":  3000,
   "speedRun":     true,
-  "autoSubmit":   false,
+  "autoSubmit":   true,
   "sound":        { "all": true, "blips": true },
   "pin":          "0000",
   "lastBackupDay": 20295
@@ -246,13 +246,14 @@ and stops.
 
 ## Schema versioning
 
-`mt.schema` holds an integer, currently **1**. On boot, read it before anything else and run each
+`mt.schema` holds an integer, currently **2**. On boot, read it before anything else and run each
 migration in order to the current version. A missing `mt.schema` with no other `mt.*` keys is a
 fresh install; a missing one *with* other keys is treated as version 1.
 
 ```js
 const MIGRATIONS = {
-  // 2: (s) => { ... }   // shape: take state at v1, return state at v2
+  // shape: take the whole state at version N-1, mutate it to version N
+  2: (state) => { state.settings.autoSubmit = true; }, // auto check became the default
 };
 ```
 

@@ -143,8 +143,24 @@ test("store: defaults merge under stored settings (new fields appear)", () => {
   store.initStore();
   const s = store.get("settings");
   assert.equal(s.promoteMs, 4000, "stored value wins");
-  assert.equal(s.autoSubmit, false, "new default present");
+  assert.equal(s.autoSubmit, true, "new default present");
   assert.equal(s.lightningMs, 3000);
+});
+
+test("store: v1 data migrates autoSubmit on once, then remembers the choice", () => {
+  backing.clear();
+  backing.set("mt.schema", "1");
+  backing.set("mt.settings", JSON.stringify({ autoSubmit: false }));
+  store.initStore();
+  assert.equal(store.get("settings").autoSubmit, true, "migration flips it on");
+  assert.equal(backing.get("mt.schema"), "2", "schema stamped after migrating");
+  assert.equal(JSON.parse(backing.get("mt.settings")).autoSubmit, true, "flip persisted");
+
+  store.get("settings").autoSubmit = false; // the toggle turns it off...
+  store.touch("settings");
+  store.flushNow();
+  store.initStore(); // ...and a reload keeps it off: no re-flip at schema 2
+  assert.equal(store.get("settings").autoSubmit, false, "off survives reload");
 });
 
 /* --- factors --- */
@@ -192,6 +208,15 @@ test("backup round-trips wholesale and stamps lastBackupDay", () => {
   assert.equal(store.get("profile").emeralds, 50);
   assert.equal(store.getCard("m:7x8").t, 2);
   assert.equal(store.get("streak").count, 1);
+});
+test("import runs migrations on an older backup", () => {
+  const res = store.importBackup({
+    format: "times-table-backup",
+    schema: 1,
+    data: { settings: { autoSubmit: false } },
+  });
+  assert.equal(res.ok, true);
+  assert.equal(store.get("settings").autoSubmit, true, "v1 backup migrated on import");
 });
 test("import rejects wrong format and newer schema, touching nothing", () => {
   const before = store.get("profile").emeralds;

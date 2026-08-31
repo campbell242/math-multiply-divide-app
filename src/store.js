@@ -4,7 +4,7 @@
 // firing it).
 
 const PREFIX = "mt.";
-export const SCHEMA_VERSION = 1;
+export const SCHEMA_VERSION = 2;
 const FLUSH_MS = 2000;
 
 // Days since 1970-01-01 in the user's own timezone. Built from the local
@@ -22,7 +22,7 @@ const DEFAULTS = {
     promoteMs: 5000,
     lightningMs: 3000,
     speedRun: true,
-    autoSubmit: false, // submit on expected digit count; OFF means CHECK is the extra step
+    autoSubmit: true, // submit on expected digit count; OFF means CHECK is the extra step
     sound: { all: true, blips: true },
     pin: "0000",
     lastBackupDay: null,
@@ -65,11 +65,33 @@ function loadKey(name) {
   }
 }
 
+// Each entry takes the whole in-memory state at version N-1 and mutates it
+// to version N. Run in order on boot and when importing an older backup.
+const MIGRATIONS = {
+  // 2: auto check went from opt-in to the default. Flip stored settings up
+  //    once; the toggle keeps whatever is chosen from then on.
+  2: (state) => { state.settings.autoSubmit = true; },
+};
+
+function runMigrations(state, from) {
+  for (let v = from + 1; v <= SCHEMA_VERSION; v++) MIGRATIONS[v]?.(state);
+}
+
 export function initStore() {
   storageOk = safeSet(PREFIX + "probe", "1");
-  const schema = Number(safeGet(PREFIX + "schema") ?? SCHEMA_VERSION);
-  // MIGRATIONS run here, in order, when schema < SCHEMA_VERSION. None yet.
+  // A missing mt.schema with other mt.* keys is data from before versioning:
+  // treat it as v1. Missing with no data is a fresh install, already current.
+  let schema = Number(safeGet(PREFIX + "schema"));
+  if (!schema) {
+    schema = Object.keys(DEFAULTS).some((n) => safeGet(PREFIX + n) !== null)
+      ? 1 : SCHEMA_VERSION;
+  }
   for (const name of Object.keys(DEFAULTS)) memory[name] = loadKey(name);
+  if (schema < SCHEMA_VERSION) {
+    runMigrations(memory, schema);
+    for (const name of Object.keys(DEFAULTS)) dirty.add(name);
+    flushNow();
+  }
   safeSet(PREFIX + "schema", String(SCHEMA_VERSION));
   if (typeof document !== "undefined") {
     document.addEventListener("visibilitychange", () => {
@@ -207,6 +229,7 @@ export function importBackup(obj) {
     else memory[name] = dflt;
     dirty.add(name);
   }
+  if (obj.schema < SCHEMA_VERSION) runMigrations(memory, obj.schema);
   flushNow();
   return { ok: true };
 }
