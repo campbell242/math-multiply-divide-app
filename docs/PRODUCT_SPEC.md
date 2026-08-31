@@ -52,13 +52,22 @@ counts as a pair.
 
 Leitner boxes themed as Minecraft tool materials, so progress is legible to a child.
 
-| Tier | Interval until due again |
+| Tier | Interval until due again (after a **correct** answer) |
 |---|---|
-| Wood | same session |
+| Wood | 1 day |
 | Stone | 1 day |
 | Iron | 3 days |
 | Gold | 7 days |
 | Diamond | 16 days (mastered) |
+
+**A miss comes back the same session, at every tier.** Correctness decides whether the card
+returns today; the table above only applies once she has got it right. This is deliberately
+independent of tiering: a missed Diamond card demotes to Gold *and* returns this session
+rather than in seven days, and a Wood card she answers correctly but slowly waits a day like
+any other correct answer instead of looping back the same day.
+
+Wood and Stone share a one-day interval. They remain distinct as *progress* — Wood is two
+promotions from Iron, Stone is one — they simply no longer differ in scheduling.
 
 Transitions, tuned to encourage rather than punish:
 

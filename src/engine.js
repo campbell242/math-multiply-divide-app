@@ -3,10 +3,11 @@
 
 export const TIERS = ["wood", "stone", "iron", "gold", "diamond"];
 
-// Days until a card at this tier comes due again. Tier 0's interval of 0 is
-// what "same session" means — a demoted card is still due today, which is
-// also what makes the clearing rule need no separate mechanism.
-export const TIER_INTERVALS = [0, 1, 3, 7, 16];
+// Days until a card at this tier comes due again once she has answered it
+// CORRECTLY. A miss ignores this table entirely — see dueAfter. Wood and
+// Stone share an interval of 1: the tiers still differ as progress (how far
+// from Iron she is), they just no longer differ in when the card returns.
+export const TIER_INTERVALS = [1, 1, 3, 7, 16];
 
 /* --- Decks ---------------------------------------------------------------- */
 
@@ -106,8 +107,12 @@ export function tierAfterAnswer(tier, correct, ms, promoteMs) {
   return tier;
 }
 
-export function dueAfter(tier, today) {
-  return today + TIER_INTERVALS[tier];
+// A miss comes back the same session at EVERY tier — the interval table only
+// applies to a card she got right. This used to be implicit in Wood's
+// interval of 0, which meant a correct-but-slow Wood card was also stuck
+// returning the same day; correctness now decides it, not tier.
+export function dueAfter(tier, today, correct = true) {
+  return correct ? today + TIER_INTERVALS[tier] : today;
 }
 
 /* --- Emeralds ---------------------------------------------------------------

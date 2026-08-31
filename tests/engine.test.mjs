@@ -88,9 +88,23 @@ test("tier transitions match the spec", () => {
   assert.equal(tierAfterAnswer(4, true, 1000, 5000), 4);  // never above diamond
   assert.equal(tierAfterAnswer(3, true, 5000, 5000), 4);  // exactly at threshold promotes
 });
-test("due dates follow tier intervals", () => {
-  assert.equal(dueAfter(0, 100), 100); // wood: still due today = same session
-  assert.equal(dueAfter(4, 100), 116);
+test("a correct answer waits its tier's interval, wood included", () => {
+  assert.equal(dueAfter(0, 100, true), 101); // wood no longer returns same-session
+  assert.equal(dueAfter(1, 100, true), 101);
+  assert.equal(dueAfter(2, 100, true), 103);
+  assert.equal(dueAfter(3, 100, true), 107);
+  assert.equal(dueAfter(4, 100, true), 116);
+});
+test("a miss comes back the same session at every tier", () => {
+  for (let tier = 0; tier <= 4; tier++)
+    assert.equal(dueAfter(tier, 100, false), 100, `tier ${tier} miss returns today`);
+});
+test("a wrong answer demotes one tier AND returns today", () => {
+  // The two rules compose: demotion still caps at wood, and the card is due
+  // now regardless of where it landed.
+  const tier = tierAfterAnswer(4, false, 1000, 5000);
+  assert.equal(tier, 3, "diamond demotes to gold");
+  assert.equal(dueAfter(tier, 100, false), 100, "but returns this session, not in 7 days");
 });
 
 /* --- emeralds & stats --- */
@@ -143,8 +157,24 @@ test("store: defaults merge under stored settings (new fields appear)", () => {
   store.initStore();
   const s = store.get("settings");
   assert.equal(s.promoteMs, 4000, "stored value wins");
-  assert.equal(s.autoSubmit, false, "new default present");
+  assert.equal(s.autoSubmit, true, "new default present");
   assert.equal(s.lightningMs, 3000);
+});
+
+test("store: v1 data migrates autoSubmit on once, then remembers the choice", () => {
+  backing.clear();
+  backing.set("mt.schema", "1");
+  backing.set("mt.settings", JSON.stringify({ autoSubmit: false }));
+  store.initStore();
+  assert.equal(store.get("settings").autoSubmit, true, "migration flips it on");
+  assert.equal(backing.get("mt.schema"), "2", "schema stamped after migrating");
+  assert.equal(JSON.parse(backing.get("mt.settings")).autoSubmit, true, "flip persisted");
+
+  store.get("settings").autoSubmit = false; // the toggle turns it off...
+  store.touch("settings");
+  store.flushNow();
+  store.initStore(); // ...and a reload keeps it off: no re-flip at schema 2
+  assert.equal(store.get("settings").autoSubmit, false, "off survives reload");
 });
 
 /* --- factors --- */
@@ -192,6 +222,15 @@ test("backup round-trips wholesale and stamps lastBackupDay", () => {
   assert.equal(store.get("profile").emeralds, 50);
   assert.equal(store.getCard("m:7x8").t, 2);
   assert.equal(store.get("streak").count, 1);
+});
+test("import runs migrations on an older backup", () => {
+  const res = store.importBackup({
+    format: "times-table-backup",
+    schema: 1,
+    data: { settings: { autoSubmit: false } },
+  });
+  assert.equal(res.ok, true);
+  assert.equal(store.get("settings").autoSubmit, true, "v1 backup migrated on import");
 });
 test("import rejects wrong format and newer schema, touching nothing", () => {
   const before = store.get("profile").emeralds;
