@@ -117,12 +117,18 @@ else if (ms <= settings.promoteMs) tier = Math.min(4, tier + 1);
 `due` is then recomputed from the new tier:
 
 ```js
-const INTERVALS = [0, 1, 3, 7, 16];   // Wood, Stone, Iron, Gold, Diamond
-card.due = dayNumber() + INTERVALS[card.t];
+const INTERVALS = [1, 1, 3, 7, 16];   // Wood, Stone, Iron, Gold, Diamond
+card.due = correct ? dayNumber() + INTERVALS[card.t] : dayNumber();
 ```
 
-Tier 0 has interval 0, meaning still due today — which is what "same session" means in the
-spec, and what makes the clearing rule work without a separate mechanism.
+`due` depends on **correctness as well as tier**. A miss is due today at every tier, so a
+card she got wrong always returns in the same session no matter where it landed after
+demotion. A correct answer waits its tier's interval, Wood included — knowing it slowly no
+longer means seeing it again the same day.
+
+Note this is a scheduling policy, not a stored shape: existing `due` values stay valid day
+numbers, so no migration is needed. Cards already overdue under the old rule simply stay due
+until she next answers them, and space out from there.
 
 ## `mt.settings`
 

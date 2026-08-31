@@ -88,9 +88,23 @@ test("tier transitions match the spec", () => {
   assert.equal(tierAfterAnswer(4, true, 1000, 5000), 4);  // never above diamond
   assert.equal(tierAfterAnswer(3, true, 5000, 5000), 4);  // exactly at threshold promotes
 });
-test("due dates follow tier intervals", () => {
-  assert.equal(dueAfter(0, 100), 100); // wood: still due today = same session
-  assert.equal(dueAfter(4, 100), 116);
+test("a correct answer waits its tier's interval, wood included", () => {
+  assert.equal(dueAfter(0, 100, true), 101); // wood no longer returns same-session
+  assert.equal(dueAfter(1, 100, true), 101);
+  assert.equal(dueAfter(2, 100, true), 103);
+  assert.equal(dueAfter(3, 100, true), 107);
+  assert.equal(dueAfter(4, 100, true), 116);
+});
+test("a miss comes back the same session at every tier", () => {
+  for (let tier = 0; tier <= 4; tier++)
+    assert.equal(dueAfter(tier, 100, false), 100, `tier ${tier} miss returns today`);
+});
+test("a wrong answer demotes one tier AND returns today", () => {
+  // The two rules compose: demotion still caps at wood, and the card is due
+  // now regardless of where it landed.
+  const tier = tierAfterAnswer(4, false, 1000, 5000);
+  assert.equal(tier, 3, "diamond demotes to gold");
+  assert.equal(dueAfter(tier, 100, false), 100, "but returns this session, not in 7 days");
 });
 
 /* --- emeralds & stats --- */

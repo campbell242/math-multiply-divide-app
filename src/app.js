@@ -398,7 +398,7 @@ function submit() {
       const newTier = tierAfterAnswer(rec.t, correct, ms, s.promoteMs);
       if (newTier > rec.t) session.promoted++;
       store.recordAttempt(card.id, {
-        correct, ms, newTier, due: dueAfter(newTier, session.today),
+        correct, ms, newTier, due: dueAfter(newTier, session.today, correct),
       });
       maybeCelebratePromotion(card, oldTier, newTier, s.sound.all);
     }
@@ -507,7 +507,7 @@ function completeFactorCard() {
   const newTier = tierAfterAnswer(rec.t, correct, avgMs, s.promoteMs);
   if (newTier > rec.t) session.promoted++;
   store.recordAttempt(fs.card.id, {
-    correct, ms: totalMs, newTier, due: dueAfter(newTier, session.today),
+    correct, ms: totalMs, newTier, due: dueAfter(newTier, session.today, correct),
   });
   maybeCelebratePromotion(fs.card, oldTier, newTier, s.sound.all);
 
